@@ -1,0 +1,65 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
+
+public class PlayingCardView : MonoBehaviour
+{
+	public ImageContainer CardPapers;
+	public ImageContainer CardPictures;
+	public ImageContainer CardSeals;
+	
+	public PlayingCard Source;
+	public Image Paper;
+	public Image Picture;
+
+	private void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.Keypad1))
+		{
+			Init(Source);
+		}
+	}
+
+	public void Init(PlayingCard card)
+	{
+		Source = card;
+		card.View = this;
+		UpdatePaper();
+		UpdatePicture();
+	}
+
+	public void UpdatePaper()
+	{
+	}
+
+	public void UpdatePicture()
+	{
+		int pictureIndex = (int)Source.Rank - 1;
+		switch (Source.Suit)
+		{
+			case CardSuit.Diamond:
+				pictureIndex += 26;
+				break;
+			case CardSuit.Club:
+				pictureIndex += 13;
+				break;
+			case CardSuit.Heart:
+				break;
+			case CardSuit.Spade:
+				pictureIndex += 39;
+				break;
+			default:
+				throw new ArgumentOutOfRangeException();
+		}
+		Picture.sprite = CardPictures.GetImage(pictureIndex);
+	}
+
+	private void OnDestroy()
+	{
+		Source.View = null;
+		Source = null;
+	}
+}
