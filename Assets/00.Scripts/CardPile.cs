@@ -3,16 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class CardPile
 {
 	public Action<PlayingCard> OnCardAdded;
 	public Action<PlayingCard> OnCardRemoved;
-	private List<PlayingCard> _cards;
+	public string Name;
+	[SerializeField] private List<PlayingCard> _cards;
 	public int Count => _cards.Count;
 
-	public CardPile(List<PlayingCard> cards)
+	public CardPile(List<PlayingCard> cards, string name)
 	{
 		_cards = cards;
+		Name = name;
 	}
 	
 	public PlayingCard GetFirstCard()
@@ -32,5 +35,12 @@ public class CardPile
 		{
 			OnCardRemoved?.Invoke(card);
 		}
+	}
+
+	public List<PlayingCard> CloneCardList()
+	{
+		List<PlayingCard> cards = new List<PlayingCard>();
+		cards.AddRange(_cards);
+		return cards;
 	}
 }

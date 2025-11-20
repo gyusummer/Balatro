@@ -2,10 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public class PlayingCardView : MonoBehaviour
+public class PlayingCardView : MonoBehaviour, IPointerClickHandler
 {
 	public ImageContainer CardPapers;
 	public ImageContainer CardPictures;
@@ -14,6 +15,8 @@ public class PlayingCardView : MonoBehaviour
 	public PlayingCard Source;
 	public Image Paper;
 	public Image Picture;
+
+	public Action<PlayingCardView> OnClick;
 
 	private void Update()
 	{
@@ -57,9 +60,24 @@ public class PlayingCardView : MonoBehaviour
 		Picture.sprite = CardPictures.GetImage(pictureIndex);
 	}
 
+	public void OnSelected()
+	{
+		Paper.color = Color.black;
+	}
+
+	public void OnDeselected()
+	{
+		Paper.color = Color.white;
+	}
+	
 	private void OnDestroy()
 	{
 		Source.View = null;
 		Source = null;
+	}
+
+	public void OnPointerClick(PointerEventData eventData)
+	{
+		OnClick?.Invoke(this);
 	}
 }

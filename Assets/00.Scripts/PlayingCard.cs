@@ -69,4 +69,9 @@ public class PlayingCard
 		Rank = rank;
 		Chip = chip;
 	}
+
+	public override string ToString()
+	{
+		return $"{_rank} of {_suit}";
+	}
 }

@@ -1,21 +1,27 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-public class DeckSystem : MonoBehaviour
+// 1. Manage Deck and Hand
+// 2. Display Cards
+public class DeckSystem : Singleton<DeckSystem>
 {
-	public PlayingCardView CardPrefab;
-	public Transform HandParent;
+	[SerializeField] private PlayingCardView cardViewPrefab;
+	public Transform HandHolder;
 	
 	public CardPile Deck;
 	public CardPile DrawPile;
 	public CardPile Hand;
 
-	public void Start()
+	protected override void Awake()
 	{
+		base.Awake();
 		// 기본 52장 덱
 		var defaultDeck = new List<PlayingCard>();
-		for (int suit = (int)CardSuit.Club; suit <= (int)CardSuit.Spade; suit++)
+		for (int suit = (int)CardSuit.Diamond; suit <= (int)CardSuit.Spade; suit++)
 		{
 			for (int rank = (int)CardRank.Ace; rank <= (int)CardRank.King; rank++)
 			{
@@ -23,12 +29,29 @@ public class DeckSystem : MonoBehaviour
 				defaultDeck.Add(c);
 			}
 		}
+		
+		Deck = new CardPile(defaultDeck, nameof(defaultDeck));
+		Hand = new CardPile(new List<PlayingCard>(), nameof(Hand));
+		
+		Hand.OnCardAdded += OnCardAddedToHand;
+		Hand.OnCardRemoved += OnCardRemovedFromHand;
+	}
 
-		defaultDeck = RandomUtil.GetShuffled(defaultDeck);
-		foreach (var playingCard in defaultDeck)
-		{
-			PrintCard(playingCard);
-		}
+	private void OnCardAddedToHand(PlayingCard card)
+	{
+		PrintCard(card, HandHolder);
+	}
+	
+	private void OnCardRemovedFromHand(PlayingCard card)
+	{
+		Destroy(card.View.gameObject);
+	}
+	
+	public void InitDrawPile()
+	{
+		var cardList = Deck.CloneCardList();
+		RandomUtil.GetShuffled(cardList);
+		DrawPile = new CardPile(cardList, nameof(DrawPile));
 	}
 
 	public void Draw(int n)
@@ -54,13 +77,18 @@ public class DeckSystem : MonoBehaviour
 		PlayingCard c = DrawPile.GetFirstCard();
 		DrawPile.RemoveCard(c);
 		Hand.AddCard(c);
-		PrintCard(c);
 	}
 
-	public PlayingCardView PrintCard(PlayingCard card)
+	public PlayingCardView PrintCard(PlayingCard card, Transform uiParent = null)
 	{
-		PlayingCardView cardView = Instantiate(CardPrefab, HandParent);
+		PlayingCardView cardView = Instantiate(cardViewPrefab, uiParent);
 		cardView.Init(card);
 		return cardView;
+	}
+
+	private void OnDestroy()
+	{
+		Hand.OnCardAdded -= OnCardAddedToHand;
+		Hand.OnCardRemoved -= OnCardRemovedFromHand;
 	}
 }
