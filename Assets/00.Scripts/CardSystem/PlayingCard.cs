@@ -55,7 +55,7 @@ public class PlayingCard
 	}
 	public int Chip;
 
-	public PlayingCardView View;
+	[HideInInspector] public PlayingCardView View;
 
 	public PlayingCard(CardSuit suit, CardRank rank)
 	{

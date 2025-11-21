@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [ExecuteAlways]                                   // 에디터 모드에서도 실시간 프리뷰를 위해 사용
-[RequireComponent(typeof(HorizontalLayoutGroup))] // HorizontalLayoutGroup이 필수임을 명시
 public class CardFanLayout : MonoBehaviour
 {
     // === 사용자 설정 변수 ===
@@ -26,6 +25,22 @@ public class CardFanLayout : MonoBehaviour
     {
         parentRect = GetComponent<RectTransform>();
         layoutGroup = GetComponent<HorizontalLayoutGroup>();
+    }
+
+    private void Start()
+    {
+        DeckSystem.Instance.Hand.OnCardAdded += OnCardAddedFromHand;
+        DeckSystem.Instance.Hand.OnCardRemoved += OnCardRemovedFromHand;
+    }
+
+    private void OnCardAddedFromHand(PlayingCard card)
+    {
+        UpdateCardList();
+    }
+    
+    private void OnCardRemovedFromHand(PlayingCard card)
+    {
+        UpdateCardList();
     }
 
     void LateUpdate()
@@ -127,5 +142,11 @@ public class CardFanLayout : MonoBehaviour
             card.localRotation = targetRotation;
             card.localPosition = new Vector3(posX, posY, card.localPosition.z);
         }
+    }
+
+    private void OnDestroy()
+    {
+        DeckSystem.Instance.Hand.OnCardAdded -= OnCardAddedFromHand;
+        DeckSystem.Instance.Hand.OnCardRemoved -= OnCardRemovedFromHand;
     }
 }
