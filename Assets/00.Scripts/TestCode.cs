@@ -15,5 +15,15 @@ public class TestCode : MonoBehaviour
 		{
 			DeckSystem.Instance.Draw();
 		}
+
+		if (Input.GetKeyDown(KeyCode.Keypad2))
+		{
+			HandController.Instance.PlayHand();
+		}
+
+		if (Input.GetKeyDown(KeyCode.Keypad3))
+		{
+			HandController.Instance.DiscardHand();
+		}
 	}
 }

@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 // 1. Manage Deck and Hand
 // 2. Display Cards
@@ -45,6 +44,7 @@ public class DeckSystem : Singleton<DeckSystem>
 	private void OnCardRemovedFromHand(PlayingCard card)
 	{
 		Destroy(card.View.gameObject);
+		Debug.Log($"{card} removed from hand");
 	}
 	
 	public void InitDrawPile()

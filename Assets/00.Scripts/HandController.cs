@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,12 +8,14 @@ using UnityEngine;
 // 3. Discard
 public class HandController : Singleton<HandController>
 {
-	private List<PlayingCardView> _selectedCards;
+	private List<PlayingCard> _selectedCards;
 	public int SelectLimit = 5;
+	
+	public Action<PlayingCard> OnDiscardCard;
 
 	private void Start()
 	{
-		_selectedCards = new List<PlayingCardView>();
+		_selectedCards = new List<PlayingCard>();
 		DeckSystem.Instance.Hand.OnCardAdded += OnCardAddedToHand;
 	}
 
@@ -24,9 +27,9 @@ public class HandController : Singleton<HandController>
 	private void OnClickCard(PlayingCardView cardView)
 	{
 		// Deselect
-		if (_selectedCards.Contains(cardView))
+		if (_selectedCards.Contains(cardView.Source))
 		{
-			_selectedCards.Remove(cardView);
+			_selectedCards.Remove(cardView.Source);
 			cardView.OnDeselected();
 		}
 		else if (_selectedCards.Count >= SelectLimit)
@@ -36,19 +39,32 @@ public class HandController : Singleton<HandController>
 		// Select
 		else
 		{
-			_selectedCards.Add(cardView);
+			_selectedCards.Add(cardView.Source);
 			cardView.OnSelected();
 		}
 	}
 
 	public void PlayHand()
 	{
+		// TODO: Poker Hand Check
 		
+		
+		
+		foreach (PlayingCard card in _selectedCards)
+		{
+			DeckSystem.Instance.Hand.RemoveCard(card);
+		}
+		_selectedCards.Clear();
 	}
 
 	public void DiscardHand()
 	{
-		
+		foreach (PlayingCard card in _selectedCards)
+		{
+			OnDiscardCard?.Invoke(card);
+			DeckSystem.Instance.Hand.RemoveCard(card);
+		}
+		_selectedCards.Clear();
 	}
 
 	private void OnDestroy()
