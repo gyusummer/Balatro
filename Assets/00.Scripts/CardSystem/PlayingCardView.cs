@@ -40,7 +40,7 @@ public class PlayingCardView : MonoBehaviour, IPointerClickHandler
 
 	public void UpdatePicture()
 	{
-		int pictureIndex = (int)Source.Rank - 1;
+		int pictureIndex = (int)Source.Rank - 2;
 		switch (Source.Suit)
 		{
 			case CardSuit.Diamond:

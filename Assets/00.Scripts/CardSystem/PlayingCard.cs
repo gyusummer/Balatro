@@ -15,8 +15,7 @@ public enum CardSuit
 public enum CardRank
 {
 	None = 0,
-	Ace,
-	Two,
+	Two = 2,
 	Three,
 	Four,
 	Five,
@@ -28,12 +27,13 @@ public enum CardRank
 	Jack,
 	Queen,
 	King,
+	Ace
 }
 
 [System.Serializable]
 public class PlayingCard
 {
-	private CardSuit _suit;
+	private CardSuit _suit = CardSuit.Spade;
 	public CardSuit Suit
 	{
 		get => _suit;
@@ -43,7 +43,7 @@ public class PlayingCard
 			View?.UpdatePicture();
 		}
 	}
-	private CardRank _rank;
+	private CardRank _rank = CardRank.King;
 	public CardRank Rank
 	{
 		get => _rank;

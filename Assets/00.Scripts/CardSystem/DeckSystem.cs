@@ -22,7 +22,7 @@ public class DeckSystem : Singleton<DeckSystem>
 		var defaultDeck = new List<PlayingCard>();
 		for (int suit = (int)CardSuit.Diamond; suit <= (int)CardSuit.Spade; suit++)
 		{
-			for (int rank = (int)CardRank.Ace; rank <= (int)CardRank.King; rank++)
+			for (int rank = (int)CardRank.Two; rank <= (int)CardRank.Ace; rank++)
 			{
 				var c = new PlayingCard((CardSuit)suit, (CardRank)rank);
 				defaultDeck.Add(c);
@@ -49,6 +49,7 @@ public class DeckSystem : Singleton<DeckSystem>
 	
 	public void InitDrawPile()
 	{
+		Debug.Log("InitDrawPile");
 		var cardList = Deck.CloneCardList();
 		RandomUtil.GetShuffled(cardList);
 		DrawPile = new CardPile(cardList, nameof(DrawPile));
@@ -88,7 +89,7 @@ public class DeckSystem : Singleton<DeckSystem>
 
 	private void OnDestroy()
 	{
-		Hand.OnCardAdded -= OnCardAddedToHand;
-		Hand.OnCardRemoved -= OnCardRemovedFromHand;
+		// Hand.OnCardAdded -= OnCardAddedToHand;
+		// Hand.OnCardRemoved -= OnCardRemovedFromHand;
 	}
 }

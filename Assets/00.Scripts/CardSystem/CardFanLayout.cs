@@ -146,7 +146,8 @@ public class CardFanLayout : MonoBehaviour
 
     private void OnDestroy()
     {
-        DeckSystem.Instance.Hand.OnCardAdded -= OnCardAddedFromHand;
-        DeckSystem.Instance.Hand.OnCardRemoved -= OnCardRemovedFromHand;
+        Debug.Log("CardFan OnDestroy");
+        // DeckSystem.Instance.Hand.OnCardAdded -= OnCardAddedFromHand;
+        // DeckSystem.Instance.Hand.OnCardRemoved -= OnCardRemovedFromHand;
     }
 }

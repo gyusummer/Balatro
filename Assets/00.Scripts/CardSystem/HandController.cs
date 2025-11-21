@@ -69,6 +69,6 @@ public class HandController : Singleton<HandController>
 
 	private void OnDestroy()
 	{
-		DeckSystem.Instance.Hand.OnCardAdded -= OnCardAddedToHand;
+		// DeckSystem.Instance.Hand.OnCardAdded -= OnCardAddedToHand;
 	}
 }
