@@ -53,8 +53,7 @@ public class HandController : Singleton<HandController>
 		}
 		
 		// Check Poker Hand
-		HandResult pokerHand = PokerHand.CheckHandRank(_selectedCards);
-		Debug.Log(pokerHand.ToString());
+		PokerHand.ScoreHand(_selectedCards);
 		
 		foreach (PlayingCard card in _selectedCards)
 		{

@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public enum HandRank
@@ -55,8 +57,71 @@ public struct PreprocessedHand
     public List<CardRank> SortedUniqueRanks;                   // 정렬된 고유 랭크 (스트레이트)
 }
 
+public struct ScoreComponent
+{
+    public double Chip;
+    public double Mult;
+    public double Result => Chip * Mult;
+
+    public ScoreComponent(double chip, double mult)
+    {
+        Chip = chip;
+        Mult = mult;
+    }
+}
+
 public static class PokerHand
 {
+    public static Dictionary<HandRank, ScoreComponent> BaseScore = new Dictionary<HandRank, ScoreComponent>()
+    {
+        [HandRank.HighCard] = new ScoreComponent(5, 1),
+        [HandRank.Pair] = new ScoreComponent(10, 2),
+        [HandRank.TwoPair] = new ScoreComponent(20, 2),
+        [HandRank.ThreeOfAKind] = new ScoreComponent(30, 3),
+        [HandRank.Straight] = new ScoreComponent(30, 4),
+        [HandRank.Flush] = new ScoreComponent(35, 4),
+        [HandRank.FullHouse] = new ScoreComponent(40, 4),
+        [HandRank.FourOfAKind] = new ScoreComponent(60, 7),
+        [HandRank.StraightFlush] = new ScoreComponent(100, 8),
+        [HandRank.FiveOfAKind] = new ScoreComponent(120, 12),
+        [HandRank.FlushHouse] = new ScoreComponent(140, 14),
+        [HandRank.FlushFive] = new ScoreComponent(160, 16)
+    };
+
+    public static Dictionary<HandRank, ScoreComponent> PlanetValue = new Dictionary<HandRank, ScoreComponent>()
+    {
+        [HandRank.HighCard] = new ScoreComponent(10, 1),
+        [HandRank.Pair] = new ScoreComponent(15, 1),
+        [HandRank.TwoPair] = new ScoreComponent(20, 1),
+        [HandRank.ThreeOfAKind] = new ScoreComponent(20, 2),
+        [HandRank.Straight] = new ScoreComponent(30, 3),
+        [HandRank.Flush] = new ScoreComponent(15, 2),
+        [HandRank.FullHouse] = new ScoreComponent(25, 2),
+        [HandRank.FourOfAKind] = new ScoreComponent(30, 3),
+        [HandRank.StraightFlush] = new ScoreComponent(40, 4),
+        [HandRank.FiveOfAKind] = new ScoreComponent(35, 3),
+        [HandRank.FlushHouse] = new ScoreComponent(40, 4),
+        [HandRank.FlushFive] = new ScoreComponent(50, 3)
+    };
+
+    public static void ScoreHand(List<PlayingCard> hand)
+    {
+        HandResult handResult = CheckHandRank(hand);
+        
+        ScoreComponent baseScore = BaseScore[handResult.Rank];
+        
+        ScoreBoard.Instance.UpdateChip(baseScore.Chip);
+        ScoreBoard.Instance.UpdateMult(baseScore.Mult);
+
+        foreach (PlayingCard card in handResult.ScoredCards)
+        {
+            baseScore.Chip += card.Chip;
+            ScoreBoard.Instance.UpdateChip(baseScore.Chip);
+        }
+
+        ScoreBoard.Instance.AccumulateScore(baseScore.Result);
+    }
+    
     public static PreprocessedHand Preprocess(List<PlayingCard> hand)
     {
         // C# LINQ를 사용해 단 한 번의 순회로 모든 그룹핑을 효율적으로 수행합니다.

@@ -61,6 +61,19 @@ public class PlayingCard
 	{
 		Suit = suit;
 		Rank = rank;
+
+		if (rank == CardRank.Jack || rank == CardRank.Queen || rank == CardRank.King)
+		{
+			Chip = 10;
+		}
+		else if (rank == CardRank.Ace)
+		{
+			Chip = 11;
+		}
+		else
+		{
+			Chip = (int)rank;
+		}
 	}
 
 	public PlayingCard(CardSuit suit, CardRank rank, int chip)
