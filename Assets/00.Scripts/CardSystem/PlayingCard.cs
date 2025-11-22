@@ -33,7 +33,7 @@ public enum CardRank
 [System.Serializable]
 public class PlayingCard
 {
-	private CardSuit _suit = CardSuit.Spade;
+	[SerializeField] private CardSuit _suit = CardSuit.Spade;
 	public CardSuit Suit
 	{
 		get => _suit;
@@ -43,7 +43,7 @@ public class PlayingCard
 			View?.UpdatePicture();
 		}
 	}
-	private CardRank _rank = CardRank.King;
+	[SerializeField] private CardRank _rank = CardRank.King;
 	public CardRank Rank
 	{
 		get => _rank;

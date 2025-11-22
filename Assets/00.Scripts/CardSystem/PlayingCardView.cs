@@ -18,6 +18,7 @@ public class PlayingCardView : MonoBehaviour, IPointerClickHandler
 
 	public Action<PlayingCardView> OnClick;
 
+	// DEBUG CODE: remove later
 	private void Update()
 	{
 		if (Input.GetKeyDown(KeyCode.Keypad1))

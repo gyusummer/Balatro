@@ -46,9 +46,15 @@ public class HandController : Singleton<HandController>
 
 	public void PlayHand()
 	{
-		// TODO: Poker Hand Check
+		if (_selectedCards.Count <= 0)
+		{
+			Debug.Log("!No Cards Selected!");
+			return;
+		}
 		
-		
+		// Check Poker Hand
+		HandResult pokerHand = PokerHand.CheckHandRank(_selectedCards);
+		Debug.Log(pokerHand.ToString());
 		
 		foreach (PlayingCard card in _selectedCards)
 		{
@@ -59,6 +65,12 @@ public class HandController : Singleton<HandController>
 
 	public void DiscardHand()
 	{
+		if (_selectedCards.Count <= 0)
+		{
+			Debug.Log("!No Cards Selected!");
+			return;
+		}
+		
 		foreach (PlayingCard card in _selectedCards)
 		{
 			OnDiscardCard?.Invoke(card);

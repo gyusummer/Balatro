@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 
 public enum HandRank
@@ -22,8 +23,29 @@ public enum HandRank
 public struct HandResult
 {
     public HandRank Rank;
-    public List<PlayingCard> RankingCards; // 족보를 이룬 카드 (특수 효과 발동 대상)
-    public List<PlayingCard> KickerCards;  // 나머지 카드 (키커)
+    public List<PlayingCard> ScoredCards; // 족보를 이룬 카드 (특수 효과 발동 대상)
+    public List<PlayingCard> ExtraCards;  // 나머지 카드 (키커)
+
+    public override string ToString()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.AppendLine(Rank.ToString());
+        sb.AppendLine();
+        sb.AppendLine("Scored:");
+        foreach (var card in ScoredCards)
+        {
+            sb.AppendLine(card.ToString());
+        }
+
+        sb.AppendLine();
+        sb.AppendLine("NotScored:");
+        foreach (var card in ExtraCards)
+        {
+            sb.AppendLine(card.ToString());
+        }
+        sb.Append("## End");
+        return sb.ToString();
+    }
 }
     
 public struct PreprocessedHand
@@ -73,14 +95,26 @@ public static class PokerHand
         return new HandResult 
         { 
             Rank = HandRank.HighCard, 
-            RankingCards = hand.OrderByDescending(c => c.Rank).Take(1).ToList(), // 가장 높은 카드 1장만 RankingCards에 포함
-            KickerCards = hand.OrderByDescending(c => c.Rank).Skip(1).ToList()
+            ScoredCards = hand.OrderByDescending(c => c.Rank).Take(1).ToList(), // 가장 높은 카드 1장만 scoredCards에 포함
+            ExtraCards = hand.OrderByDescending(c => c.Rank).Skip(1).ToList()
         };
     }
 
     public static bool IsFlushFive(PreprocessedHand pHand, List<PlayingCard> hand, out HandResult result)
     {
         result = new HandResult();
+        
+        if (IsFlush(pHand, hand, out HandResult flushResult) && IsFiveOfAKind(pHand, hand, out HandResult fiveKindResult))
+        {
+            List<PlayingCard> scoredCards = flushResult.ScoredCards.Union(fiveKindResult.ScoredCards).ToList();
+            List<PlayingCard> extraCards = flushResult.ExtraCards.Intersect(fiveKindResult.ExtraCards).ToList();
+
+            result.Rank = HandRank.FlushFive;
+            result.ScoredCards = scoredCards;
+            result.ExtraCards = extraCards;
+
+            return true;
+        }
 
         return false;
     }
@@ -89,12 +123,36 @@ public static class PokerHand
     {
         result = new HandResult();
         
+        if (IsFlush(pHand, hand, out HandResult flushResult) && IsFullHouse(pHand, hand, out HandResult houseResult))
+        {
+            List<PlayingCard> scoredCards = flushResult.ScoredCards.Union(houseResult.ScoredCards).ToList();
+            List<PlayingCard> extraCards = flushResult.ExtraCards.Intersect(houseResult.ExtraCards).ToList();
+
+            result.Rank = HandRank.FlushHouse;
+            result.ScoredCards = scoredCards;
+            result.ExtraCards = extraCards;
+            
+            return true;
+        }
+        
         return false;
     }
 
     public static bool IsFiveOfAKind(PreprocessedHand pHand, List<PlayingCard> hand, out HandResult result)
     {
         result = new HandResult();
+        
+        var fiveGroup = pHand.RankGroups.FirstOrDefault(kv => kv.Value.Count == 5);
+
+        if (fiveGroup.Value != null && fiveGroup.Value.Count == 5)
+        {
+            List<PlayingCard> scoredCards = fiveGroup.Value;
+            List<PlayingCard> extraCards = new List<PlayingCard>();
+
+            result = new HandResult { Rank = HandRank.FiveOfAKind, ScoredCards = scoredCards, ExtraCards = extraCards };
+            
+            return true;
+        }
         
         return false;
     }
@@ -103,35 +161,18 @@ public static class PokerHand
     {
         result = new HandResult();
 
-        // A. 먼저 플러시 조건(같은 무늬 5장 이상) 확인
-        var flushGroup = pHand.SuitGroups.FirstOrDefault(kv => kv.Value.Count >= 5);
-
-        if (flushGroup.Value != null && flushGroup.Value.Count >= 5)
+        if (IsFlush(pHand, hand, out HandResult flushResult) && IsStraight(pHand, hand, out HandResult straightResult))
         {
-            var flushCards = flushGroup.Value;
-            var flushRanks = flushCards.Select(c => c.Rank).Distinct().OrderBy(r => r).ToList();
+            List<PlayingCard> scoredCards = flushResult.ScoredCards.Union(straightResult.ScoredCards).ToList();
+            List<PlayingCard> extraCards = flushResult.ExtraCards.Intersect(straightResult.ExtraCards).ToList();
 
-            // B. 플러시 그룹 내에서 스트레이트가 있는지 확인
-            if (flushRanks.Count >= 5)
-            {
-                for (int i = 0; i <= flushRanks.Count - 5; i++)
-                {
-                    if (flushRanks[i + 4] - flushRanks[i] == 4)
-                    {
-                        // 스트레이트 플러시 확인!
-                        CardRank highRank = flushRanks[i + 4];
-                        List<PlayingCard> rankingCards = flushCards.Where(c => (int)c.Rank >= (int)flushRanks[i] && (int)c.Rank <= (int)highRank)
-                            .ToList();
+            result.Rank = HandRank.StraightFlush;
+            result.ScoredCards = scoredCards;
+            result.ExtraCards = extraCards;
 
-                        List<PlayingCard> kickerCards = hand.Except(rankingCards).OrderByDescending(c => c.Rank).ToList();
-                    
-                        result = new HandResult { Rank = HandRank.StraightFlush, RankingCards = rankingCards, KickerCards = kickerCards };
-                        return true;
-                    }
-                }
-                // A-2-3-4-5 (Wheel) 특수 처리 로직도 여기에 추가되어야 합니다.
-            }
+            return true;
         }
+        
         return false;
     }
 
@@ -142,10 +183,11 @@ public static class PokerHand
 
         if (fourGroup.Value != null && fourGroup.Value.Count == 4)
         {
-            List<PlayingCard> rankingCards = fourGroup.Value;
-            List<PlayingCard> kickerCards = hand.Except(rankingCards).OrderByDescending(c => c.Rank).ToList();
+            List<PlayingCard> scoredCards = fourGroup.Value;
+            List<PlayingCard> extraCards = hand.Except(scoredCards).OrderByDescending(c => c.Rank).ToList();
 
-            result = new HandResult { Rank = HandRank.FourOfAKind, RankingCards = rankingCards, KickerCards = kickerCards };
+            result = new HandResult { Rank = HandRank.FourOfAKind, ScoredCards = scoredCards, ExtraCards = extraCards };
+            
             return true;
         }
         return false;
@@ -165,14 +207,15 @@ public static class PokerHand
         }
 
         // 족보를 이룬 카드 = 트리플 + 페어 카드 전체
-        List<PlayingCard> rankingCards = new List<PlayingCard>();
-        rankingCards.AddRange(tripleGroup.Value);
-        rankingCards.AddRange(pairGroup.Value);
+        List<PlayingCard> scoredCards = new List<PlayingCard>();
+        scoredCards.AddRange(tripleGroup.Value);
+        scoredCards.AddRange(pairGroup.Value);
         
-        // 풀 하우스는 5장 모두 족보에 사용되므로 KickerCards는 비어 있습니다.
+        // 풀 하우스는 5장 모두 족보에 사용되므로 extraCards는 비어 있습니다.
         result.Rank = HandRank.FullHouse;
-        result.RankingCards = rankingCards;
-        result.KickerCards = new List<PlayingCard>();
+        result.ScoredCards = scoredCards;
+        result.ExtraCards = new List<PlayingCard>();
+        
         return true;
     }
 
@@ -184,14 +227,15 @@ public static class PokerHand
         if (flushGroup.Value != null && flushGroup.Value.Count >= 5)
         {
             // 족보를 이룬 5장의 카드를 랭크 순으로 정렬하여 추출
-            List<PlayingCard> rankingCards = flushGroup.Value
+            List<PlayingCard> scoredCards = flushGroup.Value
                 .OrderByDescending(c => c.Rank)
                 .Take(5)
                 .ToList();
         
-            List<PlayingCard> kickerCards = hand.Except(rankingCards).OrderByDescending(c => c.Rank).ToList();
+            List<PlayingCard> extraCards = hand.Except(scoredCards).OrderByDescending(c => c.Rank).ToList();
 
-            result = new HandResult { Rank = HandRank.Flush, RankingCards = rankingCards, KickerCards = kickerCards };
+            result = new HandResult { Rank = HandRank.Flush, ScoredCards = scoredCards, ExtraCards = extraCards };
+            
             return true;
         }
         return false;
@@ -210,10 +254,11 @@ public static class PokerHand
             {
                 CardRank highRank = sortedRanks[i + 4];
             
-                List<PlayingCard> rankingCards = hand.Where(c => (int)c.Rank >= (int)sortedRanks[i] && (int)c.Rank <= (int)highRank)
+                List<PlayingCard> scoredCards = hand.Where(c => (int)c.Rank >= (int)sortedRanks[i] && (int)c.Rank <= (int)highRank)
                     .ToList();
             
-                result = new HandResult { Rank = HandRank.Straight, RankingCards = rankingCards, KickerCards = new List<PlayingCard>() };
+                result = new HandResult { Rank = HandRank.Straight, ScoredCards = scoredCards, ExtraCards = new List<PlayingCard>() };
+                
                 return true;
             }
         }
@@ -230,7 +275,8 @@ public static class PokerHand
                 c.Rank == CardRank.Ace || c.Rank == CardRank.Two || c.Rank == CardRank.Three || 
                 c.Rank == CardRank.Four || c.Rank == CardRank.Five).ToList();
             
-            result = new HandResult { Rank = HandRank.Straight, RankingCards = wheelCards, KickerCards = new List<PlayingCard>() };
+            result = new HandResult { Rank = HandRank.Straight, ScoredCards = wheelCards, ExtraCards = new List<PlayingCard>() };
+            
             return true;
         }
 
@@ -245,11 +291,12 @@ public static class PokerHand
         if (tripleGroup.Value != null && tripleGroup.Value.Count == 3)
         {
             // 풀 하우스는 이미 앞서 검사했으므로, 여기서 찾은 것은 순수한 트리플입니다.
-            List<PlayingCard> rankingCards = tripleGroup.Value;
+            List<PlayingCard> scoredCards = tripleGroup.Value;
         
-            List<PlayingCard> kickerCards = hand.Except(rankingCards).OrderByDescending(c => c.Rank).ToList();
+            List<PlayingCard> extraCards = hand.Except(scoredCards).OrderByDescending(c => c.Rank).ToList();
 
-            result = new HandResult { Rank = HandRank.ThreeOfAKind, RankingCards = rankingCards, KickerCards = kickerCards };
+            result = new HandResult { Rank = HandRank.ThreeOfAKind, ScoredCards = scoredCards, ExtraCards = extraCards };
+            
             return true;
         }
         return false;
@@ -267,13 +314,14 @@ public static class PokerHand
 
         if (pairGroups.Count == 2)
         {
-            List<PlayingCard> rankingCards = new List<PlayingCard>();
-            rankingCards.AddRange(pairGroups[0].Value);
-            rankingCards.AddRange(pairGroups[1].Value);
+            List<PlayingCard> scoredCards = new List<PlayingCard>();
+            scoredCards.AddRange(pairGroups[0].Value);
+            scoredCards.AddRange(pairGroups[1].Value);
 
-            List<PlayingCard> kickerCards = hand.Except(rankingCards).OrderByDescending(c => c.Rank).ToList();
+            List<PlayingCard> extraCards = hand.Except(scoredCards).OrderByDescending(c => c.Rank).ToList();
         
-            result = new HandResult { Rank = HandRank.TwoPair, RankingCards = rankingCards, KickerCards = kickerCards };
+            result = new HandResult { Rank = HandRank.TwoPair, ScoredCards = scoredCards, ExtraCards = extraCards };
+            
             return true;
         }
         return false;
@@ -290,11 +338,12 @@ public static class PokerHand
 
         if (pairGroup.Value != null && pairGroup.Value.Count == 2)
         {
-            List<PlayingCard> rankingCards = pairGroup.Value;
+            List<PlayingCard> scoredCards = pairGroup.Value;
         
-            List<PlayingCard> kickerCards = hand.Except(rankingCards).OrderByDescending(c => c.Rank).ToList();
+            List<PlayingCard> extraCards = hand.Except(scoredCards).OrderByDescending(c => c.Rank).ToList();
 
-            result = new HandResult { Rank = HandRank.Pair, RankingCards = rankingCards, KickerCards = kickerCards };
+            result = new HandResult { Rank = HandRank.Pair, ScoredCards = scoredCards, ExtraCards = extraCards };
+            
             return true;
         }
         return false;

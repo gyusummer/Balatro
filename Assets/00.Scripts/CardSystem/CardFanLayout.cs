@@ -35,12 +35,14 @@ public class CardFanLayout : MonoBehaviour
 
     private void OnCardAddedFromHand(PlayingCard card)
     {
-        UpdateCardList();
+        RectTransform childRect = card.View.transform as RectTransform;
+        handCards.Add(childRect);
     }
     
     private void OnCardRemovedFromHand(PlayingCard card)
     {
-        UpdateCardList();
+        RectTransform childRect = card.View.transform as RectTransform;
+        handCards.Remove(childRect);
     }
 
     void LateUpdate()
