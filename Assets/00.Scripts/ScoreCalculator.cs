@@ -105,4 +105,15 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 		TotalScore += score;
 		ScoreBoard.Instance.UpdateScore(score);
 	}
+	
+	public void UpgradePokerHand(HandRank handRank)
+	{
+		ScoreComponent handValue = BaseScore[handRank];
+		ScoreComponent planetValue = PlanetValue[handRank];
+		
+		handValue.Chip += planetValue.Chip;
+		handValue.Mult += planetValue.Mult;
+		
+		BaseScore[handRank] = handValue;
+	}
 }
