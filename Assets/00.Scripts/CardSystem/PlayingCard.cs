@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -54,6 +55,8 @@ public class PlayingCard
 		}
 	}
 	public int Chip;
+	
+	public CardEnhancement Enhancement;
 
 	[HideInInspector] public PlayingCardView View;
 
@@ -81,6 +84,47 @@ public class PlayingCard
 		Suit = suit;
 		Rank = rank;
 		Chip = chip;
+	}
+
+	public void ActivateInPlay()
+	{
+		if (Enhancement != CardEnhancement.Stone)
+		{
+			ScoreCalculator.Instance.AddChip(Chip);
+		}
+
+		switch (Enhancement)
+		{
+			case CardEnhancement.Bonus:
+				ScoreCalculator.Instance.AddChip(30);
+				break;
+			case CardEnhancement.Mult:
+				ScoreCalculator.Instance.AddMult(4);
+				break;
+			case CardEnhancement.Glass:
+				ScoreCalculator.Instance.ScaleMult(2);
+				break;
+			case CardEnhancement.Stone:
+				ScoreCalculator.Instance.AddChip(50);
+				break;
+			case CardEnhancement.Lucky:
+				Chance.Roll(5, () => ScoreCalculator.Instance.AddMult(20));
+				// Chance.Roll(15, () => +20$)
+				break;
+			default:
+				break;
+		}
+	}
+
+	public void ActivateInHand()
+	{
+		
+	}
+
+	public void Destroy()
+	{
+		Debug.Log($"{ToString()} Destroy");
+		DeckSystem.Instance.Deck.RemoveCard(this);
 	}
 
 	public override string ToString()

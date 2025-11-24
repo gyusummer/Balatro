@@ -53,7 +53,7 @@ public class HandController : Singleton<HandController>
 		}
 		
 		// Check Poker Hand
-		PokerHand.ScoreHand(_selectedCards);
+		ScoreCalculator.Instance.ScoreHand(_selectedCards);
 		
 		foreach (PlayingCard card in _selectedCards)
 		{
