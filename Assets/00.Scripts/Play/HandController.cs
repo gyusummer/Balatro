@@ -9,6 +9,7 @@ using UnityEngine;
 public class HandController : Singleton<HandController>
 {
 	private List<PlayingCard> _selectedCards;
+	public int SelectedCount => _selectedCards.Count;
 	public int SelectLimit = 5;
 	
 	public Action<PlayingCard> OnDiscardCard;
