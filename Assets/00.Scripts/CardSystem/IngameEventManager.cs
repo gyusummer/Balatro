@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardEventManager : Singleton<CardEventManager>
+public class IngameEventManager : Singleton<IngameEventManager>
 {
 	private static Dictionary<Type, Delegate> s_eventTable = new Dictionary<Type, Delegate>();
 
@@ -16,7 +16,7 @@ public class CardEventManager : Singleton<CardEventManager>
     /// <summary>
     /// 이벤트 등록
     /// </summary>
-    public static void RegisterEvent<T>(Action<T> listener) where T : CardEventArgs
+    public static void RegisterEvent<T>(Action<T> listener) where T : IngameEventArgs
     {
         var eventType = typeof(T);
         if (s_eventTable.TryGetValue(eventType, out var existingDelegate))
@@ -34,7 +34,7 @@ public class CardEventManager : Singleton<CardEventManager>
     /// <summary>
     /// 이벤트 해제
     /// </summary>
-    public static void UnregisterEvent<T>(Action<T> listener) where T : CardEventArgs
+    public static void UnregisterEvent<T>(Action<T> listener) where T : IngameEventArgs
     {
         var eventType = typeof(T);
         if (s_eventTable.TryGetValue(eventType, out var existingDelegate))
@@ -56,12 +56,12 @@ public class CardEventManager : Singleton<CardEventManager>
     /// <summary>
     /// 이벤트 호출
     /// </summary>
-    public static void CallEvent<T>(T eventArgs) where T : CardEventArgs
+    public static void CallEvent<T>(T eventArgs) where T : IngameEventArgs
     {
         BroadCastToListeners(eventArgs);
     }
 
-    static void BroadCastToListeners<T>(T eventArgs) where T : CardEventArgs
+    static void BroadCastToListeners<T>(T eventArgs) where T : IngameEventArgs
     {
         var eventType = eventArgs.GetType();
         Debug.Log($"[CardEventManager] Calling event: {eventType.Name} with args: {eventArgs}");

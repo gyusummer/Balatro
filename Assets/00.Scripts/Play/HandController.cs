@@ -12,6 +12,8 @@ public class HandController : Singleton<HandController>
 	public int SelectedCount => _selectedCards.Count;
 	public int SelectLimit = 5;
 	
+	private ConsumableCard _selectedConsumable;
+	
 	public Action<PlayingCard> OnDiscardCard;
 
 	private void Start()
@@ -24,24 +26,34 @@ public class HandController : Singleton<HandController>
 	{
 		card.View.OnClick += OnClickCard;
 	}
+
+	private void SelectCard(PlayingCard card)
+	{
+		_selectedCards.Add(card.View.Source);
+		card.View.OnSelected();
+	}
+
+	private void DeselectCard(PlayingCard card)
+	{
+		_selectedCards.Remove(card);
+		card.View.OnDeselected();
+	}
 	
 	private void OnClickCard(PlayingCardView cardView)
 	{
-		// Deselect
+		PlayingCard card = cardView.Source;
+		
 		if (_selectedCards.Contains(cardView.Source))
 		{
-			_selectedCards.Remove(cardView.Source);
-			cardView.OnDeselected();
+			DeselectCard(card);
 		}
 		else if (_selectedCards.Count >= SelectLimit)
 		{
 			Debug.Log("!Can't Select More!");
 		}
-		// Select
 		else
 		{
-			_selectedCards.Add(cardView.Source);
-			cardView.OnSelected();
+			SelectCard(card);
 		}
 	}
 
@@ -77,6 +89,19 @@ public class HandController : Singleton<HandController>
 			DeckSystem.Instance.Hand.RemoveCard(card);
 		}
 		_selectedCards.Clear();
+	}
+
+	public void SelectConsumable(ConsumableCard consumable)
+	{
+		_selectedConsumable?.View.OnDeselected();
+		_selectedConsumable = consumable;
+		_selectedConsumable.View.OnSelected();
+	}
+
+	public void UseConsumable()
+	{
+		_selectedConsumable.Use(_selectedCards);
+		Destroy(_selectedConsumable.View);
 	}
 
 	private void OnDestroy()

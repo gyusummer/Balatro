@@ -21,6 +21,10 @@ public class ImageContainer : ScriptableObject
 	
 	public Sprite GetImageByKeyOrNull(string key)
 	{
+		#if UNITY_EDITOR
+		Debug.Log(key);
+		#endif
+		
 		int targetIndex = ImageNames.IndexOf(key);
 
 		return GetImage(targetIndex);

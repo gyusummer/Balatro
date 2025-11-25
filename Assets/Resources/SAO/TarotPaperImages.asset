@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8a654a8a222f6040844806614263de7, type: 3}
+  m_Name: TarotPaperImages
+  m_EditorClassIdentifier: 
+  Images:
+  - {fileID: 563291179, guid: 62b743109f1b6a84f84f5e062ba253e7, type: 3}
+  - {fileID: 2074501226, guid: 62b743109f1b6a84f84f5e062ba253e7, type: 3}
+  - {fileID: -1486139125, guid: 62b743109f1b6a84f84f5e062ba253e7, type: 3}
+  - {fileID: 1112960063, guid: 62b743109f1b6a84f84f5e062ba253e7, type: 3}
+  - {fileID: 1492174651, guid: 62b743109f1b6a84f84f5e062ba253e7, type: 3}
+  - {fileID: -692421561, guid: 62b743109f1b6a84f84f5e062ba253e7, type: 3}
+  - {fileID: 2069300635, guid: 62b743109f1b6a84f84f5e062ba253e7, type: 3}
+  - {fileID: -638507967, guid: 62b743109f1b6a84f84f5e062ba253e7, type: 3}
+  - {fileID: -82619304, guid: 62b743109f1b6a84f84f5e062ba253e7, type: 3}
+  - {fileID: -1387811405, guid: 62b743109f1b6a84f84f5e062ba253e7, type: 3}
+  - {fileID: 1577776666, guid: 62b743109f1b6a84f84f5e062ba253e7, type: 3}
+  - {fileID: 167606742, guid: 62b743109f1b6a84f84f5e062ba253e7, type: 3}
+  - {fileID: 1050623767, guid: 62b743109f1b6a84f84f5e062ba253e7, type: 3}
+  - {fileID: -524551628, guid: 62b743109f1b6a84f84f5e062ba253e7, type: 3}
+  - {fileID: 1976202633, guid: 62b743109f1b6a84f84f5e062ba253e7, type: 3}
+  - {fileID: -496032957, guid: 62b743109f1b6a84f84f5e062ba253e7, type: 3}
+  - {fileID: -1713885590, guid: 62b743109f1b6a84f84f5e062ba253e7, type: 3}
+  - {fileID: 233503134, guid: 62b743109f1b6a84f84f5e062ba253e7, type: 3}
+  - {fileID: 387674000, guid: 62b743109f1b6a84f84f5e062ba253e7, type: 3}
+  - {fileID: -1512348099, guid: 62b743109f1b6a84f84f5e062ba253e7, type: 3}
+  - {fileID: -1306711209, guid: 62b743109f1b6a84f84f5e062ba253e7, type: 3}
+  - {fileID: -2021410573, guid: 62b743109f1b6a84f84f5e062ba253e7, type: 3}
+  ImageNames:
+  - Fool
+  - Magician
+  - HighPriestess
+  - Empress
+  - Emperor
+  - Hierophant
+  - Lovers
+  - Chariot
+  - Justice
+  - Hermit
+  - "WheelOfFortune\t"
+  - Strength
+  - HangedMan
+  - Death
+  - Temperance
+  - Devil
+  - Tower
+  - Star
+  - Moon
+  - Sun
+  - Judgement
+  - World

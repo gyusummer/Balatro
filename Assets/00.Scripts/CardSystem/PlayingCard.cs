@@ -56,7 +56,16 @@ public class PlayingCard
 	}
 	public int Chip;
 	
-	public CardEnhancement Enhancement;
+	[SerializeField] private CardEnhancement _enhancement;
+	public CardEnhancement Enhancement
+	{
+		get => _enhancement;
+		set
+		{
+			_enhancement = value;
+			View?.UpdatePaper();
+		}
+	}
 
 	[HideInInspector] public PlayingCardView View;
 
@@ -125,6 +134,7 @@ public class PlayingCard
 	{
 		Debug.Log($"{ToString()} Destroy");
 		DeckSystem.Instance.Deck.RemoveCard(this);
+		DeckSystem.Instance.Hand.RemoveCard(this);
 	}
 
 	public override string ToString()

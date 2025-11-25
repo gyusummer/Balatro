@@ -23,7 +23,7 @@ MonoBehaviour:
   - {fileID: -1561330530, guid: e9c02437cdf79134f933127ba67bb733, type: 3}
   - {fileID: 1740679189, guid: e9c02437cdf79134f933127ba67bb733, type: 3}
   ImageNames:
-  - Default
+  - None
   - Stone
   - Gold
   - Bonus

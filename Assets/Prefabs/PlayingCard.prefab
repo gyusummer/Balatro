@@ -130,9 +130,11 @@ MonoBehaviour:
   CardPictures: {fileID: 11400000, guid: 044b6c6ea1b6c32469cf040b0ae9b6f9, type: 2}
   CardSeals: {fileID: 11400000, guid: 1771ed7ca3820344a96dcdc0b4b7d584, type: 2}
   Source:
-    Suit: 4
-    Rank: 14
+    _suit: 0
+    _rank: 14
     Chip: 0
+    Enhancement: 0
+    View: {fileID: 0}
   Paper: {fileID: 7386192721501795462}
   Picture: {fileID: 975375633139306534}
 --- !u!1 &8342034989925729714
@@ -200,7 +202,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1164238992, guid: 2f31a9745261472418e8860016ba48b6, type: 3}
+  m_Sprite: {fileID: 1415995032, guid: 2f31a9745261472418e8860016ba48b6, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

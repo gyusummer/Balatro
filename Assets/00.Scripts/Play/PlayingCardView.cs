@@ -18,13 +18,10 @@ public class PlayingCardView : MonoBehaviour, IPointerClickHandler
 
 	public Action<PlayingCardView> OnClick;
 
-	// DEBUG CODE: remove later
-	private void Update()
+	private void OnValidate()
 	{
-		if (Input.GetKeyDown(KeyCode.Keypad1))
-		{
-			Init(Source);
-		}
+		UpdatePaper();
+		UpdatePicture();
 	}
 
 	public void Init(PlayingCard card)
