@@ -46,7 +46,7 @@ public class Fool : TarotCard
 {
 	public override bool CheckCondition(int selectedCount)
 	{
-		ConsumableCard last = ConsumableSystem.Instance.LastConsumableCard;
+		IConsumable last = ConsumableSystem.Instance.LastConsumableCard;
 		if (last is not Fool and not null)
 		{
 			return true;
@@ -346,7 +346,7 @@ public static class TarotFactory
 		int randomIndex = rng.Next(availableKeys.Count);
 		int randomCardId = availableKeys[randomIndex];
 
-		// 3. 해당 키에 등록된 생성자(Func<Tarot>)를 호출하여 객체를 생성합니다.
+		// 3. 해당 키에 등록된 생성자(Func<TarotCard>)를 호출하여 객체를 생성합니다.
 		return CardConstructors[randomCardId].Invoke();
 	}
 

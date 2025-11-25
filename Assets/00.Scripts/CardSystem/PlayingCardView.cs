@@ -34,7 +34,7 @@ public class PlayingCardView : MonoBehaviour, IPointerClickHandler
 
 	public void UpdatePaper()
 	{
-		Paper.sprite = CardPapers.GetImageByKeyOrNull(Source.Enhancement.ToString());
+		Paper.sprite = CardPapers.GetImageByNameOrFirst(Source.Enhancement.ToString());
 	}
 
 	public void UpdatePicture()

@@ -12,7 +12,7 @@ public class HandController : Singleton<HandController>
 	public int SelectedCount => _selectedCards.Count;
 	public int SelectLimit = 5;
 	
-	private ConsumableCard _selectedConsumable;
+	private IConsumable _selectedConsumable;
 	
 	public Action<PlayingCard> OnDiscardCard;
 
@@ -102,7 +102,7 @@ public class HandController : Singleton<HandController>
 		_selectedCards.Clear();
 	}
 
-	public void SelectConsumable(ConsumableCard consumable)
+	public void SelectConsumable(IConsumable consumable)
 	{
 		Debug.Log(_selectedConsumable);
 		_selectedConsumable?.View.OnDeselected();

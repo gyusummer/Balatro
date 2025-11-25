@@ -7,8 +7,9 @@ using UnityEngine.UI;
 
 public class ConsumableCardView : MonoBehaviour, IPointerClickHandler
 {
-	public ConsumableCard Source = new Fool();
-	public ImageContainer ConsumablePapers;
+	public IConsumable Source = new Fool();
+	public ImageContainer TarotImageSet;
+	public ImageContainer PlanetImageSet;
 	public Image Paper;
 
 	public Action<ConsumableCardView> OnClick;
@@ -18,7 +19,7 @@ public class ConsumableCardView : MonoBehaviour, IPointerClickHandler
 		UpdatePaper();
 	}
 
-	public void Init(ConsumableCard consumable)
+	public void Init(IConsumable consumable)
 	{
 		Source = consumable;
 		consumable.View = this;
@@ -27,7 +28,15 @@ public class ConsumableCardView : MonoBehaviour, IPointerClickHandler
 
 	public void UpdatePaper()
 	{
-		Paper.sprite = ConsumablePapers.GetImageByKeyOrNull(Source.GetType().ToString());
+		switch (Source)
+		{
+			case TarotCard:
+				Paper.sprite = TarotImageSet.GetImageByNameOrFirst(Source.Name);
+				break;
+			case PlanetCard:
+				Paper.sprite = PlanetImageSet.GetImageByNameOrFirst(Source.Name);
+				break;
+		}
 	}
 	
 	public void OnSelected()

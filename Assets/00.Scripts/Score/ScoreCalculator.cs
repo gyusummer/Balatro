@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class ScoreCalculator : Singleton<ScoreCalculator>
 {
-	public static Dictionary<HandRank, ScoreComponent> BaseScore;
-	public static Dictionary<HandRank, ScoreComponent> PlanetValue;
+	private static Dictionary<HandRank, ScoreComponent> s_baseScore;
+	private static Dictionary<HandRank, ScoreComponent> s_planetValue;
 
 	private double _chip;
 	public double Chip
@@ -33,7 +33,7 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 	protected override void Awake()
 	{
 		base.Awake();
-		BaseScore = new Dictionary<HandRank, ScoreComponent>()
+		s_baseScore = new Dictionary<HandRank, ScoreComponent>()
 		{
 			[HandRank.HighCard] = new ScoreComponent(5, 1),
 			[HandRank.Pair] = new ScoreComponent(10, 2),
@@ -48,7 +48,7 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 			[HandRank.FlushHouse] = new ScoreComponent(140, 14),
 			[HandRank.FlushFive] = new ScoreComponent(160, 16)
 		};
-		PlanetValue = new Dictionary<HandRank, ScoreComponent>()
+		s_planetValue = new Dictionary<HandRank, ScoreComponent>()
 		{
 			[HandRank.HighCard] = new ScoreComponent(10, 1),
 			[HandRank.Pair] = new ScoreComponent(15, 1),
@@ -89,8 +89,8 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 	{
 		HandInfo handInfo = PokerHand.CheckHandRank(hand);
         
-		Chip = BaseScore[handInfo.Rank].Chip;
-		Mult = BaseScore[handInfo.Rank].Mult;
+		Chip = s_baseScore[handInfo.Rank].Chip;
+		Mult = s_baseScore[handInfo.Rank].Mult;
 
 		foreach (var card in handInfo.ScoredCards)
 		{
@@ -108,12 +108,12 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 	
 	public void UpgradePokerHand(HandRank handRank)
 	{
-		ScoreComponent handValue = BaseScore[handRank];
-		ScoreComponent planetValue = PlanetValue[handRank];
+		ScoreComponent handValue = s_baseScore[handRank];
+		ScoreComponent planetValue = s_planetValue[handRank];
 		
 		handValue.Chip += planetValue.Chip;
 		handValue.Mult += planetValue.Mult;
 		
-		BaseScore[handRank] = handValue;
+		s_baseScore[handRank] = handValue;
 	}
 }

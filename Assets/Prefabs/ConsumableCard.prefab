@@ -124,5 +124,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa3532b715e4d9d48ba739100fc0d43d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ConsumablePapers: {fileID: 11400000, guid: 56b4588f12c331248bd75a927503fc09, type: 2}
+  TarotImageSet: {fileID: 11400000, guid: 56b4588f12c331248bd75a927503fc09, type: 2}
+  PlanetImageSet: {fileID: 11400000, guid: 71d9d687f48078e4cb96fb93cd82a8cf, type: 2}
   Paper: {fileID: 4928114015992498836}

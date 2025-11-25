@@ -19,7 +19,7 @@ public class ImageContainer : ScriptableObject
 		return Images[index];
 	}
 	
-	public Sprite GetImageByKeyOrNull(string key)
+	public Sprite GetImageByNameOrFirst(string key)
 	{
 		#if UNITY_EDITOR
 		Debug.Log(key);

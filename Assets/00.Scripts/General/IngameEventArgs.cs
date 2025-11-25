@@ -20,9 +20,9 @@ public class DiscardEventArgs : IngameEventArgs
 
 public class ConsumeEventArgs : IngameEventArgs
 {
-	public ConsumableCard Consumable;
+	public IConsumable Consumable;
 
-	public ConsumeEventArgs(ConsumableCard consumable)
+	public ConsumeEventArgs(IConsumable consumable)
 	{
 		Consumable = consumable;
 	}
