@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ConsumableCardView : MonoBehaviour
+public class ConsumableCardView : MonoBehaviour, IPointerClickHandler
 {
 	public ConsumableCard Source = new Fool();
 	public ImageContainer ConsumablePapers;

@@ -7,20 +7,25 @@ public abstract class ConsumableCard
 {
 	public ConsumableCardView View { get; set; }
 	public abstract bool CheckCondition(int selectedCount);
-	public void Use(List<PlayingCard> selectedCards)
+	public bool Use(List<PlayingCard> selectedCards)
 	{
+		if (CheckCondition(selectedCards.Count) == false)
+		{
+			return false;
+		}
+
 		Effect(selectedCards);
 		IngameEventManager.CallEvent(new ConsumeEventArgs(this));
+		return true;
 	}
 	protected abstract void Effect(List<PlayingCard> selectedCards);
 }
 
 public class ConsumableSystem : Singleton<ConsumableSystem>
 {
-	public List<Type> Tarots = new List<Type>()
-	{
-		typeof(Fool),
-	};
+	[SerializeField] private ConsumableCardView viewPrefab;
+	[SerializeField] private Transform ConsumableHolder;
+	
 	public ConsumableCard LastConsumableCard { get; private set; }
 	
 	private void Start()
@@ -34,8 +39,19 @@ public class ConsumableSystem : Singleton<ConsumableSystem>
 		});
 	}
 
-	public ConsumableCard CreateConsumable<T>() where T : ConsumableCard, new()
+	public ConsumableCard CreateConsumable(ConsumableCard consumable)
 	{
-		return new T();
+		return PrintCard(consumable).Source;
+	}
+	
+	public ConsumableCardView PrintCard(ConsumableCard consumable, Transform uiParent = null)
+	{
+		if (uiParent == null)
+		{
+			uiParent = ConsumableHolder;
+		}
+		ConsumableCardView consumableView = Instantiate(viewPrefab, uiParent);
+		consumableView.Init(consumable);
+		return consumableView;
 	}
 }

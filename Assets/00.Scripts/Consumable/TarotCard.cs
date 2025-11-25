@@ -22,6 +22,8 @@ public abstract class TarotCard : ConsumableCard
 		{
 			card.Suit = suit;
 		}
+		
+		HandController.Instance.DeselectAllCards();
 	}
 	
 	protected void EnhanceCard(List<PlayingCard> cards, CardEnhancement enhance)
@@ -30,11 +32,13 @@ public abstract class TarotCard : ConsumableCard
 		{
 			card.Enhancement = enhance;
 		}
+		
+		HandController.Instance.DeselectAllCards();
 	}
 }
 
 #region Tarots
-// UNDONE: Complete function
+// UNDONE: Complete function / After : Money, Joker, Rearrange, Inventory
 
 // The Fool	Creates the last Tarot or Planet card used during this run
 // The Fool excluded
@@ -43,16 +47,19 @@ public class Fool : TarotCard
 	public override bool CheckCondition(int selectedCount)
 	{
 		ConsumableCard last = ConsumableSystem.Instance.LastConsumableCard;
-		if (last is not Fool)
+		if (last is not Fool and not null)
 		{
 			return true;
 		}
+		
+		Debug.Log("last card is Tarot or null");
 		return false;
 	}
 
 	protected override void Effect(List<PlayingCard> selectedCards)
 	{
 		// Add LastCard to player inventory
+		ConsumableSystem.Instance.CreateConsumable(ConsumableSystem.Instance.LastConsumableCard);
 	}
 }
 
@@ -161,6 +168,10 @@ public class WheelOfFortune : TarotCard
 // Strength	Increases rank of up to 2 selected cards by 1
 public class Strength : TarotCard
 {
+	public Strength()
+	{
+		MaxTarget = 2;
+	}
 	protected override void Effect(List<PlayingCard> selectedCards)
 	{
 		foreach (PlayingCard card in selectedCards)
@@ -174,6 +185,7 @@ public class Strength : TarotCard
 				card.Rank += 1;
 			}
 		}
+		HandController.Instance.DeselectAllCards();
 	}
 }
 
@@ -304,10 +316,10 @@ public static class TarotFactory
 		{ 5, () => new Hierophant() },
 		{ 6, () => new Lovers() },
 		{ 7, () => new Chariot() },
-		{ 8, () => new Strength() },
+		{ 8, () => new Justice() },
 		{ 9, () => new Hermit() },
 		{ 10, () => new WheelOfFortune() },
-		{ 11, () => new Justice() },
+		{ 11, () => new Strength() },
 		{ 12, () => new HangedMan() },
 		{ 13, () => new Death() },
 		{ 14, () => new Temperance() },
@@ -336,5 +348,10 @@ public static class TarotFactory
 
 		// 3. 해당 키에 등록된 생성자(Func<Tarot>)를 호출하여 객체를 생성합니다.
 		return CardConstructors[randomCardId].Invoke();
+	}
+
+	public static TarotCard CreateCard(int index)
+	{
+		return CardConstructors[index].Invoke();
 	}
 }

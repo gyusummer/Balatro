@@ -66,6 +66,7 @@ public class PlayingCardView : MonoBehaviour, IPointerClickHandler
 
 	public void OnDeselected()
 	{
+		Debug.Log($"{Source} Deselected");
 		Paper.color = Color.white;
 	}
 	

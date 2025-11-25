@@ -38,6 +38,17 @@ public class HandController : Singleton<HandController>
 		_selectedCards.Remove(card);
 		card.View.OnDeselected();
 	}
+
+	public void DeselectAllCards()
+	{
+		Debug.Log($"Deselect {_selectedCards.Count} Cards");
+		for (int i = _selectedCards.Count - 1; i >= 0; i--)
+		{
+			var c =  _selectedCards[i];
+			Debug.Log(c);
+			DeselectCard(_selectedCards[i]);
+		}
+	}
 	
 	private void OnClickCard(PlayingCardView cardView)
 	{
@@ -93,15 +104,20 @@ public class HandController : Singleton<HandController>
 
 	public void SelectConsumable(ConsumableCard consumable)
 	{
+		Debug.Log(_selectedConsumable);
 		_selectedConsumable?.View.OnDeselected();
 		_selectedConsumable = consumable;
+		Debug.Log(_selectedConsumable);
 		_selectedConsumable.View.OnSelected();
 	}
 
 	public void UseConsumable()
 	{
-		_selectedConsumable.Use(_selectedCards);
-		Destroy(_selectedConsumable.View);
+		if (_selectedConsumable.Use(_selectedCards))
+		{
+			Destroy(_selectedConsumable.View.gameObject);
+			_selectedConsumable = null;
+		}
 	}
 
 	private void OnDestroy()

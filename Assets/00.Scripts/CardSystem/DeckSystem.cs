@@ -8,8 +8,8 @@ using UnityEngine;
 // 2. Display Cards
 public class DeckSystem : Singleton<DeckSystem>
 {
-	[SerializeField] private PlayingCardView cardViewPrefab;
-	public Transform HandHolder;
+	[SerializeField] private PlayingCardView viewPrefab;
+	[SerializeField] private Transform HandHolder;
 	
 	public CardPile Deck;
 	public CardPile DrawPile;
@@ -82,7 +82,11 @@ public class DeckSystem : Singleton<DeckSystem>
 
 	public PlayingCardView PrintCard(PlayingCard card, Transform uiParent = null)
 	{
-		PlayingCardView cardView = Instantiate(cardViewPrefab, uiParent);
+		if (uiParent == null)
+		{
+			uiParent = HandHolder;
+		}
+		PlayingCardView cardView = Instantiate(viewPrefab, uiParent);
 		cardView.Init(card);
 		return cardView;
 	}
