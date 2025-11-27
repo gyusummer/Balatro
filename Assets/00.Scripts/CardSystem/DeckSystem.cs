@@ -3,13 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 // 1. Manage Deck and Hand
 // 2. Display Cards
 public class DeckSystem : Singleton<DeckSystem>
 {
 	[SerializeField] private PlayingCardView viewPrefab;
-	[SerializeField] private Transform HandHolder;
+	[SerializeField] private Transform handHolder;
 	
 	public CardPile Deck;
 	public CardPile DrawPile;
@@ -38,7 +39,7 @@ public class DeckSystem : Singleton<DeckSystem>
 
 	private void OnCardAddedToHand(PlayingCard card)
 	{
-		PrintCard(card, HandHolder);
+		PrintCard(card, handHolder);
 	}
 	
 	private void OnCardRemovedFromHand(PlayingCard card)
@@ -84,7 +85,7 @@ public class DeckSystem : Singleton<DeckSystem>
 	{
 		if (uiParent == null)
 		{
-			uiParent = HandHolder;
+			uiParent = handHolder;
 		}
 		PlayingCardView cardView = Instantiate(viewPrefab, uiParent);
 		cardView.Init(card);

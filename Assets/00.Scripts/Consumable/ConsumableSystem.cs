@@ -33,7 +33,7 @@ public abstract class ConsumableCard : IConsumable
 public class ConsumableSystem : Singleton<ConsumableSystem>
 {
 	[SerializeField] private ConsumableCardView viewPrefab;
-	[SerializeField] private Transform ConsumableHolder;
+	[SerializeField] private Transform consumableHolder;
 	
 	public IConsumable LastConsumableCard { get; private set; }
 	
@@ -57,7 +57,7 @@ public class ConsumableSystem : Singleton<ConsumableSystem>
 	{
 		if (uiParent == null)
 		{
-			uiParent = ConsumableHolder;
+			uiParent = consumableHolder;
 		}
 		ConsumableCardView consumableView = Instantiate(viewPrefab, uiParent);
 		consumableView.Init(consumable);
