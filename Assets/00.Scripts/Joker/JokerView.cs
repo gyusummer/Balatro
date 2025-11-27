@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class JokerView : MonoBehaviour
 {
-    public Joker Source = JokerFactory.CreateJoker(0);
+    public Joker Source;
     public ImageContainer JokerImageSet;
     public Image Paper;
 
@@ -26,6 +26,8 @@ public class JokerView : MonoBehaviour
 
     public void UpdatePaper()
     {
+        if (Source == null) return;
+        
         Debug.Log($"{gameObject.name}\n" +
                   $"{Source.Name}");
         Paper.sprite = JokerImageSet.GetImageByNameOrFirst(Source.Name);

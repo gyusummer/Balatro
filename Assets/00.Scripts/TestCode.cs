@@ -31,5 +31,11 @@ public class TestCode : MonoBehaviour
         {
             HandController.Instance.UseConsumable();
         }
+
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            Debug.Log("Joker");
+            JokerFactory.Instance.CreateRandomJoker().Register();
+        }
     }
 }
