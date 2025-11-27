@@ -10,10 +10,14 @@ public abstract class IngameEventArgs : System.EventArgs
 public class ScoreCardEventArgs : IngameEventArgs
 {
 	public PlayingCard Card;
-	public HandInfo HandInfo;
+
+	public ScoreCardEventArgs(PlayingCard card)
+	{
+		Card = card;
+	}
 }
 
-public class DiscardEventArgs : IngameEventArgs
+public class DiscardCardEventArgs : IngameEventArgs
 {
 	
 }

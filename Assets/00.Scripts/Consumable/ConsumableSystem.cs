@@ -39,7 +39,7 @@ public class ConsumableSystem : Singleton<ConsumableSystem>
 	
 	private void Start()
 	{
-		IngameEventManager.RegisterEvent<ConsumeEventArgs>(args =>
+		IngameEventManager.AddListener<ConsumeEventArgs>(args =>
 		{
 			if (args.Consumable is TarotCard or PlanetCard)
 			{

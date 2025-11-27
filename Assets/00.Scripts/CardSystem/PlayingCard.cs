@@ -123,6 +123,8 @@ public class PlayingCard
 			default:
 				break;
 		}
+		
+		IngameEventManager.CallEvent(new ScoreCardEventArgs(this));
 	}
 
 	public void ActivateInHand()

@@ -4,11 +4,6 @@ using UnityEngine;
 
 public class TestCode : MonoBehaviour
 {
-    private void Start()
-    {
-        
-    }
-
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Keypad0))

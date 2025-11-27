@@ -16,7 +16,7 @@ public class IngameEventManager : Singleton<IngameEventManager>
     /// <summary>
     /// 이벤트 등록
     /// </summary>
-    public static void RegisterEvent<T>(Action<T> listener) where T : IngameEventArgs
+    public static void AddListener<T>(Action<T> listener) where T : IngameEventArgs
     {
         var eventType = typeof(T);
         if (s_eventTable.TryGetValue(eventType, out var existingDelegate))
@@ -34,7 +34,7 @@ public class IngameEventManager : Singleton<IngameEventManager>
     /// <summary>
     /// 이벤트 해제
     /// </summary>
-    public static void UnregisterEvent<T>(Action<T> listener) where T : IngameEventArgs
+    public static void RemoveListener<T>(Action<T> listener) where T : IngameEventArgs
     {
         var eventType = typeof(T);
         if (s_eventTable.TryGetValue(eventType, out var existingDelegate))
