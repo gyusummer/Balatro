@@ -4,21 +4,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
 
+[System.Serializable]
 public abstract class Joker
 {
+    public JokerView View;
+    public string Name;
     public abstract void Register();
     public abstract void Unregister();
 }
 
 public class Joker<TEventArgs> : Joker where TEventArgs : IngameEventArgs
 {
-    private Predicate<TEventArgs> condition;
-    private Action effect;
+    private Predicate<TEventArgs> _condition;
+    private Action _effect;
 
-    public Joker(Predicate<TEventArgs> condition, Action effect)
+    public Joker(string name, Predicate<TEventArgs> condition, Action effect)
     {
-        this.condition = condition;
-        this.effect = effect;
+        Name = name;
+        _condition = condition;
+        _effect = effect;
     }
     
     public override void Register()
@@ -28,9 +32,9 @@ public class Joker<TEventArgs> : Joker where TEventArgs : IngameEventArgs
 
     private void ApplyEffect(TEventArgs eventArgs)
     {
-        if (condition(eventArgs))
+        if (_condition(eventArgs))
         {
-            effect.Invoke();
+            _effect.Invoke();
         }
     }
 
@@ -38,15 +42,4 @@ public class Joker<TEventArgs> : Joker where TEventArgs : IngameEventArgs
     {
         IngameEventManager.RemoveListener<TEventArgs>(ApplyEffect);
     }
-}
-
-public class JokerManager
-{
-    public List<Joker> Jokers = new List<Joker>()
-    {
-        new Joker<CardScoredEventArgs>((eventArgs) => eventArgs.Card.Suit == CardSuit.Diamond, () => ScoreCalculator.Instance.AddMult(4)),
-        new Joker<CardScoredEventArgs>((eventArgs) => eventArgs.Card.Suit == CardSuit.Club, () => ScoreCalculator.Instance.AddMult(4)),
-        new Joker<CardScoredEventArgs>((eventArgs) => eventArgs.Card.Suit == CardSuit.Heart, () => ScoreCalculator.Instance.AddMult(4)),
-        new Joker<CardScoredEventArgs>((eventArgs) => eventArgs.Card.Suit == CardSuit.Spade, () => ScoreCalculator.Instance.AddMult(4)),
-    };
 }
