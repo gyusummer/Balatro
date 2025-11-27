@@ -7,27 +7,58 @@ public abstract class IngameEventArgs : System.EventArgs
 	
 }
 
-public class ScoreCardEventArgs : IngameEventArgs
+public class ConsumableConsumedEventArgs : IngameEventArgs
+{
+	public IConsumable Consumable;
+
+	public ConsumableConsumedEventArgs(IConsumable consumable)
+	{
+		Consumable = consumable;
+	}
+}
+
+public class BlindSelected : IngameEventArgs
+{
+	
+}
+
+public class CardDiscardedEventArgs : IngameEventArgs
+{
+	
+}
+
+public class HandPlayedEventArgs : IngameEventArgs
+{
+	
+}
+
+public class CardScoredEventArgs : IngameEventArgs
 {
 	public PlayingCard Card;
 
-	public ScoreCardEventArgs(PlayingCard card)
+	public CardScoredEventArgs(PlayingCard card)
 	{
 		Card = card;
 	}
 }
 
-public class DiscardCardEventArgs : IngameEventArgs
+
+public class CardHeldEventArgs : IngameEventArgs
 {
 	
 }
 
-public class ConsumeEventArgs : IngameEventArgs
+public class JokerActivatedEventArgs : IngameEventArgs
 {
-	public IConsumable Consumable;
+	
+}
 
-	public ConsumeEventArgs(IConsumable consumable)
-	{
-		Consumable = consumable;
-	}
+public class ScoreCalcFinishedEventArgs : IngameEventArgs
+{
+	
+}
+
+public class BlindFinished : IngameEventArgs
+{
+	
 }

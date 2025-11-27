@@ -124,7 +124,7 @@ public class PlayingCard
 				break;
 		}
 		
-		IngameEventManager.CallEvent(new ScoreCardEventArgs(this));
+		IngameEventManager.CallEvent(new CardScoredEventArgs(this));
 	}
 
 	public void ActivateInHand()

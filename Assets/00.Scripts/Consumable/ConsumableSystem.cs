@@ -24,7 +24,7 @@ public abstract class ConsumableCard : IConsumable
 		}
 
 		Effect(selectedCards);
-		IngameEventManager.CallEvent(new ConsumeEventArgs(this));
+		IngameEventManager.CallEvent(new ConsumableConsumedEventArgs(this));
 		return true;
 	}
 	protected abstract void Effect(List<PlayingCard> selectedCards);
@@ -39,7 +39,7 @@ public class ConsumableSystem : Singleton<ConsumableSystem>
 	
 	private void Start()
 	{
-		IngameEventManager.AddListener<ConsumeEventArgs>(args =>
+		IngameEventManager.AddListener<ConsumableConsumedEventArgs>(args =>
 		{
 			if (args.Consumable is TarotCard or PlanetCard)
 			{
