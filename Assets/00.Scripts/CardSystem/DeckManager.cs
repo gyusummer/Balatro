@@ -7,9 +7,9 @@ using UnityEngine.Serialization;
 
 // 1. Manage Deck and Hand
 // 2. Display Cards
-public class DeckSystem : Singleton<DeckSystem>
+public class DeckManager : Singleton<DeckManager>
 {
-	[SerializeField] private PlayingCardView viewPrefab;
+	[SerializeField] private CardView viewPrefab;
 	[SerializeField] private Transform handHolder;
 	
 	public CardPile Deck;
@@ -20,29 +20,29 @@ public class DeckSystem : Singleton<DeckSystem>
 	{
 		base.Awake();
 		// 기본 52장 덱
-		var defaultDeck = new List<PlayingCard>();
+		var defaultDeck = new List<Card>();
 		for (int suit = (int)CardSuit.Diamond; suit <= (int)CardSuit.Spade; suit++)
 		{
 			for (int rank = (int)CardRank.Two; rank <= (int)CardRank.Ace; rank++)
 			{
-				var c = new PlayingCard((CardSuit)suit, (CardRank)rank);
+				var c = new Card((CardSuit)suit, (CardRank)rank);
 				defaultDeck.Add(c);
 			}
 		}
 		
 		Deck = new CardPile(defaultDeck, nameof(defaultDeck));
-		Hand = new CardPile(new List<PlayingCard>(), nameof(Hand));
+		Hand = new CardPile(new List<Card>(), nameof(Hand));
 		
-		Hand.OnCardAdded += OnCardAddedToHand;
-		Hand.OnCardRemoved += OnCardRemovedFromHand;
+		Hand.OnCardAdded += PrintHandCard;
+		Hand.OnCardRemoved += DestroyHandCard;
 	}
 
-	private void OnCardAddedToHand(PlayingCard card)
+	private void PrintHandCard(Card card)
 	{
 		PrintCard(card, handHolder);
 	}
 	
-	private void OnCardRemovedFromHand(PlayingCard card)
+	private void DestroyHandCard(Card card)
 	{
 		Destroy(card.View.gameObject);
 		Debug.Log($"{card} removed from hand");
@@ -76,18 +76,18 @@ public class DeckSystem : Singleton<DeckSystem>
 			Debug.Log("No Card in Draw Pile");
 			return;
 		}
-		PlayingCard c = DrawPile.GetFirstCard();
+		Card c = DrawPile.GetFirstCard();
 		DrawPile.RemoveCard(c);
 		Hand.AddCard(c);
 	}
 
-	public PlayingCardView PrintCard(PlayingCard card, Transform uiParent = null)
+	public CardView PrintCard(Card card, Transform uiParent = null)
 	{
 		if (uiParent == null)
 		{
 			uiParent = handHolder;
 		}
-		PlayingCardView cardView = Instantiate(viewPrefab, uiParent);
+		CardView cardView = Instantiate(viewPrefab, uiParent);
 		cardView.Init(card);
 		return cardView;
 	}

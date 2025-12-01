@@ -32,7 +32,7 @@ public enum CardRank
 }
 
 [System.Serializable]
-public class PlayingCard
+public class Card
 {
 	[SerializeField] private CardSuit _suit = CardSuit.Spade;
 	public CardSuit Suit
@@ -67,9 +67,9 @@ public class PlayingCard
 		}
 	}
 
-	[HideInInspector] public PlayingCardView View;
+	[HideInInspector] public CardView View;
 
-	public PlayingCard(CardSuit suit, CardRank rank)
+	public Card(CardSuit suit, CardRank rank)
 	{
 		Suit = suit;
 		Rank = rank;
@@ -88,7 +88,7 @@ public class PlayingCard
 		}
 	}
 
-	public PlayingCard(CardSuit suit, CardRank rank, int chip)
+	public Card(CardSuit suit, CardRank rank, int chip)
 	{
 		Suit = suit;
 		Rank = rank;
@@ -135,8 +135,8 @@ public class PlayingCard
 	public void Destroy()
 	{
 		Debug.Log($"{ToString()} Destroy");
-		DeckSystem.Instance.Deck.RemoveCard(this);
-		DeckSystem.Instance.Hand.RemoveCard(this);
+		DeckManager.Instance.Deck.RemoveCard(this);
+		DeckManager.Instance.Hand.RemoveCard(this);
 	}
 
 	public override string ToString()

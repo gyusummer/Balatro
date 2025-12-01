@@ -24,20 +24,18 @@ public class ConsumableSystemEditor : Editor
 		// 3. 버튼을 생성하고 클릭 이벤트를 연결합니다.
 		// GUILayout.Button("버튼에 표시될 텍스트");
 		TarotIndex = EditorGUILayout.IntField("타로 번호:", TarotIndex);
-
-		
 		if (GUILayout.Button("Create Tarot"))
 		{
 			// 버튼 클릭 시, 타겟 스크립트의 함수를 호출합니다.
 			// Undo.RecordObject(script.gameObject, "Function Called"); // (옵션: 실행 취소 기록)
             
-			consumableSystem.PrintCard(TarotFactory.CreateCard(TarotIndex));
+			consumableSystem.CreateConsumable(TarotFactory.CreateCard(TarotIndex));
 		}
 		
 		PlanetIndex = EditorGUILayout.IntField("행성 번호:", PlanetIndex);
 		if (GUILayout.Button("Create Planet"))
 		{
-			consumableSystem.PrintCard(PlanetFactory.CreateCard(PlanetIndex));
+			consumableSystem.CreateConsumable(PlanetFactory.CreateCard(PlanetIndex));
 		}
 	}
 }

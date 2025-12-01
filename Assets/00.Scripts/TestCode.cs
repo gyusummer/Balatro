@@ -8,13 +8,13 @@ public class TestCode : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Keypad0))
         {
-            DeckSystem.Instance.InitDrawPile();
-            DeckSystem.Instance.Draw(8);
+            DeckManager.Instance.InitDrawPile();
+            DeckManager.Instance.Draw(8);
         }
         
         if (Input.GetKeyDown(KeyCode.Keypad1))
         {
-            DeckSystem.Instance.Draw();
+            DeckManager.Instance.Draw();
         }
 
         if (Input.GetKeyDown(KeyCode.Keypad2))

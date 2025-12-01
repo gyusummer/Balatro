@@ -29,17 +29,17 @@ public class CardFanLayout : MonoBehaviour
 
     private void Start()
     {
-        DeckSystem.Instance.Hand.OnCardAdded += OnCardAddedFromHand;
-        DeckSystem.Instance.Hand.OnCardRemoved += OnCardRemovedFromHand;
+        DeckManager.Instance.Hand.OnCardAdded += OnCardAddedFromHand;
+        DeckManager.Instance.Hand.OnCardRemoved += OnCardRemovedFromHand;
     }
 
-    private void OnCardAddedFromHand(PlayingCard card)
+    private void OnCardAddedFromHand(Card card)
     {
         RectTransform childRect = card.View.transform as RectTransform;
         handCards.Add(childRect);
     }
     
-    private void OnCardRemovedFromHand(PlayingCard card)
+    private void OnCardRemovedFromHand(Card card)
     {
         RectTransform childRect = card.View.transform as RectTransform;
         handCards.Remove(childRect);

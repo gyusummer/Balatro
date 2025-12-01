@@ -6,30 +6,30 @@ using UnityEngine;
 [System.Serializable]
 public class CardPile
 {
-	public Action<PlayingCard> OnCardAdded;
-	public Action<PlayingCard> OnCardRemoved;
+	public Action<Card> OnCardAdded;
+	public Action<Card> OnCardRemoved;
 	public string Name;
-	[SerializeField] private List<PlayingCard> _cards;
+	[SerializeField] private List<Card> _cards;
 	public int Count => _cards.Count;
 
-	public CardPile(List<PlayingCard> cards, string name)
+	public CardPile(List<Card> cards, string name)
 	{
 		_cards = cards;
 		Name = name;
 	}
 	
-	public PlayingCard GetFirstCard()
+	public Card GetFirstCard()
 	{
 		return _cards[0];
 	}
 	
-	public void AddCard(PlayingCard card)
+	public void AddCard(Card card)
 	{
 		_cards.Add(card);
 		OnCardAdded?.Invoke(card);
 	}
 
-	public void RemoveCard(PlayingCard card)
+	public void RemoveCard(Card card)
 	{
 		if (_cards.Remove(card))
 		{
@@ -37,9 +37,9 @@ public class CardPile
 		}
 	}
 
-	public List<PlayingCard> CloneCardList()
+	public List<Card> CloneCardList()
 	{
-		List<PlayingCard> cards = new List<PlayingCard>();
+		List<Card> cards = new List<Card>();
 		cards.AddRange(_cards);
 		return cards;
 	}

@@ -85,7 +85,7 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 		Mult *= factor;
 	}
 	
-	public void ScoreHand(List<PlayingCard> hand)
+	public void ScoreHand(List<Card> hand)
 	{
 		HandInfo handInfo = PokerHand.CheckHandRank(hand);
         

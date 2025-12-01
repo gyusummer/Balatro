@@ -8,32 +8,30 @@ using UnityEngine;
 // 3. Discard
 public class HandController : Singleton<HandController>
 {
-	private List<PlayingCard> _selectedCards;
+	private List<Card> _selectedCards;
 	public int SelectedCount => _selectedCards.Count;
 	public int SelectLimit = 5;
 	
 	private IConsumable _selectedConsumable;
-	
-	public Action<PlayingCard> OnDiscardCard;
 
 	private void Start()
 	{
-		_selectedCards = new List<PlayingCard>();
-		DeckSystem.Instance.Hand.OnCardAdded += OnCardAddedToHand;
+		_selectedCards = new List<Card>();
+		DeckManager.Instance.Hand.OnCardAdded += SubscribeCard;
 	}
 
-	private void OnCardAddedToHand(PlayingCard card)
+	private void SubscribeCard(Card card)
 	{
-		card.View.OnClick += OnClickCard;
+		card.View.OnClick += TrySelect;
 	}
 
-	private void SelectCard(PlayingCard card)
+	private void SelectCard(Card card)
 	{
 		_selectedCards.Add(card.View.Source);
 		card.View.OnSelected();
 	}
 
-	private void DeselectCard(PlayingCard card)
+	private void DeselectCard(Card card)
 	{
 		_selectedCards.Remove(card);
 		card.View.OnDeselected();
@@ -50,9 +48,9 @@ public class HandController : Singleton<HandController>
 		}
 	}
 	
-	private void OnClickCard(PlayingCardView cardView)
+	private void TrySelect(CardView cardView)
 	{
-		PlayingCard card = cardView.Source;
+		Card card = cardView.Source;
 		
 		if (_selectedCards.Contains(cardView.Source))
 		{
@@ -79,9 +77,9 @@ public class HandController : Singleton<HandController>
 		// Check Poker Hand
 		ScoreCalculator.Instance.ScoreHand(_selectedCards);
 		
-		foreach (PlayingCard card in _selectedCards)
+		foreach (Card card in _selectedCards)
 		{
-			DeckSystem.Instance.Hand.RemoveCard(card);
+			DeckManager.Instance.Hand.RemoveCard(card);
 		}
 		_selectedCards.Clear();
 	}
@@ -94,10 +92,9 @@ public class HandController : Singleton<HandController>
 			return;
 		}
 		
-		foreach (PlayingCard card in _selectedCards)
+		foreach (Card card in _selectedCards)
 		{
-			OnDiscardCard?.Invoke(card);
-			DeckSystem.Instance.Hand.RemoveCard(card);
+			DeckManager.Instance.Hand.RemoveCard(card);
 		}
 		_selectedCards.Clear();
 	}

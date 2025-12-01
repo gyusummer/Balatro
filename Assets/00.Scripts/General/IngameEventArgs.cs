@@ -34,9 +34,9 @@ public class HandPlayedEventArgs : IngameEventArgs
 
 public class CardScoredEventArgs : IngameEventArgs
 {
-	public PlayingCard Card;
+	public Card Card;
 
-	public CardScoredEventArgs(PlayingCard card)
+	public CardScoredEventArgs(Card card)
 	{
 		Card = card;
 	}

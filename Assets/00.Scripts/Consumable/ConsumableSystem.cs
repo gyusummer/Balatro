@@ -8,7 +8,7 @@ public interface IConsumable
 	public ConsumableCardView View { get; set; }
 	public string Name { get; }
 	public bool CheckCondition(int selectedCount);
-	public bool Use(List<PlayingCard> selectedCards);
+	public bool Use(List<Card> selectedCards);
 }
 
 public abstract class ConsumableCard : IConsumable
@@ -16,7 +16,7 @@ public abstract class ConsumableCard : IConsumable
 	public ConsumableCardView View { get; set; }
 	public string Name => GetType().ToString();
 	public abstract bool CheckCondition(int selectedCount);
-	public bool Use(List<PlayingCard> selectedCards)
+	public bool Use(List<Card> selectedCards)
 	{
 		if (CheckCondition(selectedCards.Count) == false)
 		{
@@ -27,7 +27,7 @@ public abstract class ConsumableCard : IConsumable
 		IngameEventManager.CallEvent(new ConsumableConsumedEventArgs(this));
 		return true;
 	}
-	protected abstract void Effect(List<PlayingCard> selectedCards);
+	protected abstract void Effect(List<Card> selectedCards);
 }
 
 public class ConsumableSystem : Singleton<ConsumableSystem>
@@ -50,10 +50,10 @@ public class ConsumableSystem : Singleton<ConsumableSystem>
 
 	public IConsumable CreateConsumable(IConsumable consumable)
 	{
-		return PrintCard(consumable).Source;
+		return Print(consumable).Source;
 	}
 	
-	public ConsumableCardView PrintCard(IConsumable consumable, Transform uiParent = null)
+	private ConsumableCardView Print(IConsumable consumable, Transform uiParent = null)
 	{
 		if (uiParent == null)
 		{

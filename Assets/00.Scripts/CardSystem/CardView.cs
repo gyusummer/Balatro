@@ -6,17 +6,17 @@ using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public class PlayingCardView : MonoBehaviour, IPointerClickHandler
+public class CardView : MonoBehaviour, IPointerClickHandler
 {
 	public ImageContainer CardPapers;
 	public ImageContainer CardPictures;
 	public ImageContainer CardSeals;
 	
-	public PlayingCard Source;
+	public Card Source;
 	public Image Paper;
 	public Image Picture;
 
-	public Action<PlayingCardView> OnClick;
+	public Action<CardView> OnClick;
 
 	private void OnValidate()
 	{
@@ -24,7 +24,7 @@ public class PlayingCardView : MonoBehaviour, IPointerClickHandler
 		UpdatePicture();
 	}
 
-	public void Init(PlayingCard card)
+	public void Init(Card card)
 	{
 		Source = card;
 		card.View = this;

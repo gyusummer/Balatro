@@ -16,9 +16,9 @@ public abstract class TarotCard : ConsumableCard
 		return false;
 	}
 
-	protected void TransformCardSuit(List<PlayingCard> cards, CardSuit suit)
+	protected void TransformCardSuit(List<Card> cards, CardSuit suit)
 	{
-		foreach (PlayingCard card in cards)
+		foreach (Card card in cards)
 		{
 			card.Suit = suit;
 		}
@@ -26,9 +26,9 @@ public abstract class TarotCard : ConsumableCard
 		HandController.Instance.DeselectAllCards();
 	}
 	
-	protected void EnhanceCard(List<PlayingCard> cards, CardEnhancement enhance)
+	protected void EnhanceCard(List<Card> cards, CardEnhancement enhance)
 	{
-		foreach (PlayingCard card in cards)
+		foreach (Card card in cards)
 		{
 			card.Enhancement = enhance;
 		}
@@ -55,7 +55,7 @@ public class Fool : TarotCard
 		return false;
 	}
 
-	protected override void Effect(List<PlayingCard> selectedCards)
+	protected override void Effect(List<Card> selectedCards)
 	{
 		// Add LastCard to player inventory
 		ConsumableSystem.Instance.CreateConsumable(ConsumableSystem.Instance.LastConsumableCard);
@@ -70,7 +70,7 @@ public class Magician : TarotCard
 		MaxTarget = 2;
 	}
 
-	protected override void Effect(List<PlayingCard> selectedCards)
+	protected override void Effect(List<Card> selectedCards)
 	{
 		EnhanceCard(selectedCards, CardEnhancement.Lucky);
 	}
@@ -80,7 +80,7 @@ public class Magician : TarotCard
 // (Must have room)
 public class HighPriestess : TarotCard
 {
-	protected override void Effect(List<PlayingCard> selectedCards)
+	protected override void Effect(List<Card> selectedCards)
 	{
 	}
 }
@@ -92,7 +92,7 @@ public class Empress : TarotCard
 	{
 		MaxTarget = 2;
 	}
-	protected override void Effect(List<PlayingCard> selectedCards)
+	protected override void Effect(List<Card> selectedCards)
 	{
 		EnhanceCard(selectedCards, CardEnhancement.Mult);
 	}
@@ -102,7 +102,7 @@ public class Empress : TarotCard
 // (Must have room)
 public class Emperor : TarotCard
 {
-	protected override void Effect(List<PlayingCard> selectedCards)
+	protected override void Effect(List<Card> selectedCards)
 	{
 	}
 }
@@ -114,7 +114,7 @@ public class Hierophant : TarotCard
 	{
 		MaxTarget = 2;
 	}
-	protected override void Effect(List<PlayingCard> selectedCards)
+	protected override void Effect(List<Card> selectedCards)
 	{
 		EnhanceCard(selectedCards, CardEnhancement.Bonus);
 	}
@@ -123,7 +123,7 @@ public class Hierophant : TarotCard
 // The Lovers	Enhances 1 selected card into a Wild Card
 public class Lovers : TarotCard
 {
-	protected override void Effect(List<PlayingCard> selectedCards)
+	protected override void Effect(List<Card> selectedCards)
 	{
 		EnhanceCard(selectedCards, CardEnhancement.Wild);
 	}
@@ -132,7 +132,7 @@ public class Lovers : TarotCard
 // The Chariot	Enhances 1 selected card into a Steel Card
 public class Chariot : TarotCard
 {
-	protected override void Effect(List<PlayingCard> selectedCards)
+	protected override void Effect(List<Card> selectedCards)
 	{
 		EnhanceCard(selectedCards, CardEnhancement.Steel);
 	}
@@ -141,7 +141,7 @@ public class Chariot : TarotCard
 // Justice	Enhances 1 selected card into a Glass Card
 public class Justice : TarotCard
 {
-	protected override void Effect(List<PlayingCard> selectedCards)
+	protected override void Effect(List<Card> selectedCards)
 	{
 		EnhanceCard(selectedCards, CardEnhancement.Glass);
 	}
@@ -151,7 +151,7 @@ public class Justice : TarotCard
 // (Max of $20)
 public class Hermit : TarotCard
 {
-	protected override void Effect(List<PlayingCard> selectedCards)
+	protected override void Effect(List<Card> selectedCards)
 	{
 	}
 }
@@ -159,7 +159,7 @@ public class Hermit : TarotCard
 // The Wheel of Fortune	1 in 4 chance to add Foil, Holographic, or Polychrome edition to a random Joker
 public class WheelOfFortune : TarotCard
 {
-	protected override void Effect(List<PlayingCard> selectedCards)
+	protected override void Effect(List<Card> selectedCards)
 	{
 	}
 }
@@ -171,9 +171,9 @@ public class Strength : TarotCard
 	{
 		MaxTarget = 2;
 	}
-	protected override void Effect(List<PlayingCard> selectedCards)
+	protected override void Effect(List<Card> selectedCards)
 	{
-		foreach (PlayingCard card in selectedCards)
+		foreach (Card card in selectedCards)
 		{
 			if (card.Rank == CardRank.Ace)
 			{
@@ -195,9 +195,9 @@ public class HangedMan : TarotCard
 	{
 		MaxTarget = 2;
 	}
-	protected override void Effect(List<PlayingCard> selectedCards)
+	protected override void Effect(List<Card> selectedCards)
 	{
-		foreach (PlayingCard card in selectedCards)
+		foreach (Card card in selectedCards)
 		{
 			card.Destroy();
 		}
@@ -208,7 +208,7 @@ public class HangedMan : TarotCard
 // (Drag to rearrange)
 public class Death : TarotCard
 {
-	protected override void Effect(List<PlayingCard> selectedCards)
+	protected override void Effect(List<Card> selectedCards)
 	{
 	}
 }
@@ -217,14 +217,14 @@ public class Death : TarotCard
 // (Max of $50)
 public class Temperance : TarotCard
 {
-	protected override void Effect(List<PlayingCard> selectedCards)
+	protected override void Effect(List<Card> selectedCards)
 	{
 	}
 }
 // The Devil	Enhances 1 selected card into a Gold Card
 public class Devil : TarotCard
 {
-	protected override void Effect(List<PlayingCard> selectedCards)
+	protected override void Effect(List<Card> selectedCards)
 	{
 		EnhanceCard(selectedCards, CardEnhancement.Gold);
 	}
@@ -232,7 +232,7 @@ public class Devil : TarotCard
 // The Tower	Enhances 1 selected card into a Stone Card
 public class Tower : TarotCard
 {
-	protected override void Effect(List<PlayingCard> selectedCards)
+	protected override void Effect(List<Card> selectedCards)
 	{
 		EnhanceCard(selectedCards, CardEnhancement.Stone);
 	}
@@ -245,7 +245,7 @@ public class Star : TarotCard
 	{
 		MaxTarget = 3;
 	}
-	protected override void Effect(List<PlayingCard> selectedCards)
+	protected override void Effect(List<Card> selectedCards)
 	{
 		TransformCardSuit(selectedCards, CardSuit.Diamond);
 	}
@@ -258,7 +258,7 @@ public class Moon : TarotCard
 	{
 		MaxTarget = 3;
 	}
-	protected override void Effect(List<PlayingCard> selectedCards)
+	protected override void Effect(List<Card> selectedCards)
 	{
 		TransformCardSuit(selectedCards, CardSuit.Club);
 	}
@@ -271,7 +271,7 @@ public class Sun : TarotCard
 	{
 		MaxTarget = 3;
 	}
-	protected override void Effect(List<PlayingCard> selectedCards)
+	protected override void Effect(List<Card> selectedCards)
 	{
 		TransformCardSuit(selectedCards, CardSuit.Heart);
 	}
@@ -281,7 +281,7 @@ public class Sun : TarotCard
 // 	(Must have room)
 public class Judgement : TarotCard
 {
-	protected override void Effect(List<PlayingCard> selectedCards)
+	protected override void Effect(List<Card> selectedCards)
 	{
 	}
 }
@@ -293,7 +293,7 @@ public class World : TarotCard
 	{
 		MaxTarget = 3;
 	}
-	protected override void Effect(List<PlayingCard> selectedCards)
+	protected override void Effect(List<Card> selectedCards)
 	{
 		TransformCardSuit(selectedCards, CardSuit.Spade);
 	}
