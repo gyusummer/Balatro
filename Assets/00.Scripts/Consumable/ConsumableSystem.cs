@@ -10,7 +10,7 @@ public abstract class ConsumableCard
 	public abstract bool CheckCondition(int selectedCount);
 	public bool Use(List<Card> selectedCards)
 	{
-		Debug.Log("ConsumableCard Use");
+		Debug.Log($"Consumable Use : {this.GetType().Name}");
 		if (CheckCondition(selectedCards.Count) == false)
 		{
 			return false;
@@ -25,9 +25,6 @@ public abstract class ConsumableCard
 
 public class ConsumableSystem : Singleton<ConsumableSystem>
 {
-	[SerializeField] private ConsumableCardView viewPrefab;
-	[SerializeField] private Transform consumableHolder;
-	
 	public ConsumableCard LastConsumableCard { get; private set; }
 	
 	private void Start()
@@ -40,20 +37,19 @@ public class ConsumableSystem : Singleton<ConsumableSystem>
 			}
 		});
 	}
-
-	public ConsumableCard CreateConsumable(ConsumableCard consumable)
-	{
-		return Print(consumable).Source;
-	}
 	
-	private ConsumableCardView Print(ConsumableCard consumable, Transform uiParent = null)
+	public void Print(ConsumableCard consumable, Transform uiParent = null)
 	{
-		if (uiParent == null)
+		switch (consumable)
 		{
-			uiParent = consumableHolder;
+			case TarotCard:
+				TarotFactory.Instance.Print(consumable);
+				break;
+			case PlanetCard:
+				PlanetFactory.Instance.Print(consumable);
+				break;
+			default:
+				break;
 		}
-		ConsumableCardView consumableView = Instantiate(viewPrefab, uiParent);
-		consumableView.Init(consumable);
-		return consumableView;
 	}
 }

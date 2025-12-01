@@ -44,11 +44,11 @@ public abstract class TarotCard : ConsumableCard
 // The Fool excluded
 public class Fool : TarotCard
 {
+	private ConsumableCard lastCard => ConsumableSystem.Instance.LastConsumableCard;
 	public override bool CheckCondition(int selectedCount)
 	{
 		Debug.Log("this is Fool CheckCondition");
-		ConsumableCard last = ConsumableSystem.Instance.LastConsumableCard;
-		if (last is not Fool and not null)
+		if (lastCard is not Fool and not null)
 		{
 			return true;
 		}
@@ -60,7 +60,7 @@ public class Fool : TarotCard
 	protected override void Effect(List<Card> selectedCards)
 	{
 		// Add LastCard to player inventory
-		ConsumableSystem.Instance.CreateConsumable(ConsumableSystem.Instance.LastConsumableCard);
+		ConsumableSystem.Instance.Print(lastCard);
 	}
 }
 

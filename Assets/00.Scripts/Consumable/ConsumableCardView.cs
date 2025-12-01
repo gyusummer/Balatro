@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public abstract class ConsumableCardView : View<ConsumableCard>, IPointerClickHandler
 {
-	public ConsumableCard Source = new Fool();
+	public ConsumableCard Source;
 	public ImageContainer ImageSet;
 	public Image Paper;
 
@@ -27,6 +27,11 @@ public abstract class ConsumableCardView : View<ConsumableCard>, IPointerClickHa
 
 	public void UpdatePaper()
 	{
+		if (Source == null)
+		{
+			Debug.Log($"{gameObject.name} Source is null");
+			return;
+		}
 		Paper.sprite = ImageSet.GetImageByNameOrFirst(Source.Name);
 	}
 	
