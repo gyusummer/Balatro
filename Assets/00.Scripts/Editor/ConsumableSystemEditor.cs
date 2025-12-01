@@ -29,13 +29,13 @@ public class ConsumableSystemEditor : Editor
 			// 버튼 클릭 시, 타겟 스크립트의 함수를 호출합니다.
 			// Undo.RecordObject(script.gameObject, "Function Called"); // (옵션: 실행 취소 기록)
             
-			consumableSystem.CreateConsumable(TarotFactory.CreateCard(TarotIndex));
+			TarotFactory.Instance.Create(TarotIndex);
 		}
 		
 		PlanetIndex = EditorGUILayout.IntField("행성 번호:", PlanetIndex);
 		if (GUILayout.Button("Create Planet"))
 		{
-			consumableSystem.CreateConsumable(PlanetFactory.CreateCard(PlanetIndex));
+			PlanetFactory.Instance.Create(PlanetIndex);
 		}
 	}
 }

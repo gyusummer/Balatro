@@ -9,6 +9,7 @@ public abstract class TarotCard : ConsumableCard
 
 	public override bool CheckCondition(int selectedCount)
 	{
+		Debug.Log("this is Tarot CheckCondition");
 		if (selectedCount != 0 && selectedCount <= MaxTarget)
 		{
 			return true;
@@ -45,7 +46,8 @@ public class Fool : TarotCard
 {
 	public override bool CheckCondition(int selectedCount)
 	{
-		IConsumable last = ConsumableSystem.Instance.LastConsumableCard;
+		Debug.Log("this is Fool CheckCondition");
+		ConsumableCard last = ConsumableSystem.Instance.LastConsumableCard;
 		if (last is not Fool and not null)
 		{
 			return true;

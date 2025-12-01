@@ -9,9 +9,9 @@ public abstract class IngameEventArgs : System.EventArgs
 
 public class ConsumableConsumedEventArgs : IngameEventArgs
 {
-	public IConsumable Consumable;
+	public ConsumableCard Consumable;
 
-	public ConsumableConsumedEventArgs(IConsumable consumable)
+	public ConsumableConsumedEventArgs(ConsumableCard consumable)
 	{
 		Consumable = consumable;
 	}

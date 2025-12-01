@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class JokerView : MonoBehaviour
+public class JokerView : View<Joker>
 {
     public Joker Source;
     public ImageContainer JokerImageSet;
@@ -17,7 +17,7 @@ public class JokerView : MonoBehaviour
         UpdatePaper();
     }
 
-    public void Init(Joker joker)
+    public override void Init(Joker joker)
     {
         Source = joker;
         joker.View = this;

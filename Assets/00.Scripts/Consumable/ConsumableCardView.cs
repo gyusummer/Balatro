@@ -5,11 +5,10 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ConsumableCardView : MonoBehaviour, IPointerClickHandler
+public abstract class ConsumableCardView : View<ConsumableCard>, IPointerClickHandler
 {
-	public IConsumable Source = new Fool();
-	public ImageContainer TarotImageSet;
-	public ImageContainer PlanetImageSet;
+	public ConsumableCard Source = new Fool();
+	public ImageContainer ImageSet;
 	public Image Paper;
 
 	public Action<ConsumableCardView> OnClick;
@@ -19,7 +18,7 @@ public class ConsumableCardView : MonoBehaviour, IPointerClickHandler
 		UpdatePaper();
 	}
 
-	public void Init(IConsumable consumable)
+	public override void Init(ConsumableCard consumable)
 	{
 		Source = consumable;
 		consumable.View = this;
@@ -28,15 +27,7 @@ public class ConsumableCardView : MonoBehaviour, IPointerClickHandler
 
 	public void UpdatePaper()
 	{
-		switch (Source)
-		{
-			case TarotCard:
-				Paper.sprite = TarotImageSet.GetImageByNameOrFirst(Source.Name);
-				break;
-			case PlanetCard:
-				Paper.sprite = PlanetImageSet.GetImageByNameOrFirst(Source.Name);
-				break;
-		}
+		Paper.sprite = ImageSet.GetImageByNameOrFirst(Source.Name);
 	}
 	
 	public void OnSelected()
