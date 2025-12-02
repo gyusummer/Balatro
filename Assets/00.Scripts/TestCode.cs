@@ -32,6 +32,11 @@ public class TestCode : MonoBehaviour
             HandController.Instance.UseConsumable();
         }
 
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            Shop.Instance.FillGoods();
+        }
+        
         if (Input.GetKeyDown(KeyCode.J))
         {
             JokerFactory.Instance.CreateRandom().Register();

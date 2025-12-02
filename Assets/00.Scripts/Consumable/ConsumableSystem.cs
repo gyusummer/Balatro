@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public abstract class ConsumableCard
 {
@@ -36,6 +37,19 @@ public class ConsumableSystem : Singleton<ConsumableSystem>
 				LastConsumableCard = args.Consumable;
 			}
 		});
+	}
+
+	public ConsumableCard CreateRandom(Transform uiParent = null)
+	{
+		int n = Random.Range(0, 2);
+		if (n == 0)
+		{
+			return TarotFactory.Instance.CreateRandom(uiParent);
+		}
+		else
+		{
+			return PlanetFactory.Instance.CreateRandom(uiParent);
+		}
 	}
 	
 	public void Print(ConsumableCard consumable, Transform uiParent = null)

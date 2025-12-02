@@ -13,6 +13,7 @@ public abstract class Joker
     public abstract void Unregister();
 }
 
+[System.Serializable]
 public class Joker<TEventArgs> : Joker where TEventArgs : IngameEventArgs
 {
     private Predicate<TEventArgs> _condition;

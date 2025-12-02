@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public class CardView : MonoBehaviour, IPointerClickHandler
+public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
 	public ImageContainer CardPapers;
 	public ImageContainer CardPictures;
@@ -78,6 +78,31 @@ public class CardView : MonoBehaviour, IPointerClickHandler
 
 	public void OnPointerClick(PointerEventData eventData)
 	{
+		if (_isDragging) return;
 		OnClick?.Invoke(this);
+	}
+
+	private void LateUpdate()
+	{
+		if (_isDragging)
+		{
+			transform.position = Input.mousePosition;
+			Debug.Log(Input.mousePosition);
+		}
+	}
+
+	private bool _isDragging = false;
+	public void OnBeginDrag(PointerEventData eventData)
+	{
+		_isDragging = true;
+	}
+
+	public void OnEndDrag(PointerEventData eventData)
+	{
+		_isDragging = false;
+	}
+
+	public void OnDrag(PointerEventData eventData)
+	{
 	}
 }

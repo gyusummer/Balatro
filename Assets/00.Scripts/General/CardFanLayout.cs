@@ -45,7 +45,7 @@ public class CardFanLayout : MonoBehaviour
         handCards.Remove(childRect);
     }
 
-    void LateUpdate()
+    void Update()
     {
         // 에디터에서 변경사항을 실시간으로 반영
 #if UNITY_EDITOR

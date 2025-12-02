@@ -10,21 +10,21 @@ public abstract class View<T> : MonoBehaviour
 public abstract class Factory<T, TView> : Singleton<Factory<T, TView>> where TView : View<T>
 {
     [SerializeField] private TView prefab;
-    [SerializeField] private Transform holder;
+    [SerializeField] private Transform defaultHolder;
 	
     protected static Dictionary<int, Func<T>> s_constructors { get; set; }
     protected static readonly System.Random rng = new System.Random();
 	
-    public T CreateRandom()
+    public T CreateRandom(Transform uiParent = null)
     {
         int randomIndex = rng.Next(s_constructors.Keys.Count);
-        return Create(randomIndex);
+        return Create(randomIndex, uiParent);
     }
 
-    public T Create(int index)
+    public T Create(int index, Transform uiParent = null)
     {
         T product = s_constructors[index].Invoke();
-        Print(product);
+        Print(product, uiParent);
         return product;
     }
 	
@@ -32,7 +32,7 @@ public abstract class Factory<T, TView> : Singleton<Factory<T, TView>> where TVi
     {
         if (uiParent == null)
         {
-            uiParent = holder;
+            uiParent = defaultHolder;
         }
         TView view = Instantiate(prefab, uiParent);
         view.Init(source);
