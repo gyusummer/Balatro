@@ -12,18 +12,23 @@ public class Inventory : Singleton<Inventory>
 
 	public void Start()
 	{
-		Jokers.OnAdded += joker => joker.Register();
+		Jokers.OnAdded += RegisterJoker;
 		Jokers.OnRemoved += joker => joker.Unregister();
+		Jokers.OnRemoved += joker => Destroy(joker.View.gameObject);
 	}
 
-	private void AddJoker(Joker joker)
+	private void RegisterJoker(Joker joker)
 	{
 		joker.Register();
-		joker.View.transform.SetParent(_jokerHolder);
-	}
-
-	private void AddConsumable(ConsumableCard consumable)
-	{
-		consumable.View.transform.SetParent(_jokerHolder);
+		if (joker.View == null)
+		{
+			Debug.Log($"{joker.Name}'s View is null");
+			JokerFactory.Instance.Print(joker);
+		}
+		else
+		{
+			Debug.Log($"{joker.Name}'s View is not null");
+			joker.View.transform.SetParent(_jokerHolder);
+		}
 	}
 }

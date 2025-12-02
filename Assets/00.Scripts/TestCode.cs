@@ -39,7 +39,8 @@ public class TestCode : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.J))
         {
-            JokerFactory.Instance.CreateRandom().Register();
+            var joker = JokerFactory.Instance.CreateRandom(true);
+            Inventory.Instance.Jokers.Add(joker);
         }
     }
 }

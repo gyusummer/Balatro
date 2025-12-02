@@ -204,7 +204,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 8665330842564692280, guid: 3ee6874c7bf01af4db9aad3784f5c089, type: 3}
-  defaultHolder: {fileID: 0}
+  defaultHolder: {fileID: 1327535988}
 --- !u!114 &127536076
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -218,7 +218,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 8101490952843245071, guid: 1577c0086470ae342af471eb219f0be7, type: 3}
-  defaultHolder: {fileID: 0}
+  defaultHolder: {fileID: 1327535988}
 --- !u!114 &127536077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -232,7 +232,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 2705346766142191328, guid: c2e72a94e9195ad4397eb72546987318, type: 3}
-  defaultHolder: {fileID: 0}
+  defaultHolder: {fileID: 497021399}
 --- !u!1 &199211462
 GameObject:
   m_ObjectHideFlags: 0
@@ -320,7 +320,6 @@ GameObject:
   - component: {fileID: 205970346}
   - component: {fileID: 205970349}
   - component: {fileID: 205970348}
-  - component: {fileID: 205970347}
   m_Layer: 5
   m_Name: Shop
   m_TagString: Untagged
@@ -349,26 +348,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1200, y: 800}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &205970347
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 205970345}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01315e7fa2f049940adfabbd4744c17f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UpperList: {fileID: 1015307605}
-  LowerList: {fileID: 661905896}
-  _jokers:
-    Name: 
-    Max: 3
-  _consumes:
-    Name: 
-    Max: 3
 --- !u!114 &205970348
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2276,6 +2255,8 @@ GameObject:
   - component: {fileID: 2118569227}
   - component: {fileID: 2118569229}
   - component: {fileID: 2118569230}
+  - component: {fileID: 2118569232}
+  - component: {fileID: 2118569231}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -2360,6 +2341,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecdcfb2610675894dabe9ebb8b94f2a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2118569231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2118569225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8134a030ed6969b4c80518978f780e55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _jokerHolder: {fileID: 497021399}
+  _consumableHolder: {fileID: 1327535988}
+  Jokers:
+    Name: 
+    Max: 5
+  Consumables:
+    Name: 
+    Max: 2
+--- !u!114 &2118569232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2118569225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01315e7fa2f049940adfabbd4744c17f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UpperList: {fileID: 1015307605}
+  LowerList: {fileID: 661905896}
+  Jokers:
+    Name: 
+    Max: 3
+  Consumes:
+    Name: 
+    Max: 3
 --- !u!1 &2142859487
 GameObject:
   m_ObjectHideFlags: 0

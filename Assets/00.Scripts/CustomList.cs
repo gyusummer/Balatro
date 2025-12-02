@@ -24,16 +24,16 @@ public class CustomList<T>
         Name = name;
         Max = max;
     }
+    
+    public bool Contains(T item) => _list.Contains(item);
 	
-    public T GetFirst()
-    {
-        return _list[0];
-    }
+    public T First() => _list[0];
 	
     public void Add(T element)
     {
         if (Count >= Max)
         {
+            Debug.Log("Exceeded maximum");
             return;
         }
         _list.Add(element);
@@ -45,6 +45,16 @@ public class CustomList<T>
         if (_list.Remove(element))
         {
             OnRemoved?.Invoke(element);
+        }
+    }
+
+    public void ClearWith(Action<T> callback)
+    {
+        for (int i = Count - 1; i >= 0; i--)
+        {
+            T element = _list[i];
+            Remove(element);
+            callback.Invoke(element);
         }
     }
 

@@ -39,16 +39,16 @@ public class ConsumableSystem : Singleton<ConsumableSystem>
 		});
 	}
 
-	public ConsumableCard CreateRandom(Transform uiParent = null)
+	public ConsumableCard CreateRandom(bool print, Transform uiParent = null)
 	{
 		int n = Random.Range(0, 2);
 		if (n == 0)
 		{
-			return TarotFactory.Instance.CreateRandom(uiParent);
+			return TarotFactory.Instance.CreateRandom(print, uiParent);
 		}
 		else
 		{
-			return PlanetFactory.Instance.CreateRandom(uiParent);
+			return PlanetFactory.Instance.CreateRandom(print, uiParent);
 		}
 	}
 	

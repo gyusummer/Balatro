@@ -15,16 +15,19 @@ public abstract class Factory<T, TView> : Singleton<Factory<T, TView>> where TVi
     protected static Dictionary<int, Func<T>> s_constructors { get; set; }
     protected static readonly System.Random rng = new System.Random();
 	
-    public T CreateRandom(Transform uiParent = null)
+    public T CreateRandom(bool print, Transform uiParent = null)
     {
         int randomIndex = rng.Next(s_constructors.Keys.Count);
-        return Create(randomIndex, uiParent);
+        return Create(randomIndex, print, uiParent);
     }
 
-    public T Create(int index, Transform uiParent = null)
+    public T Create(int index, bool print, Transform uiParent = null)
     {
         T product = s_constructors[index].Invoke();
-        Print(product, uiParent);
+        if (print)
+        {
+            Print(product, uiParent);
+        }
         return product;
     }
 	

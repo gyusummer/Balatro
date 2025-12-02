@@ -1,40 +1,39 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 
 public interface ITradeable
 {
+	public static ITradeable Selected;
 	public int Price { get; set; }
 	public bool Buy();
 	public bool Sell();
 }
+
 public class Shop : Singleton<Shop>
 {
 	[SerializeField] private Transform UpperList;
 	[SerializeField] private Transform LowerList;
 	
-	[SerializeField] private CustomList<Joker> _jokers = new CustomList<Joker>(3);
-	[SerializeField] private CustomList<ConsumableCard> _consumes = new CustomList<ConsumableCard>(3);
-
-	private void Start()
-	{
-		_jokers.OnRemoved += joker => Destroy(joker.View.gameObject);
-		_consumes.OnRemoved += consume => Destroy(consume.View.gameObject);
-	}
+	public CustomList<Joker> Jokers = new CustomList<Joker>(3);
+	public CustomList<ConsumableCard> Consumes = new CustomList<ConsumableCard>(3);
 
 	public void FillGoods()
 	{
-		_jokers.Clear();
-		for (int i = 0; i < _jokers.Max; i++)
+		Jokers.ClearWith(joker => Destroy(joker.View.gameObject));
+		for (int i = 0; i < Jokers.Max; i++)
 		{
-			Joker joker = JokerFactory.Instance.CreateRandom(UpperList);
-			_jokers.Add(joker);
+			Joker joker = JokerFactory.Instance.CreateRandom(true, UpperList);
+			Jokers.Add(joker);
 		}
-		_consumes.Clear();
-		for (int i = 0; i < _consumes.Max; i++)
+		
+		Consumes.ClearWith(consume => Destroy(consume.View.gameObject));
+		for (int i = 0; i < Consumes.Max; i++)
 		{
-			ConsumableCard consume = ConsumableSystem.Instance.CreateRandom(LowerList);
-			_consumes.Add(consume);
+			ConsumableCard consume = ConsumableSystem.Instance.CreateRandom(true, LowerList);
+			Consumes.Add(consume);
 		}
 	}
 }
