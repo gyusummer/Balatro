@@ -12,12 +12,13 @@ public class Inventory : Singleton<Inventory>
 
 	public void Start()
 	{
-		Jokers.OnAdded += RegisterJoker;
+		Jokers.OnAdded += ProcessView;
 		Jokers.OnRemoved += joker => joker.Unregister();
 		Jokers.OnRemoved += joker => Destroy(joker.View.gameObject);
+		Consumables.OnAdded += ProcessView;
 	}
 
-	private void RegisterJoker(Joker joker)
+	private void ProcessView(Joker joker)
 	{
 		joker.Register();
 		if (joker.View == null)
@@ -29,6 +30,20 @@ public class Inventory : Singleton<Inventory>
 		{
 			Debug.Log($"{joker.Name}'s View is not null");
 			joker.View.transform.SetParent(_jokerHolder);
+		}
+	}
+	
+	private void ProcessView(ConsumableCard consumable)
+	{
+		if (consumable.View == null)
+		{
+			Debug.Log($"{consumable.Name}'s View is null");
+			ConsumableSystem.Instance.Print(consumable);
+		}
+		else
+		{
+			Debug.Log($"{consumable.Name}'s View is not null");
+			consumable.View.transform.SetParent(_consumableHolder);
 		}
 	}
 }

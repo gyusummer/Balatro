@@ -10,9 +10,9 @@ public abstract class Joker : ITradeable
 {
     public JokerView View;
     public string Name;
+    public int Price { get; set; }
     public abstract void Register();
     public abstract void Unregister();
-    public int Price { get; set; }
     public bool Buy()
     {
         if (Shop.Instance.Jokers.Contains(this))

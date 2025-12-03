@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public abstract class ConsumableCard
+public abstract class ConsumableCard : ITradeable
 {
 	public ConsumableCardView View { get; set; }
 	public string Name => GetType().ToString();
+	public int Price { get; set; }
 	public abstract bool CheckCondition(int selectedCount);
 	public bool Use(List<Card> selectedCards)
 	{
@@ -19,9 +20,32 @@ public abstract class ConsumableCard
 
 		Effect(selectedCards);
 		IngameEventManager.CallEvent(new ConsumableConsumedEventArgs(this));
+		UnityEngine.Object.Destroy(View.gameObject);
 		return true;
 	}
 	protected abstract void Effect(List<Card> selectedCards);
+	public bool Buy()
+	{
+		if (Shop.Instance.Consumables.Contains(this))
+		{
+			Shop.Instance.Consumables.Remove(this);
+			Inventory.Instance.Consumables.Add(this);
+			Debug.Log($"{this.Name} Buy");
+			return true;
+		}
+		return false;
+	}
+
+	public bool Sell()
+	{
+		if (Inventory.Instance.Consumables.Contains(this))
+		{
+			Inventory.Instance.Consumables.Remove(this);
+			Debug.Log($"{this.Name} Sell");
+			return true;
+		}
+		return false;
+	}
 }
 
 public class ConsumableSystem : Singleton<ConsumableSystem>

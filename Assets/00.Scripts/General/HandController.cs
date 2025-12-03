@@ -102,7 +102,7 @@ public class HandController : Singleton<HandController>
 	public void SelectConsumable(ConsumableCard consumable)
 	{
 		Debug.Log(_selectedConsumable);
-		_selectedConsumable?.View.OnDeselected();
+		_selectedConsumable?.View?.OnDeselected();
 		_selectedConsumable = consumable;
 		Debug.Log(_selectedConsumable);
 		_selectedConsumable.View.OnSelected();
@@ -112,7 +112,6 @@ public class HandController : Singleton<HandController>
 	{
 		if (_selectedConsumable.Use(_selectedCards))
 		{
-			Destroy(_selectedConsumable.View.gameObject);
 			_selectedConsumable = null;
 		}
 	}

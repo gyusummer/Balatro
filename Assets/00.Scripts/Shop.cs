@@ -18,7 +18,7 @@ public class Shop : Singleton<Shop>
 	[SerializeField] private Transform LowerList;
 	
 	public CustomList<Joker> Jokers = new CustomList<Joker>(3);
-	public CustomList<ConsumableCard> Consumes = new CustomList<ConsumableCard>(3);
+	public CustomList<ConsumableCard> Consumables = new CustomList<ConsumableCard>(3);
 
 	public void FillGoods()
 	{
@@ -29,11 +29,11 @@ public class Shop : Singleton<Shop>
 			Jokers.Add(joker);
 		}
 		
-		Consumes.ClearWith(consume => Destroy(consume.View.gameObject));
-		for (int i = 0; i < Consumes.Max; i++)
+		Consumables.ClearWith(consume => Destroy(consume.View.gameObject));
+		for (int i = 0; i < Consumables.Max; i++)
 		{
 			ConsumableCard consume = ConsumableSystem.Instance.CreateRandom(true, LowerList);
-			Consumes.Add(consume);
+			Consumables.Add(consume);
 		}
 	}
 }
