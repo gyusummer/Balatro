@@ -24,12 +24,20 @@ public class BlindSelected : IngameEventArgs
 
 public class CardDiscardedEventArgs : IngameEventArgs
 {
-	
+	public Card Card;
+	public CardDiscardedEventArgs(Card card)
+	{
+		Card = card;
+	}
 }
 
 public class HandPlayedEventArgs : IngameEventArgs
 {
-	
+	public HandInfo Info;
+	public HandPlayedEventArgs(HandInfo handInfo)
+	{
+		Info = handInfo;
+	}
 }
 
 public class CardScoredEventArgs : IngameEventArgs

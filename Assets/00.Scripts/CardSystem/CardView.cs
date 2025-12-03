@@ -72,7 +72,10 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 	
 	private void OnDestroy()
 	{
-		Source.View = null;
+		if (Source.View == this)
+		{
+			Source.View = null;
+		}
 		Source = null;
 	}
 

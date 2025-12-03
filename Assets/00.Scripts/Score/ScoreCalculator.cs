@@ -88,6 +88,8 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 	public void ScoreHand(List<Card> hand)
 	{
 		HandInfo handInfo = PokerHand.CheckHandRank(hand);
+		IngameEventManager.CallEvent(new HandPlayedEventArgs(handInfo));
+		Debug.Log($"<color=orange>{handInfo.Rank}</color>");
         
 		Chip = s_baseScore[handInfo.Rank].Chip;
 		Mult = s_baseScore[handInfo.Rank].Mult;

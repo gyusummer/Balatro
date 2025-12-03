@@ -30,11 +30,11 @@ public class DeckManager : Singleton<DeckManager>
 			}
 		}
 		
-		Deck = new CardPile(defaultDeck, nameof(defaultDeck));
-		Hand = new CardPile(new List<Card>(), nameof(Hand));
+		Deck = new CardPile(defaultDeck, "default");
+		Hand = new CardPile(new List<Card>(), "hand");
 		
-		Hand.OnCardAdded += PrintHandCard;
-		Hand.OnCardRemoved += DestroyHandCard;
+		Hand.OnAdded += PrintHandCard;
+		Hand.OnRemoved += DestroyHandCard;
 	}
 
 	private void PrintHandCard(Card card)
@@ -44,6 +44,7 @@ public class DeckManager : Singleton<DeckManager>
 	
 	private void DestroyHandCard(Card card)
 	{
+		Debug.Log($"remove {card} from hand");
 		Destroy(card.View.gameObject);
 		Debug.Log($"{card} removed from hand");
 	}
@@ -51,9 +52,8 @@ public class DeckManager : Singleton<DeckManager>
 	public void InitDrawPile()
 	{
 		Debug.Log("InitDrawPile");
-		var cardList = Deck.CloneCardList();
-		RandomUtil.GetShuffled(cardList);
-		DrawPile = new CardPile(cardList, nameof(DrawPile));
+		var cardList = Deck.CloneList();
+		DrawPile = new CardPile(RandomUtil.GetShuffled(cardList), "DrawPile");
 	}
 
 	public void Draw(int n)
@@ -76,9 +76,9 @@ public class DeckManager : Singleton<DeckManager>
 			Debug.Log("No Card in Draw Pile");
 			return;
 		}
-		Card c = DrawPile.GetFirstCard();
-		DrawPile.RemoveCard(c);
-		Hand.AddCard(c);
+		Card c = DrawPile.First();
+		DrawPile.Remove(c);
+		Hand.Add(c);
 	}
 
 	public CardView PrintCard(Card card, Transform uiParent = null)

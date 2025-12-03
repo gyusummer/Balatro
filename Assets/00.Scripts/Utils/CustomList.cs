@@ -8,11 +8,11 @@ public class CustomList<T>
     public Action<T> OnAdded;
     public Action<T> OnRemoved;
     public string Name;
-    [SerializeField] private List<T> _list;
+    [SerializeField] protected List<T> _list;
     public int Count => _list.Count;
     public int Max;
 
-    public CustomList(int max = int.MaxValue)
+    public CustomList(int max = 256)
     {
         _list = new List<T>();
         Name = "";

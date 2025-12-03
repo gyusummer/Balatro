@@ -204,7 +204,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 8665330842564692280, guid: 3ee6874c7bf01af4db9aad3784f5c089, type: 3}
-  defaultHolder: {fileID: 1327535988}
+  defaultHolder: {fileID: 0}
 --- !u!114 &127536076
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -218,7 +218,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 8101490952843245071, guid: 1577c0086470ae342af471eb219f0be7, type: 3}
-  defaultHolder: {fileID: 1327535988}
+  defaultHolder: {fileID: 0}
 --- !u!114 &127536077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -232,7 +232,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 2705346766142191328, guid: c2e72a94e9195ad4397eb72546987318, type: 3}
-  defaultHolder: {fileID: 497021399}
+  defaultHolder: {fileID: 0}
 --- !u!1 &199211462
 GameObject:
   m_ObjectHideFlags: 0
@@ -326,7 +326,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &205970346
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2257,6 +2257,8 @@ GameObject:
   - component: {fileID: 2118569230}
   - component: {fileID: 2118569232}
   - component: {fileID: 2118569231}
+  - component: {fileID: 2118569234}
+  - component: {fileID: 2118569233}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -2378,9 +2380,37 @@ MonoBehaviour:
   Jokers:
     Name: 
     Max: 3
-  Consumes:
+  Consumables:
     Name: 
     Max: 3
+--- !u!114 &2118569233
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2118569225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c897d86d236568a409ee89166d40db2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2118569234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2118569225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6780af9f89fc3d47b4d608f603763f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BlindGoal: 450
+  HandsLeft: 4
+  DiscardsLeft: 3
+  HandCapacity: 8
 --- !u!1 &2142859487
 GameObject:
   m_ObjectHideFlags: 0

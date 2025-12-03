@@ -29,8 +29,8 @@ public class CardFanLayout : MonoBehaviour
 
     private void Start()
     {
-        DeckManager.Instance.Hand.OnCardAdded += OnCardAddedFromHand;
-        DeckManager.Instance.Hand.OnCardRemoved += OnCardRemovedFromHand;
+        DeckManager.Instance.Hand.OnAdded += OnCardAddedFromHand;
+        DeckManager.Instance.Hand.OnRemoved += OnCardRemovedFromHand;
     }
 
     private void OnCardAddedFromHand(Card card)

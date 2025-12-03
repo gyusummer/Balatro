@@ -135,8 +135,8 @@ public class Card
 	public void Destroy()
 	{
 		Debug.Log($"{ToString()} Destroy");
-		DeckManager.Instance.Deck.RemoveCard(this);
-		DeckManager.Instance.Hand.RemoveCard(this);
+		DeckManager.Instance.Deck.Remove(this);
+		DeckManager.Instance.Hand.Remove(this);
 	}
 
 	public override string ToString()

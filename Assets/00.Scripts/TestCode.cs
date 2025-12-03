@@ -8,8 +8,8 @@ public class TestCode : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Keypad0))
         {
-            DeckManager.Instance.InitDrawPile();
-            DeckManager.Instance.Draw(8);
+            BlindManager.Instance.InitBlind();
+            BlindManager.Instance.StartBlind();
         }
         
         if (Input.GetKeyDown(KeyCode.Keypad1))

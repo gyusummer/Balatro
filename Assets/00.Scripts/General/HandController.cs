@@ -17,7 +17,7 @@ public class HandController : Singleton<HandController>
 	private void Start()
 	{
 		_selectedCards = new List<Card>();
-		DeckManager.Instance.Hand.OnCardAdded += SubscribeCard;
+		DeckManager.Instance.Hand.OnAdded += SubscribeCard;
 	}
 
 	private void SubscribeCard(Card card)
@@ -66,39 +66,6 @@ public class HandController : Singleton<HandController>
 		}
 	}
 
-	public void PlayHand()
-	{
-		if (_selectedCards.Count <= 0)
-		{
-			Debug.Log("!No Cards Selected!");
-			return;
-		}
-		
-		// Check Poker Hand
-		ScoreCalculator.Instance.ScoreHand(_selectedCards);
-		
-		foreach (Card card in _selectedCards)
-		{
-			DeckManager.Instance.Hand.RemoveCard(card);
-		}
-		_selectedCards.Clear();
-	}
-
-	public void DiscardHand()
-	{
-		if (_selectedCards.Count <= 0)
-		{
-			Debug.Log("!No Cards Selected!");
-			return;
-		}
-		
-		foreach (Card card in _selectedCards)
-		{
-			DeckManager.Instance.Hand.RemoveCard(card);
-		}
-		_selectedCards.Clear();
-	}
-
 	public void SelectConsumable(ConsumableCard consumable)
 	{
 		Debug.Log(_selectedConsumable);
@@ -113,6 +80,22 @@ public class HandController : Singleton<HandController>
 		if (_selectedConsumable.Use(_selectedCards))
 		{
 			_selectedConsumable = null;
+		}
+	}
+
+	public void PlayHand()
+	{
+		if (_selectedCards.Count > 0)
+		{
+			BlindManager.Instance.PlayHand(_selectedCards);
+		}
+	}
+	
+	public void DiscardHand()
+	{
+		if (_selectedCards.Count > 0)
+		{
+			BlindManager.Instance.DiscardHand(_selectedCards);
 		}
 	}
 
