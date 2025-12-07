@@ -8,41 +8,35 @@ public class CardFanLayout : MonoBehaviour
 {
     // === 사용자 설정 변수 ===
     [Header("Slerp Fan Effect Settings")] [Tooltip("부채꼴 정렬의 가상 회전 반경. 클수록 곡률이 완만해집니다.")]
-    public float radius = 500f; // 적절한 초기값 (픽셀 단위)
+    public float radius = 5000f; // 적절한 초기값 (픽셀 단위)
 
-    [Tooltip("전체 카드 덱이 차지할 최대 각도")] public float totalArcAngle = 60f; // 전체 덱의 좌우 최대 각도 (예: -30도에서 +30도)
+    [Tooltip("전체 카드 덱이 차지할 최대 각도")] public float totalArcAngle = 10f; // 전체 덱의 좌우 최대 각도 (예: -30도에서 +30도)
 
     [Tooltip("자식 카드를 포함하는 목록. 동적으로 업데이트됩니다.")]
     public List<RectTransform> handCards = new List<RectTransform>();
-
-    // 부모의 RectTransform
-    private RectTransform parentRect;
-
-    // HorizontalLayoutGroup 컴포넌트
-    private HorizontalLayoutGroup layoutGroup;
-
-    void Awake()
-    {
-        parentRect = GetComponent<RectTransform>();
-        layoutGroup = GetComponent<HorizontalLayoutGroup>();
-    }
+    
+    public RectTransform DraggingChild;
 
     private void Start()
     {
+        UpdateCardList();
         DeckManager.Instance.Hand.OnAdded += OnCardAddedFromHand;
         DeckManager.Instance.Hand.OnRemoved += OnCardRemovedFromHand;
+        ApplyFanEffect();
     }
 
     private void OnCardAddedFromHand(Card card)
     {
         RectTransform childRect = card.View.transform as RectTransform;
         handCards.Add(childRect);
+        ApplyFanEffect();
     }
     
     private void OnCardRemovedFromHand(Card card)
     {
         RectTransform childRect = card.View.transform as RectTransform;
         handCards.Remove(childRect);
+        ApplyFanEffect();
     }
 
     void Update()
@@ -56,7 +50,7 @@ public class CardFanLayout : MonoBehaviour
 #endif
 
         // 레이아웃 그룹의 계산이 끝난 후 정렬을 시작합니다.
-        ApplyFanEffect();
+        //ApplyFanEffect();
     }
 
     // 자식 카드의 목록을 업데이트합니다.
@@ -73,7 +67,7 @@ public class CardFanLayout : MonoBehaviour
         }
     }
 
-    private void ApplyFanEffect()
+    public void ApplyFanEffect()
     {
         if (handCards.Count <= 1)
         {
@@ -100,6 +94,9 @@ public class CardFanLayout : MonoBehaviour
         {
             RectTransform card = handCards[i];
 
+            if (card == DraggingChild)
+                continue;
+            
             // 2. **Slerp 보간 비율 (t)**
             // 인덱스 비율 t (0.0 ~ 1.0)
             float t = (float)i / (N - 1);

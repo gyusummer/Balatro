@@ -85,6 +85,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4938566831595421242}
   - component: {fileID: 2705346766142191328}
+  - component: {fileID: 8011020083255566089}
   m_Layer: 5
   m_Name: JokerCard
   m_TagString: Untagged
@@ -126,3 +127,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   JokerImageSet: {fileID: 11400000, guid: e5b90f5092aeda04e83792f2072caf79, type: 2}
   Paper: {fileID: 2832307153957133469}
+--- !u!225 &8011020083255566089
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8902571789443897126}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

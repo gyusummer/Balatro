@@ -6,10 +6,15 @@ using UnityEngine.Serialization;
 
 public interface ITradeable
 {
-	public static ITradeable Selected;
+	public bool IsPlayerOwned { get; set; }
 	public int Price { get; set; }
 	public bool Buy();
 	public bool Sell();
+}
+
+public interface ITradeableView
+{
+	public ITradeable Tradeable { get; }
 }
 
 public class Shop : Singleton<Shop>

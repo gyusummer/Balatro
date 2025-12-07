@@ -5,8 +5,9 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public abstract class ConsumableCardView : View<ConsumableCard>, IPointerClickHandler
+public abstract class ConsumableCardView : View<ConsumableCard>, ITradeableView, IPointerClickHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
+    public ITradeable Tradeable => Source;
 	public ConsumableCard Source;
 	public ImageContainer ImageSet;
 	public Image Paper;
@@ -55,5 +56,31 @@ public abstract class ConsumableCardView : View<ConsumableCard>, IPointerClickHa
 	{
 		HandController.Instance.SelectConsumable(Source);
 		OnClick?.Invoke(this);
+	}
+	
+	private RectTransform rectTransform;
+	private CanvasGroup canvasGroup;
+
+	void Awake()
+	{
+		rectTransform = GetComponent<RectTransform>();
+		canvasGroup = GetComponent<CanvasGroup>();
+	}
+	
+	public void OnBeginDrag(PointerEventData eventData)
+	{
+		canvasGroup.blocksRaycasts = false; 
+		canvasGroup.alpha = 0.6f; // 살짝 반투명하게 만듦
+	}
+
+	public void OnDrag(PointerEventData eventData)
+	{
+		rectTransform.anchoredPosition += eventData.delta / rectTransform.localScale.x; 
+	}
+
+	public void OnEndDrag(PointerEventData eventData)
+	{
+		canvasGroup.blocksRaycasts = true;
+		canvasGroup.alpha = 1f;
 	}
 }

@@ -8,8 +8,7 @@ public class TestCode : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Keypad0))
         {
-            BlindManager.Instance.InitBlind();
-            BlindManager.Instance.StartBlind();
+            BlindManager.Instance.StartBlind(new Blind(300, Blind.BlindRank.Small));
         }
         
         if (Input.GetKeyDown(KeyCode.Keypad1))

@@ -105,7 +105,7 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 	public void AccumulateScore(double score)
 	{
 		TotalScore += score;
-		ScoreBoard.Instance.UpdateScore(score);
+		ScoreBoard.Instance.UpdateScore(TotalScore);
 	}
 	
 	public void UpgradePokerHand(HandRank handRank)

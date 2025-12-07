@@ -85,6 +85,7 @@ GameObject:
   m_Component:
   - component: {fileID: 138562110071833184}
   - component: {fileID: 5957092072872259520}
+  - component: {fileID: 182057364064228921}
   m_Layer: 5
   m_Name: PlayingCard
   m_TagString: Untagged
@@ -133,10 +134,22 @@ MonoBehaviour:
     _suit: 0
     _rank: 14
     Chip: 0
-    Enhancement: 0
+    _enhancement: 0
     View: {fileID: 0}
   Paper: {fileID: 7386192721501795462}
   Picture: {fileID: 975375633139306534}
+--- !u!225 &182057364064228921
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5947236146283197018}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &8342034989925729714
 GameObject:
   m_ObjectHideFlags: 0

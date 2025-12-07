@@ -85,6 +85,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3650627419927427578}
   - component: {fileID: 8665330842564692280}
+  - component: {fileID: -5875018588187168927}
   m_Layer: 5
   m_Name: PlanetCard
   m_TagString: Untagged
@@ -126,3 +127,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ImageSet: {fileID: 11400000, guid: 71d9d687f48078e4cb96fb93cd82a8cf, type: 2}
   Paper: {fileID: 4928114015992498836}
+--- !u!225 &-5875018588187168927
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3601323316992931733}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

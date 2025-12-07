@@ -1,24 +1,50 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
+
+public class Blind
+{
+	public enum BlindRank
+	{
+		None,
+		Small,
+		Big,
+		Boss
+	}
+
+	public double GoalScore;
+	public BlindRank Rank;
+
+	public Blind(double goalScore, BlindRank rank)
+	{
+		GoalScore = goalScore;
+		Rank = rank;
+	}
+}
 
 public class BlindManager : Singleton<BlindManager>
 {
-	public int BlindGoal = 450;
+	public Blind CurrentBlind;
+	public double BlindGoal = 450;
 	public int HandsLeft = 4;
 	public int DiscardsLeft = 3;
 	public int HandCapacity = 8;
 	
-	public void InitBlind()
+	private void InitBlind()
 	{
 		HandsLeft = RunManager.Variables.Hands;
 		DiscardsLeft = RunManager.Variables.Discards;
 		HandCapacity = RunManager.Variables.HandCapacity;
 	}
 
-	public void StartBlind()
+	public void StartBlind(Blind blind)
 	{
+		InitBlind();
 		ScoreCalculator.Instance.TotalScore = 0;
+		CurrentBlind = blind;
+		BlindGoal = blind.GoalScore;
+		ScoreBoard.Instance.UpdateGoal(BlindGoal);
 		DeckManager.Instance.InitDrawPile();
 		DeckManager.Instance.Hand.Clear();
 		FillHand();
@@ -41,10 +67,18 @@ public class BlindManager : Singleton<BlindManager>
 
 	public void WinBlind()
 	{
+		Debug.Log("<color=red>WinBlind</color>");
 		// broadcast blind end event
 		// earn money;
+		IngameEventManager.CallEvent(new BlindFinished());
+		
+		if (CurrentBlind.Rank == Blind.BlindRank.Boss)
+		{
+			RunManager.Instance.WinAnte();
+		}
+		
 		// go to shop;
-		Debug.Log("<color=red>WinBlind</color>");
+		RunManager.Instance.ChangeState(3);
 	}
 	
 	public void PlayHand(List<Card> selectedCards)

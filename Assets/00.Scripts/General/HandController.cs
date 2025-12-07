@@ -68,10 +68,18 @@ public class HandController : Singleton<HandController>
 
 	public void SelectConsumable(ConsumableCard consumable)
 	{
-		Debug.Log(_selectedConsumable);
+		if (consumable.IsPlayerOwned == false)
+		{
+			return;
+		}
+
+		if (_selectedConsumable == consumable)
+		{
+			UseConsumable();
+		}
+		
 		_selectedConsumable?.View?.OnDeselected();
 		_selectedConsumable = consumable;
-		Debug.Log(_selectedConsumable);
 		_selectedConsumable.View.OnSelected();
 	}
 

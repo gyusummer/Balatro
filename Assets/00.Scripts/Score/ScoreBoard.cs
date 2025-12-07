@@ -9,6 +9,7 @@ public class ScoreBoard : Singleton<ScoreBoard>
 	[SerializeField] private TMP_Text Chip;
 	[SerializeField] private TMP_Text Mult;
 	[SerializeField] private TMP_Text Score;
+	[SerializeField] private TMP_Text Goal;
 
 	public void UpdateChip(double chipValue)
 	{
@@ -23,5 +24,10 @@ public class ScoreBoard : Singleton<ScoreBoard>
 	public void UpdateScore(double scoreValue)
 	{
 		Score.text = scoreValue.ToString();
+	}
+
+	public void UpdateGoal(double goalValue)
+	{
+		Goal.text = goalValue.ToString();
 	}
 }

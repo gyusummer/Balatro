@@ -22,12 +22,12 @@ public class IngameEventManager : Singleton<IngameEventManager>
         if (s_eventTable.TryGetValue(eventType, out var existingDelegate))
         {
             s_eventTable[eventType] = Delegate.Combine(existingDelegate, listener);
-            Debug.Log($"[CardEventManager] Registered event listener for {eventType.Name}");
+            //Debug.Log($"[CardEventManager] Registered event listener for {eventType.Name}");
         }
         else
         {
             s_eventTable[eventType] = listener;
-            Debug.Log($"[CardEventManager] Created new event listener for {eventType.Name}");
+            Debug.LogWarning($"[CardEventManager] Created new event listener for {eventType.Name}");
         }
     }
 
@@ -43,12 +43,12 @@ public class IngameEventManager : Singleton<IngameEventManager>
             if (current == null)
             {
                 s_eventTable.Remove(eventType);
-                Debug.Log($"[CardEventManager] Unregistered all listeners for {eventType.Name}");
+                //Debug.Log($"[CardEventManager] Unregistered all listeners for {eventType.Name}");
             }
             else
             {
                 s_eventTable[eventType] = current;
-                Debug.Log($"[CardEventManager] Unregistered listener for {eventType.Name}");
+                Debug.LogWarning($"[CardEventManager] Unregistered listener for {eventType.Name}");
             }
         }
     }
@@ -64,18 +64,13 @@ public class IngameEventManager : Singleton<IngameEventManager>
     static void BroadCastToListeners<T>(T eventArgs) where T : IngameEventArgs
     {
         var eventType = eventArgs.GetType();
-        Debug.Log($"[CardEventManager] Calling event: {eventType.Name} with args: {eventArgs}");
-
-#if UNITY_EDITOR
-        Debug.Log($"[CardEventManager] Dispatching event: {eventType.Name}");
-#endif
-
+        
         if (s_eventTable.TryGetValue(eventType, out var del))
         {
             try
             {
                 del.DynamicInvoke(eventArgs);
-                Debug.Log($"[CardEventManager] Successfully invoked event: {eventType.Name}");
+                //Debug.Log($"[CardEventManager] Successfully invoked event: {eventType.Name}");
             }
             catch (Exception ex)
             {

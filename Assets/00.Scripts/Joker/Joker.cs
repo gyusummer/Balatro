@@ -10,15 +10,17 @@ public abstract class Joker : ITradeable
 {
     public JokerView View;
     public string Name;
+    public bool IsPlayerOwned { get; set; }
     public int Price { get; set; }
     public abstract void Register();
     public abstract void Unregister();
     public bool Buy()
     {
-        if (Shop.Instance.Jokers.Contains(this))
+        if (Shop.Instance.Jokers.Contains(this) && Inventory.Instance.IsFullJoker == false)
         {
             Shop.Instance.Jokers.Remove(this);
             Inventory.Instance.Jokers.Add(this);
+            IsPlayerOwned = true;
             Debug.Log($"{this.Name} Buy");
             return true;
         }
@@ -31,6 +33,7 @@ public abstract class Joker : ITradeable
         {
             Inventory.Instance.Jokers.Remove(this);
             Debug.Log($"{this.Name} Sell");
+            IsPlayerOwned = false;
             return true;
         }
         return false;

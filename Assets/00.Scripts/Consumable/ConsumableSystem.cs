@@ -8,6 +8,7 @@ public abstract class ConsumableCard : ITradeable
 {
 	public ConsumableCardView View { get; set; }
 	public string Name => GetType().ToString();
+	public bool IsPlayerOwned { get; set; }
 	public int Price { get; set; }
 	public abstract bool CheckCondition(int selectedCount);
 	public bool Use(List<Card> selectedCards)
@@ -19,6 +20,7 @@ public abstract class ConsumableCard : ITradeable
 		}
 
 		Effect(selectedCards);
+		Inventory.Instance.Consumables.Remove(this);
 		IngameEventManager.CallEvent(new ConsumableConsumedEventArgs(this));
 		UnityEngine.Object.Destroy(View.gameObject);
 		return true;
@@ -26,10 +28,11 @@ public abstract class ConsumableCard : ITradeable
 	protected abstract void Effect(List<Card> selectedCards);
 	public bool Buy()
 	{
-		if (Shop.Instance.Consumables.Contains(this))
+		if (Shop.Instance.Consumables.Contains(this) && Inventory.Instance.IsFullConsumable == false)
 		{
 			Shop.Instance.Consumables.Remove(this);
 			Inventory.Instance.Consumables.Add(this);
+			IsPlayerOwned = true;
 			Debug.Log($"{this.Name} Buy");
 			return true;
 		}
@@ -41,6 +44,7 @@ public abstract class ConsumableCard : ITradeable
 		if (Inventory.Instance.Consumables.Contains(this))
 		{
 			Inventory.Instance.Consumables.Remove(this);
+			IsPlayerOwned = false;
 			Debug.Log($"{this.Name} Sell");
 			return true;
 		}
