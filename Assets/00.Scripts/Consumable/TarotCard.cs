@@ -10,7 +10,6 @@ public abstract class TarotCard : ConsumableCard
 
 	public override bool CheckCondition(int selectedCount)
 	{
-		Debug.Log("this is Tarot CheckCondition");
 		if (selectedCount != 0 && selectedCount <= MaxTarget)
 		{
 			return true;
@@ -203,6 +202,7 @@ public class HangedMan : TarotCard
 		{
 			card.Destroy();
 		}
+		HandController.Instance.DeselectAllCards();
 	}
 }
 

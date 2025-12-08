@@ -70,7 +70,6 @@ public abstract class ConsumableCardView : View<ConsumableCard>, ITradeableView,
 	public void OnBeginDrag(PointerEventData eventData)
 	{
 		canvasGroup.blocksRaycasts = false; 
-		canvasGroup.alpha = 0.6f; // 살짝 반투명하게 만듦
 	}
 
 	public void OnDrag(PointerEventData eventData)
@@ -81,6 +80,5 @@ public abstract class ConsumableCardView : View<ConsumableCard>, ITradeableView,
 	public void OnEndDrag(PointerEventData eventData)
 	{
 		canvasGroup.blocksRaycasts = true;
-		canvasGroup.alpha = 1f;
 	}
 }

@@ -21,7 +21,12 @@ public class ImageContainer : ScriptableObject
 	
 	public Sprite GetImageByNameOrFirst(string key)
 	{
-		Debug.Log(key);
+#if UNITY_EDITOR
+		if (Application.isPlaying)
+		{
+			Debug.Log(key);
+		}
+#endif
 		int targetIndex = ImageNames.IndexOf(key);
 
 		return GetImage(targetIndex);

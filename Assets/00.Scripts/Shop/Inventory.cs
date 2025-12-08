@@ -19,6 +19,7 @@ public class Inventory : Singleton<Inventory>
 		Jokers.OnRemoved += joker => joker.Unregister();
 		Jokers.OnRemoved += joker => Destroy(joker.View.gameObject);
 		Consumables.OnAdded += ProcessView;
+		Consumables.OnRemoved += consume => Destroy(consume.View.gameObject);
 	}
 
 	private void ProcessView(Joker joker)

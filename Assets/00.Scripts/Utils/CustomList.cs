@@ -8,7 +8,7 @@ public class CustomList<T>
     public Action<T> OnAdded;
     public Action<T> OnRemoved;
     public string Name;
-    [SerializeReference] protected List<T> _list;
+    protected List<T> _list;
     public int Count => _list.Count;
     public int Max;
 
