@@ -6155,7 +6155,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CurrentAnte: 1
-  GoalAnte: 2
+  GoalAnte: 8
   _smallScore: {fileID: 3107818}
   _bigScore: {fileID: 1373571203}
   _bossScore: {fileID: 1713657984}
