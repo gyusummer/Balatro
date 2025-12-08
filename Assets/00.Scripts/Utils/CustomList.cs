@@ -1,49 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
-public class CustomList<T>
+public class CustomList<T> : Collection<T>
 {
     public Action<T> OnAdded;
     public Action<T> OnRemoved;
     public string Name;
-    protected List<T> _list;
-    public int Count => _list.Count;
     public int Max;
 
     public CustomList(int max = 256)
     {
-        _list = new List<T>();
         Name = "";
         Max = max;
     }
     
-    public CustomList(List<T> list, string name, int max = int.MaxValue)
+    public CustomList(IList<T> list, string name, int max = int.MaxValue) : base(list)
     {
-        _list = list;
         Name = name;
         Max = max;
     }
     
-    public bool Contains(T item) => _list.Contains(item);
+    public T First() => this[0];
 	
-    public T First() => _list[0];
-	
-    public void Add(T element)
+    public new void Add(T element)
     {
         if (Count >= Max)
         {
             Debug.Log("Exceeded maximum");
             return;
         }
-        _list.Add(element);
+        base.Add(element);
         OnAdded?.Invoke(element);
     }
 
-    public void Remove(T element)
+    public new void Remove(T element)
     {
-        if (_list.Remove(element))
+        if (base.Remove(element))
         {
             OnRemoved?.Invoke(element);
         }
@@ -53,25 +49,23 @@ public class CustomList<T>
     {
         for (int i = Count - 1; i >= 0; i--)
         {
-            T element = _list[i];
+            T element = this[i];
             Remove(element);
             callback.Invoke(element);
         }
     }
 
-    public void Clear()
+    public new void Clear()
     {
-        Debug.Log(Count);
+        Debug.Log("Custom List Clear");
         for (int i = Count - 1; i >= 0; i--)
         {
-            Remove(_list[i]);
+            Remove(this[i]);
         }
     }
 
     public List<T> CloneList()
     {
-        List<T> newList = new List<T>();
-        newList.AddRange(_list);
-        return newList;
+        return new List<T>(this);
     }
 }

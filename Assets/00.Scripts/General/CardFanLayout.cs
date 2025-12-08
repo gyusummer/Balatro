@@ -71,7 +71,7 @@ public class CardFanLayout : MonoBehaviour
         }
     }
 
-    private void UpdateCardList(List<Card> cards)
+    private void UpdateCardList(IList<Card> cards)
     {
         Debug.Log("UpdateCardList");
         _cardViews.Clear();
