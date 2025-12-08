@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public abstract class PlanetCard : ConsumableCard
 {
 	protected HandRank HandRank { get; set; }

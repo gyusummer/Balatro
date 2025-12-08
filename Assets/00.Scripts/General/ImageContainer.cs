@@ -21,6 +21,7 @@ public class ImageContainer : ScriptableObject
 	
 	public Sprite GetImageByNameOrFirst(string key)
 	{
+		Debug.Log(key);
 		int targetIndex = ImageNames.IndexOf(key);
 
 		return GetImage(targetIndex);

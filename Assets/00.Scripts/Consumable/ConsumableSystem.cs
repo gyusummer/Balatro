@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+[System.Serializable]
 public abstract class ConsumableCard : ITradeable
 {
 	public ConsumableCardView View { get; set; }

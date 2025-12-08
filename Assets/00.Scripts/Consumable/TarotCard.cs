@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public abstract class TarotCard : ConsumableCard
 {
 	public int MaxTarget = 1;
@@ -47,7 +48,6 @@ public class Fool : TarotCard
 	private ConsumableCard lastCard => ConsumableSystem.Instance.LastConsumableCard;
 	public override bool CheckCondition(int selectedCount)
 	{
-		Debug.Log("this is Fool CheckCondition");
 		if (lastCard is not Fool and not null)
 		{
 			return true;

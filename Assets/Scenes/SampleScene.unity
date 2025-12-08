@@ -340,7 +340,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 8665330842564692280, guid: 3ee6874c7bf01af4db9aad3784f5c089, type: 3}
-  defaultHolder: {fileID: 0}
+  defaultHolder: {fileID: 1327535988}
 --- !u!114 &127536076
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -354,7 +354,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 8101490952843245071, guid: 1577c0086470ae342af471eb219f0be7, type: 3}
-  defaultHolder: {fileID: 0}
+  defaultHolder: {fileID: 1327535988}
 --- !u!114 &127536077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -368,7 +368,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 2705346766142191328, guid: c2e72a94e9195ad4397eb72546987318, type: 3}
-  defaultHolder: {fileID: 0}
+  defaultHolder: {fileID: 497021399}
 --- !u!1 &131949176
 GameObject:
   m_ObjectHideFlags: 0
@@ -6051,6 +6051,9 @@ MonoBehaviour:
     Name: 
     _list: []
     Max: 0
+  references:
+    version: 2
+    RefIds: []
 --- !u!114 &2118569228
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6105,10 +6108,15 @@ MonoBehaviour:
   _consumableHolder: {fileID: 1327535988}
   Jokers:
     Name: 
+    _list: []
     Max: 5
   Consumables:
     Name: 
+    _list: []
     Max: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!114 &2118569232
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6125,10 +6133,15 @@ MonoBehaviour:
   LowerList: {fileID: 661905896}
   Jokers:
     Name: 
+    _list: []
     Max: 3
   Consumables:
     Name: 
+    _list: []
     Max: 3
+  references:
+    version: 2
+    RefIds: []
 --- !u!114 &2118569233
 MonoBehaviour:
   m_ObjectHideFlags: 0
