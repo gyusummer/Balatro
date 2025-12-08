@@ -16,21 +16,17 @@ public class CardPile : CustomList<Card>
 		
 	}
 
-	public void SortByRank(Card _)
+	public void SortByRank()
 	{
-		var sorted = this.OrderByDescending(card => card.Rank).ThenByDescending(card => card.Suit);
-		((Collection<Card>)this).Clear(); 
-		this.AddRange(sorted);
+		_list = _list.OrderByDescending(card => card.Rank).ThenByDescending(card => card.Suit).ToList();
 		
-		OnOrderChanged?.Invoke(this);
+		OnOrderChanged?.Invoke(_list);
 	}
 
-	public void SortBySuit(Card _)
+	public void SortBySuit()
 	{
-		var sorted = this.OrderByDescending(card => card.Suit).ThenByDescending(card => card.Rank).ToList();
-		((Collection<Card>)this).Clear();
-		this.AddRange(sorted);
+		_list = _list.OrderByDescending(card => card.Suit).ThenByDescending(card => card.Rank).ToList();
 		
-		OnOrderChanged?.Invoke(this);
+		OnOrderChanged?.Invoke(_list);
 	}
 }

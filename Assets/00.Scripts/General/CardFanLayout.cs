@@ -21,11 +21,8 @@ public class CardFanLayout : MonoBehaviour
 
     private void Start()
     {
-        // UpdateCardList();
-        // DeckManager.Instance.Hand.OnAdded += OnCardAddedFromHand;
-        // DeckManager.Instance.Hand.OnRemoved += OnCardRemovedFromHand;
         DeckManager.Instance.Hand.OnOrderChanged += UpdateCardList;
-        DeckManager.Instance.Hand.SortByRank(null);
+        DeckManager.Instance.Hand.SortByRank();
         ApplyFanEffect();
     }
 
@@ -73,7 +70,6 @@ public class CardFanLayout : MonoBehaviour
 
     private void UpdateCardList(IList<Card> cards)
     {
-        Debug.Log("UpdateCardList");
         _cardViews.Clear();
         foreach (Card card in cards)
         {

@@ -13,7 +13,7 @@ public class TestCode : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.Keypad1))
         {
-            DeckManager.Instance.Draw();
+            DeckManager.Instance.Draw(1);
         }
 
         if (Input.GetKeyDown(KeyCode.Keypad2))

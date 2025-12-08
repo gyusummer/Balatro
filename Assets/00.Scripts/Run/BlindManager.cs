@@ -55,11 +55,12 @@ public class BlindManager : Singleton<BlindManager>
 		if (ScoreCalculator.Instance.TotalScore >= BlindGoal)
 		{
 			WinBlind();
+			return;
 		}
 		else if (HandsLeft <= 0)
 		{
-			// Lose;
 			RunManager.Instance.LoseGame();
+			return;
 		}
 		// not Win, not Lose => continue;
 		FillHand();
