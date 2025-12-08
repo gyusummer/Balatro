@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 [ExecuteAlways]                                   // 에디터 모드에서도 실시간 프리뷰를 위해 사용
@@ -13,29 +14,32 @@ public class CardFanLayout : MonoBehaviour
     [Tooltip("전체 카드 덱이 차지할 최대 각도")] public float totalArcAngle = 10f; // 전체 덱의 좌우 최대 각도 (예: -30도에서 +30도)
 
     [Tooltip("자식 카드를 포함하는 목록. 동적으로 업데이트됩니다.")]
-    public List<RectTransform> handCards = new List<RectTransform>();
+    private List<RectTransform> _cardViews = new List<RectTransform>();
+    public List<Card> Cards = new List<Card>();
     
     public RectTransform DraggingChild;
 
     private void Start()
     {
-        UpdateCardList();
-        DeckManager.Instance.Hand.OnAdded += OnCardAddedFromHand;
-        DeckManager.Instance.Hand.OnRemoved += OnCardRemovedFromHand;
+        // UpdateCardList();
+        // DeckManager.Instance.Hand.OnAdded += OnCardAddedFromHand;
+        // DeckManager.Instance.Hand.OnRemoved += OnCardRemovedFromHand;
+        DeckManager.Instance.Hand.OnOrderChanged += UpdateCardList;
+        DeckManager.Instance.Hand.SortByRank(null);
         ApplyFanEffect();
     }
 
     private void OnCardAddedFromHand(Card card)
     {
         RectTransform childRect = card.View.transform as RectTransform;
-        handCards.Add(childRect);
+        _cardViews.Add(childRect);
         ApplyFanEffect();
     }
     
     private void OnCardRemovedFromHand(Card card)
     {
         RectTransform childRect = card.View.transform as RectTransform;
-        handCards.Remove(childRect);
+        _cardViews.Remove(childRect);
         ApplyFanEffect();
     }
 
@@ -56,23 +60,40 @@ public class CardFanLayout : MonoBehaviour
     // 자식 카드의 목록을 업데이트합니다.
     private void UpdateCardList()
     {
-        handCards.Clear();
+        _cardViews.Clear();
         foreach (Transform child in transform)
         {
             RectTransform childRect = child as RectTransform;
             if (childRect != null && child.gameObject.activeInHierarchy)
             {
-                handCards.Add(childRect);
+                _cardViews.Add(childRect);
             }
         }
     }
 
+    private void UpdateCardList(List<Card> cards)
+    {
+        Debug.Log("UpdateCardList");
+        _cardViews.Clear();
+        foreach (Card card in cards)
+        {
+            if (card.View == null)
+                Debug.LogWarning("Card View is null");
+            RectTransform childRect = card.View.transform as RectTransform;
+            if (childRect)
+            {
+                _cardViews.Add(childRect);
+            }
+        }
+        ApplyFanEffect();
+    }
+
     public void ApplyFanEffect()
     {
-        if (handCards.Count <= 1)
+        if (_cardViews.Count <= 1)
         {
             // 카드가 하나 이하면 효과를 적용할 필요가 없습니다.
-            foreach (var card in handCards)
+            foreach (var card in _cardViews)
             {
                 card.localRotation = Quaternion.identity; // 회전 초기화
                 card.localPosition = Vector3.zero;
@@ -81,8 +102,7 @@ public class CardFanLayout : MonoBehaviour
             return;
         }
 
-        int N = handCards.Count;
-        float cardWidth = handCards[0].rect.width; // 카드의 너비를 가정 (모두 동일하다고 가정)
+        int N = _cardViews.Count;
 
         // 1. **시작 각도 및 각 카드 당 각도 계산**
         // 덱의 중앙을 0도로 설정하고, 시작 각도와 종료 각도를 계산합니다.
@@ -92,7 +112,7 @@ public class CardFanLayout : MonoBehaviour
         // Slerp의 보간 비율 (0.0 ~ 1.0)
         for (int i = 0; i < N; i++)
         {
-            RectTransform card = handCards[i];
+            RectTransform card = _cardViews[i];
 
             if (card == DraggingChild)
                 continue;
@@ -140,12 +160,27 @@ public class CardFanLayout : MonoBehaviour
             // 6. **적용**
             card.localRotation = targetRotation;
             card.localPosition = new Vector3(posX, posY, card.localPosition.z);
+            
+            card.SetSiblingIndex(i);
         }
+    }
+
+    public int GetIndexByPosX(float posX)
+    {
+        int N = _cardViews.Count;
+        for (int i = 0; i < N; i++)
+        {
+            if (_cardViews[i].position.x > posX)
+            {
+                return i;
+            }
+        }
+
+        return N - 1;
     }
 
     private void OnDestroy()
     {
-        Debug.Log("CardFan OnDestroy");
         // DeckSystem.Instance.Hand.OnCardAdded -= OnCardAddedFromHand;
         // DeckSystem.Instance.Hand.OnCardRemoved -= OnCardRemovedFromHand;
     }

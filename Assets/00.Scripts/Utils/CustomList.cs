@@ -18,9 +18,10 @@ public class CustomList<T>
         Name = "";
         Max = max;
     }
-    public CustomList(List<T> cards, string name, int max = int.MaxValue)
+    
+    public CustomList(List<T> list, string name, int max = int.MaxValue)
     {
-        _list = cards;
+        _list = list;
         Name = name;
         Max = max;
     }

@@ -35,6 +35,8 @@ public class DeckManager : Singleton<DeckManager>
 		
 		Hand.OnAdded += PrintHandCard;
 		Hand.OnRemoved += DestroyHandCard;
+		Hand.OnAdded += Hand.SortByRank;
+		Hand.OnRemoved += Hand.SortByRank;
 	}
 
 	private void PrintHandCard(Card card)
