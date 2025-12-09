@@ -1,15 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
+[Flags]
 public enum CardSuit
 {
-	None = -1,
-	Diamond,
-	Club,
-	Heart,
-	Spade,
+	None = 0,
+	Diamond = 1,
+	Club = 2,
+	Heart = 4,
+	Spade = 8,
+	Wild = Diamond | Club | Heart | Spade
 }
 
 // 2 ~ 14
@@ -34,16 +37,26 @@ public enum CardRank
 [System.Serializable]
 public class Card
 {
+	public static readonly CardSuit[] ALL_EACH_SUITS = new CardSuit[]{ CardSuit.Diamond , CardSuit.Club, CardSuit.Heart, CardSuit.Spade };
 	[SerializeField] private CardSuit _suit = CardSuit.Spade;
+	public CardSuit SuitOrigin => _suit;
 	public CardSuit Suit
 	{
-		get => _suit;
+		get
+		{
+			if (Enhancement == CardEnhancement.Wild)
+			{
+				return CardSuit.Wild;
+			}
+			return _suit;
+		}
 		set
 		{
 			_suit = value;
 			View?.UpdatePicture();
 		}
 	}
+
 	[SerializeField] private CardRank _rank = CardRank.King;
 	public CardRank Rank
 	{

@@ -21,7 +21,8 @@ public class DeckManager : Singleton<DeckManager>
 		base.Awake();
 		// 기본 52장 덱
 		var defaultDeck = new List<Card>();
-		for (int suit = (int)CardSuit.Diamond; suit <= (int)CardSuit.Spade; suit++)
+		// for (int suit = (int)CardSuit.Diamond; suit <= (int)CardSuit.Spade; suit++)
+		foreach (CardSuit suit in Card.ALL_EACH_SUITS)
 		{
 			for (int rank = (int)CardRank.Two; rank <= (int)CardRank.Ace; rank++)
 			{
