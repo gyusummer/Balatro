@@ -16,7 +16,7 @@ public abstract class Joker : ITradeable
     public abstract void Unregister();
     public bool Buy()
     {
-        if (Shop.Instance.Jokers.Contains(this) && Inventory.Instance.IsFullJoker == false)
+        if (Shop.Instance.Jokers.Contains(this) && Inventory.Instance.Jokers.IsFull == false)
         {
             Shop.Instance.Jokers.Remove(this);
             Inventory.Instance.Jokers.Add(this);

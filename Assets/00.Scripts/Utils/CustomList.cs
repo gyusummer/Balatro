@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -11,6 +12,7 @@ public class CustomList<T>
     public Action<T> OnRemoved;
     [SerializeField] protected List<T> _list;
     public int Count => _list.Count;
+    public bool IsFull => Count == Max;
     public string Name;
     public int Max;
 
@@ -29,8 +31,8 @@ public class CustomList<T>
     }
     
     public T First() => _list[0];
-    
     public bool Contains(T item) => _list.Contains(item);
+    public int IndexOf(T item) => _list.IndexOf(item);
 	
     public void Add(T element)
     {
@@ -74,4 +76,5 @@ public class CustomList<T>
     {
         return new List<T>(_list);
     }
+
 }

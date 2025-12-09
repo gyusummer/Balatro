@@ -83,6 +83,7 @@ public class HighPriestess : TarotCard
 {
 	protected override void Effect(List<Card> selectedCards)
 	{
+		
 	}
 }
 
@@ -103,8 +104,15 @@ public class Empress : TarotCard
 // (Must have room)
 public class Emperor : TarotCard
 {
+	public override bool CheckCondition(int selectedCount)
+	{
+		return Inventory.Instance.Consumables.IsFull == false;
+	}
+
 	protected override void Effect(List<Card> selectedCards)
 	{
+		Inventory.Instance.Consumables.Add(PlanetFactory.Instance.CreateRandom(false));
+		Inventory.Instance.Consumables.Add(PlanetFactory.Instance.CreateRandom(false));
 	}
 }
 
@@ -210,8 +218,14 @@ public class HangedMan : TarotCard
 // (Drag to rearrange)
 public class Death : TarotCard
 {
+	public override bool CheckCondition(int selectedCount)
+	{
+		return selectedCount == 2;
+	}
+
 	protected override void Effect(List<Card> selectedCards)
 	{
+		selectedCards[1].CopyTo(selectedCards[0]);
 	}
 }
 
@@ -283,8 +297,14 @@ public class Sun : TarotCard
 // 	(Must have room)
 public class Judgement : TarotCard
 {
+	public override bool CheckCondition(int selectedCount)
+	{
+		return Inventory.Instance.Jokers.IsFull == false;
+	}
+
 	protected override void Effect(List<Card> selectedCards)
 	{
+		Inventory.Instance.Jokers.Add(JokerFactory.Instance.CreateRandom(false));
 	}
 }
 

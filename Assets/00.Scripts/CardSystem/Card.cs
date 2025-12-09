@@ -139,6 +139,14 @@ public class Card
 		DeckManager.Instance.Hand.Remove(this);
 	}
 
+	public void CopyTo(Card other)
+	{
+		other.Suit =  Suit;
+		other.Rank = Rank;
+		other.Chip = Chip;
+		other.Enhancement = Enhancement;
+	}
+
 	public override string ToString()
 	{
 		return $"{_rank} of {_suit}";

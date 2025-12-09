@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 // 1. Select
@@ -8,7 +9,9 @@ using UnityEngine;
 // 3. Discard
 public class HandController : Singleton<HandController>
 {
+	private CardPile _hand;
 	private List<Card> _selectedCards;
+	private List<Card> SortedSelected => _selectedCards.OrderBy(card => _hand.IndexOf(card)).ToList();
 	public int SelectedCount => _selectedCards.Count;
 	public int SelectLimit = 5;
 	
@@ -17,6 +20,7 @@ public class HandController : Singleton<HandController>
 	private void Start()
 	{
 		_selectedCards = new List<Card>();
+		_hand = DeckManager.Instance.Hand;
 		DeckManager.Instance.Hand.OnAdded += SubscribeCard;
 	}
 
@@ -85,7 +89,7 @@ public class HandController : Singleton<HandController>
 
 	public void UseConsumable()
 	{
-		if (_selectedConsumable.Use(_selectedCards))
+		if (_selectedConsumable.Use(SortedSelected))
 		{
 			_selectedConsumable = null;
 		}
@@ -95,7 +99,8 @@ public class HandController : Singleton<HandController>
 	{
 		if (_selectedCards.Count > 0)
 		{
-			BlindManager.Instance.PlayHand(_selectedCards);
+			BlindManager.Instance.PlayHand(SortedSelected);
+			_selectedCards.Clear();
 		}
 	}
 	
@@ -103,7 +108,8 @@ public class HandController : Singleton<HandController>
 	{
 		if (_selectedCards.Count > 0)
 		{
-			BlindManager.Instance.DiscardHand(_selectedCards);
+			BlindManager.Instance.DiscardHand(SortedSelected);
+			_selectedCards.Clear();
 		}
 	}
 

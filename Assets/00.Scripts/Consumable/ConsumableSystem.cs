@@ -29,7 +29,7 @@ public abstract class ConsumableCard : ITradeable
 	protected abstract void Effect(List<Card> selectedCards);
 	public bool Buy()
 	{
-		if (Shop.Instance.Consumables.Contains(this) && Inventory.Instance.IsFullConsumable == false)
+		if (Shop.Instance.Consumables.Contains(this) && Inventory.Instance.Consumables.IsFull == false)
 		{
 			Shop.Instance.Consumables.Remove(this);
 			Inventory.Instance.Consumables.Add(this);

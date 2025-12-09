@@ -9,9 +9,6 @@ public class Inventory : Singleton<Inventory>
 	
 	public CustomList<Joker> Jokers = new CustomList<Joker>(5);
 	public CustomList<ConsumableCard> Consumables = new CustomList<ConsumableCard>(2);
-	
-	public bool IsFullJoker => Jokers.Count >= Jokers.Max;
-	public bool IsFullConsumable => Consumables.Count >= Consumables.Max;
 
 	public void Start()
 	{

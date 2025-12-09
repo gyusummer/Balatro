@@ -91,7 +91,6 @@ public class BlindManager : Singleton<BlindManager>
 		{
 			DeckManager.Instance.Hand.Remove(card);
 		}
-		selectedCards.Clear();
 		HandsLeft--;
 
 		CheckBlindGoal();
@@ -109,7 +108,6 @@ public class BlindManager : Singleton<BlindManager>
 			DeckManager.Instance.Hand.Remove(card);
 			IngameEventManager.CallEvent(new CardDiscardedEventArgs(card));
 		}
-		selectedCards.Clear();
 		DiscardsLeft--;
 
 		FillHand();

@@ -15,7 +15,7 @@ public abstract class Factory<T, TView> : Singleton<Factory<T, TView>> where TVi
     protected static Dictionary<int, Func<T>> s_constructors { get; set; }
     protected static readonly System.Random rng = new System.Random();
 	
-    public T CreateRandom(bool print, Transform uiParent = null)
+    public T CreateRandom(bool print = false, Transform uiParent = null)
     {
         int randomIndex = rng.Next(s_constructors.Keys.Count);
         return Create(randomIndex, print, uiParent);
