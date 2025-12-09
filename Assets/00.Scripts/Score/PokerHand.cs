@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -85,7 +86,10 @@ public static class PokerHand
     {
         // C# LINQ를 사용해 단 한 번의 순회로 모든 그룹핑을 효율적으로 수행합니다.
         var rankGroups = hand.GroupBy(card => card.Rank).ToDictionary(g => g.Key, g => g.ToList());
-        var suitGroups = hand.GroupBy(card => card.Suit).ToDictionary(g => g.Key, g => g.ToList());
+        var suitGroups = 
+            hand.SelectMany(card => GetIndividualSuits(card.Suit), (card, suit) => new { Card = card, Suit = suit })
+            .GroupBy(keySelector: x => x.Suit, elementSelector: x => x.Card)
+            .ToDictionary(g => g.Key, g => g.ToList());
         var sortedRanks = hand.Select(card => card.Rank).Distinct().OrderBy(r => r).ToList();
     
         return new PreprocessedHand
@@ -94,6 +98,17 @@ public static class PokerHand
             SuitGroups = suitGroups,
             SortedUniqueRanks = sortedRanks
         };
+        
+        static IEnumerable<CardSuit> GetIndividualSuits(CardSuit enumFlag)
+        {
+            foreach (CardSuit suit in Card.ALL_EACH_SUITS)
+            {
+                if ((enumFlag & suit) == suit)
+                {
+                    yield return suit;
+                }
+            }
+        }
     }
     
     public static HandInfo CheckHandRank(List<Card> hand)

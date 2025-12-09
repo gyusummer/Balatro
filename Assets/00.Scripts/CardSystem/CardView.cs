@@ -40,7 +40,7 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 	public void UpdatePicture()
 	{
 		int pictureIndex = (int)Source.Rank - 2;
-		switch (Source.Suit)
+		switch (Source.SuitOrigin)
 		{
 			case CardSuit.Diamond:
 				pictureIndex += 26;

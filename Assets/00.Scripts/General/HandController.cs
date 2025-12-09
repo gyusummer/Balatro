@@ -10,7 +10,7 @@ using UnityEngine;
 public class HandController : Singleton<HandController>
 {
 	private CardPile _hand;
-	private List<Card> _selectedCards;
+	[SerializeField] private List<Card> _selectedCards;
 	private List<Card> SortedSelected => _selectedCards.OrderBy(card => _hand.IndexOf(card)).ToList();
 	public int SelectedCount => _selectedCards.Count;
 	public int SelectLimit = 5;
