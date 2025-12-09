@@ -30,6 +30,7 @@ public class BlindManager : Singleton<BlindManager>
 	public int HandsLeft = 4;
 	public int DiscardsLeft = 3;
 	public int HandCapacity = 8;
+	public bool CanDiscard => DiscardsLeft > 0;
 	
 	private void InitBlind()
 	{
@@ -82,8 +83,12 @@ public class BlindManager : Singleton<BlindManager>
 		RunManager.Instance.ChangeState(3);
 	}
 	
-	public void PlayHand(List<Card> selectedCards)
+	public bool PlayHand(List<Card> selectedCards)
 	{
+		if (HandsLeft <= 0)
+		{
+			return false;
+		}
 		// Check Poker Hand
 		ScoreCalculator.Instance.ScoreHand(selectedCards);
 		
@@ -94,13 +99,14 @@ public class BlindManager : Singleton<BlindManager>
 		HandsLeft--;
 
 		CheckBlindGoal();
+		return true;
 	}
 
-	public void DiscardHand(List<Card> selectedCards)
+	public bool DiscardHand(List<Card> selectedCards)
 	{
 		if (DiscardsLeft <= 0)
 		{
-			return;
+			return false;
 		}
 		
 		foreach (Card card in selectedCards)
@@ -111,6 +117,7 @@ public class BlindManager : Singleton<BlindManager>
 		DiscardsLeft--;
 
 		FillHand();
+		return true;
 	}
 
 	public void FillHand()

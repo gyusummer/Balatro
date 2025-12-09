@@ -97,18 +97,26 @@ public class HandController : Singleton<HandController>
 
 	public void PlayHand()
 	{
-		if (_selectedCards.Count > 0)
+		if (_selectedCards.Count <= 0)
 		{
-			BlindManager.Instance.PlayHand(SortedSelected);
+			return;
+		}
+
+		if (BlindManager.Instance.PlayHand(SortedSelected))
+		{
 			_selectedCards.Clear();
 		}
 	}
 	
 	public void DiscardHand()
 	{
-		if (_selectedCards.Count > 0)
+		if (_selectedCards.Count <= 0)
 		{
-			BlindManager.Instance.DiscardHand(SortedSelected);
+			return;
+		}
+
+		if(BlindManager.Instance.DiscardHand(SortedSelected))
+		{
 			_selectedCards.Clear();
 		}
 	}
