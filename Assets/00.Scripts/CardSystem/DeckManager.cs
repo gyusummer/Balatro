@@ -32,6 +32,11 @@ public class DeckManager : Singleton<DeckManager>
 		
 		Deck = new CardPile(defaultDeck, "default");
 		Hand = new CardPile(new List<Card>(), "hand");
+
+		if (handHolder.TryGetComponent<CardFanLayout>(out var layout))
+		{
+			layout.SetSource(Hand);
+		}
 		
 		Hand.OnAdded += PrintHandCard;
 		Hand.OnRemoved += DestroyHandCard;

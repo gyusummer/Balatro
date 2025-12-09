@@ -28,6 +28,10 @@ public abstract class ConsumableCardView : View<ConsumableCard>, ITradeableView,
 
 	public void UpdatePaper()
 	{
+		#if UNITY_EDITOR
+		if (Application.isPlaying == false)
+			return;
+		#endif
 		if (Source == null)
 		{
 			Debug.Log($"{gameObject.name} Source is null");

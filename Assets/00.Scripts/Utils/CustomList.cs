@@ -9,7 +9,7 @@ public class CustomList<T>
 {
     public Action<T> OnAdded;
     public Action<T> OnRemoved;
-    protected List<T> _list;
+    [SerializeField] protected List<T> _list;
     public int Count => _list.Count;
     public string Name;
     public int Max;
@@ -21,7 +21,7 @@ public class CustomList<T>
         Max = max;
     }
     
-    public CustomList(IList<T> list, string name, int max = int.MaxValue)
+    public CustomList(IList<T> list, string name, int max = 256)
     {
         _list = new List<T>(list);
         Name = name;
@@ -32,7 +32,7 @@ public class CustomList<T>
     
     public bool Contains(T item) => _list.Contains(item);
 	
-    public new void Add(T element)
+    public void Add(T element)
     {
         if (Count >= Max)
         {
@@ -43,7 +43,7 @@ public class CustomList<T>
         OnAdded?.Invoke(element);
     }
 
-    public new void Remove(T element)
+    public void Remove(T element)
     {
         if (_list.Remove(element))
         {
@@ -61,7 +61,7 @@ public class CustomList<T>
         }
     }
 
-    public new void Clear()
+    public void Clear()
     {
         Debug.Log("Custom List Clear");
         for (int i = Count - 1; i >= 0; i--)

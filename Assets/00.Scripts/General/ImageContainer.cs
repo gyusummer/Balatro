@@ -22,7 +22,7 @@ public class ImageContainer : ScriptableObject
 	public Sprite GetImageByNameOrFirst(string key)
 	{
 #if UNITY_EDITOR
-		if (Application.isPlaying)
+		if (Application.isPlaying && key != "None")
 		{
 			Debug.Log(key);
 		}

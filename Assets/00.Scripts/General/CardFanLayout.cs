@@ -4,71 +4,83 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-[ExecuteAlways]                                   // 에디터 모드에서도 실시간 프리뷰를 위해 사용
+[ExecuteAlways] // 에디터 모드에서도 실시간 프리뷰를 위해 사용
 public class CardFanLayout : MonoBehaviour
 {
     // === 사용자 설정 변수 ===
-    [Header("Slerp Fan Effect Settings")] [Tooltip("부채꼴 정렬의 가상 회전 반경. 클수록 곡률이 완만해집니다.")]
-    public float radius = 5000f; // 적절한 초기값 (픽셀 단위)
+    [Header("Slerp Fan Effect Settings")]
+    [Tooltip("부채꼴 정렬의 가상 회전 반경. 클수록 곡률이 완만해집니다.")]
+    [SerializeField] private float radius = 5000f; // 적절한 초기값 (픽셀 단위)
 
-    [Tooltip("전체 카드 덱이 차지할 최대 각도")] public float totalArcAngle = 10f; // 전체 덱의 좌우 최대 각도 (예: -30도에서 +30도)
+    [Tooltip("전체 카드 덱이 차지할 최대 각도")]
+    [SerializeField] private float totalArcAngle = 10f; // 전체 덱의 좌우 최대 각도 (예: -30도에서 +30도)
 
     [Tooltip("자식 카드를 포함하는 목록. 동적으로 업데이트됩니다.")]
     private List<RectTransform> _cardViews = new List<RectTransform>();
-    public List<Card> Cards = new List<Card>();
+    private CardPile _source;
     
     public RectTransform DraggingChild;
 
-    private void Start()
+    public void SetSource(CardPile cardPile)
     {
-        DeckManager.Instance.Hand.OnOrderChanged += UpdateCardList;
-        DeckManager.Instance.Hand.SortByRank();
-        ApplyFanEffect();
-    }
-
-    private void OnCardAddedFromHand(Card card)
-    {
-        RectTransform childRect = card.View.transform as RectTransform;
-        _cardViews.Add(childRect);
-        ApplyFanEffect();
-    }
-    
-    private void OnCardRemovedFromHand(Card card)
-    {
-        RectTransform childRect = card.View.transform as RectTransform;
-        _cardViews.Remove(childRect);
-        ApplyFanEffect();
-    }
-
-    void Update()
-    {
-        // 에디터에서 변경사항을 실시간으로 반영
-#if UNITY_EDITOR
-        if (!Application.isPlaying)
+        if (_source != null)
         {
-            UpdateCardList();
+            _source.OnOrderChanged -= ReCalculate;
         }
-#endif
-
-        // 레이아웃 그룹의 계산이 끝난 후 정렬을 시작합니다.
-        //ApplyFanEffect();
+        _source = cardPile;
+        _source.OnOrderChanged += ReCalculate;
     }
+
+    // private void Start()
+    // {
+    //     DeckManager.Instance.Hand.OnOrderChanged += UpdateCardList;
+    //     DeckManager.Instance.Hand.SortByRank();
+    //     ApplyFanEffect();
+    // }
+
+    // private void OnCardAddedFromHand(Card card)
+    // {
+    //     RectTransform childRect = card.View.transform as RectTransform;
+    //     _cardViews.Add(childRect);
+    //     ApplyFanEffect();
+    // }
+    //
+    // private void OnCardRemovedFromHand(Card card)
+    // {
+    //     RectTransform childRect = card.View.transform as RectTransform;
+    //     _cardViews.Remove(childRect);
+    //     ApplyFanEffect();
+    // }
+
+//     void Update()
+//     {
+//         // 에디터에서 변경사항을 실시간으로 반영
+// #if UNITY_EDITOR
+//         if (!Application.isPlaying)
+//         {
+//             UpdateCardList();
+//         }
+// #endif
+//
+//         // 레이아웃 그룹의 계산이 끝난 후 정렬을 시작합니다.
+//         //ApplyFanEffect();
+//     }
 
     // 자식 카드의 목록을 업데이트합니다.
-    private void UpdateCardList()
-    {
-        _cardViews.Clear();
-        foreach (Transform child in transform)
-        {
-            RectTransform childRect = child as RectTransform;
-            if (childRect != null && child.gameObject.activeInHierarchy)
-            {
-                _cardViews.Add(childRect);
-            }
-        }
-    }
+    // private void UpdateCardList()
+    // {
+    //     _cardViews.Clear();
+    //     foreach (Transform child in transform)
+    //     {
+    //         RectTransform childRect = child as RectTransform;
+    //         if (childRect != null && child.gameObject.activeInHierarchy)
+    //         {
+    //             _cardViews.Add(childRect);
+    //         }
+    //     }
+    // }
 
-    private void UpdateCardList(IList<Card> cards)
+    private void ReCalculate(IList<Card> cards)
     {
         _cardViews.Clear();
         foreach (Card card in cards)
@@ -161,10 +173,10 @@ public class CardFanLayout : MonoBehaviour
         }
     }
 
-    public int GetIndexByPosX(float posX)
+    private int GetIndexByPosX(float posX)
     {
-        int N = _cardViews.Count;
-        for (int i = 0; i < N; i++)
+        int n = _cardViews.Count;
+        for (int i = 0; i < n; i++)
         {
             if (_cardViews[i].position.x > posX)
             {
@@ -172,12 +184,17 @@ public class CardFanLayout : MonoBehaviour
             }
         }
 
-        return N - 1;
+        return n - 1;
     }
 
-    private void OnDestroy()
+    public void ManualSort(CardView view)
     {
-        // DeckSystem.Instance.Hand.OnCardAdded -= OnCardAddedFromHand;
-        // DeckSystem.Instance.Hand.OnCardRemoved -= OnCardRemovedFromHand;
+        int curIndex = _cardViews.IndexOf(view.transform as RectTransform);
+        int newIndex = GetIndexByPosX(view.transform.position.x);
+
+        if (curIndex != newIndex)
+        {
+            _source.ManualInsert(view.Source, newIndex);
+        }
     }
 }

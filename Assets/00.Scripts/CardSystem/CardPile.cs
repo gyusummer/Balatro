@@ -29,4 +29,17 @@ public class CardPile : CustomList<Card>
 		
 		OnOrderChanged?.Invoke(_list);
 	}
+
+	public void ManualInsert(Card card, int index)
+	{
+		if (card == null || _list.Contains(card) == false)
+		{
+			return;
+		}
+
+		_list.Remove(card);
+		_list.Insert(index, card);
+		
+		OnOrderChanged?.Invoke(_list);
+	}
 }

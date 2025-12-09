@@ -109,7 +109,7 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 	{
 		// eventData.delta를 사용하여 부드럽게 위치 이동 (가장 효율적)
 		rectTransform.anchoredPosition += eventData.delta / rectTransform.localScale.x;
-		int index = fanLayout.GetIndexByPosX(transform.position.x);
+		fanLayout.ManualSort(this);
 		
 
 		// **팁: eventData.delta 대신 eventData.position을 사용하면 Canvas 설정에 따라 움직임이 부자연스러울 수 있습니다.**

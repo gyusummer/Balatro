@@ -85,8 +85,6 @@ public class RunManager : Singleton<RunManager>
     public GameObject BlindPanel;
     public GameObject ShopPanel;
     
-    private RunState _currentState = RunState.None;
-    
     public void ChangeState(int state)
     {
         RunState newState = (RunState)state;
