@@ -11,16 +11,37 @@ public class TradeDrop : MonoBehaviour, IDropHandler
 		
 		if (view == null) return;
 		
-		var com = view.Tradeable;
+		var tradeable = view.Tradeable;
 		
-		Debug.Log(com.IsPlayerOwned);
-		if (com.IsPlayerOwned)
+		Debug.Log(tradeable.IsPlayerOwned);
+		if (tradeable.IsPlayerOwned)
 		{
-			com.Sell();
+			Sell(tradeable);
 		}
 		else
 		{
-			com.Buy();
+			Buy(tradeable);
 		}
+	}
+
+	private static int PlayerMoney
+	{
+		get => Inventory.Instance.PlayerMoney;
+		set => Inventory.Instance.PlayerMoney = value;
+	}
+	
+	public void Buy(ITradeable item)
+	{
+		if (PlayerMoney >= item.Price)
+		{
+			PlayerMoney -= item.Price;
+			item.Buy();
+		}
+	}
+
+	public void Sell(ITradeable item)
+	{
+		item.Sell();
+		PlayerMoney += item.Price;
 	}
 }
