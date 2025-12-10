@@ -17,7 +17,31 @@ public class RunManager : Singleton<RunManager>
 		public static int HandCapacity = 8;
 	}
 
-	public int CurrentAnte = 1;
+    public TMP_Text AnteText;
+    public TMP_Text RoundText;
+    
+	private int _currentAnte = 1;
+    public int CurrentAnte
+    {
+        get => _currentAnte;
+        set
+        {
+            _currentAnte = value;
+            AnteText.text = value.ToString();
+        }
+    }
+
+    private int _round = 0;
+    public int Round
+    {
+        get => _round;
+        set
+        {
+            _round = value;
+            RoundText.text = value.ToString();
+        }
+    }
+    
     public int GoalAnte = 8;
     public Blind Small;
     public Blind Big;

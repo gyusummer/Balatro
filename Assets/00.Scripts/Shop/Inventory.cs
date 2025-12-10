@@ -1,16 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Inventory : Singleton<Inventory>
 {
 	[SerializeField] private Transform _jokerHolder;
 	[SerializeField] private Transform _consumableHolder;
+	public TMP_Text MoneyText;
 	
 	public CustomList<Joker> Jokers = new CustomList<Joker>(5);
 	public CustomList<ConsumableCard> Consumables = new CustomList<ConsumableCard>(2);
-	
-	[field: SerializeField] public int PlayerMoney { get; set; }
+
+	private int _playerMoney = 4;
+	public int PlayerMoney
+	{
+		get => _playerMoney;
+		set
+		{
+			_playerMoney = value;
+			MoneyText.text = $"${value.ToString()}";
+		}
+	}
 
 	public void Start()
 	{

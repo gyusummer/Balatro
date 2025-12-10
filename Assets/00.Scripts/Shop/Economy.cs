@@ -22,7 +22,7 @@ public class Economy
 		set => Inventory.Instance.PlayerMoney = value;
 	}
 
-	public void GetInterest()
+	public static void GetInterest()
 	{
 		int interest = (int)(PlayerMoney / 5);
 		switch (interest)

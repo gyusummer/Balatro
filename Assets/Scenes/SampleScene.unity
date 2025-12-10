@@ -8680,13 +8680,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _jokerHolder: {fileID: 497021399}
   _consumableHolder: {fileID: 1327535988}
+  MoneyText: {fileID: 1636140157}
   Jokers:
     Name: 
     Max: 5
   Consumables:
     Name: 
     Max: 2
-  <PlayerMoney>k__BackingField: 0
 --- !u!114 &2118569232
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8719,7 +8719,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c897d86d236568a409ee89166d40db2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CurrentAnte: 1
+  AnteText: {fileID: 1667634578}
+  RoundText: {fileID: 1543318282}
   GoalAnte: 2
   _smallScore: {fileID: 3107818}
   _bigScore: {fileID: 1373571203}
@@ -8740,9 +8741,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6780af9f89fc3d47b4d608f603763f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HandsText: {fileID: 629270388}
+  DiscardsText: {fileID: 1918561423}
   BlindGoal: 450
-  HandsLeft: 4
-  DiscardsLeft: 3
   HandCapacity: 8
 --- !u!1 &2138108318
 GameObject:

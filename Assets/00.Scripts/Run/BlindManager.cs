@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
 
@@ -25,10 +26,32 @@ public class Blind
 
 public class BlindManager : Singleton<BlindManager>
 {
+	public TMP_Text HandsText;
+	public TMP_Text DiscardsText;
+	
 	public Blind CurrentBlind;
 	public double BlindGoal = 450;
-	public int HandsLeft = 4;
-	public int DiscardsLeft = 3;
+
+	private int _handsLeft = 4;
+	public int HandsLeft
+	{
+		get => _handsLeft;
+		set
+		{
+			_handsLeft = value;
+			HandsText.text = value.ToString();
+		}
+	}
+	private int _discardsLeft = 3;
+	public int DiscardsLeft
+	{
+		get => _discardsLeft;
+		set
+		{
+			_discardsLeft = value;
+			DiscardsText.text = value.ToString();
+		}
+	}
 	public int HandCapacity = 8;
 	public bool CanDiscard => DiscardsLeft > 0;
 	
@@ -46,6 +69,7 @@ public class BlindManager : Singleton<BlindManager>
 		CurrentBlind = blind;
 		BlindGoal = blind.GoalScore;
 		ScoreBoard.Instance.UpdateGoal(BlindGoal);
+		RunManager.Instance.Round++;
 		DeckManager.Instance.InitDrawPile();
 		DeckManager.Instance.Hand.Clear();
 		FillHand();
@@ -73,6 +97,8 @@ public class BlindManager : Singleton<BlindManager>
 		// broadcast blind end event
 		// earn money;
 		IngameEventManager.CallEvent(new BlindFinished());
+		Economy.GetInterest();
+		Inventory.Instance.PlayerMoney += HandsLeft;
 		
 		if (CurrentBlind.Rank == Blind.BlindRank.Boss)
 		{

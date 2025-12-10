@@ -11,7 +11,7 @@ public abstract class Joker : ITradeable
     public JokerView View;
     public string Name;
     public bool IsPlayerOwned { get; set; }
-    public int Price { get; set; }
+    public int Price { get; set; } = 3;
     public abstract void Register();
     public abstract void Unregister();
     public bool Buy()
