@@ -84,25 +84,55 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 	{
 		Mult *= factor;
 	}
-	
-	public void ScoreHand(List<Card> hand)
-	{
-		HandInfo handInfo = PokerHand.CheckHandRank(hand);
-		IngameEventManager.CallEvent(new HandPlayedEventArgs(handInfo));
-		Debug.Log($"<color=orange>{handInfo.ToString()}</color>");
-        
-		Chip = s_baseScore[handInfo.Rank].Chip;
-		Mult = s_baseScore[handInfo.Rank].Mult;
 
-		foreach (var card in handInfo.ScoredCards)
-		{
-			card.ActivateInPlay();
-		}
+	public void EvaluatePlay(List<Card> playedHand)
+	{
+		EvaluateHand(playedHand, out HandInfo handInfo);
+		ScoreCards(handInfo.ScoredCards);
+		IngameEventManager.CallEvent(new HandPlayedEventArgs(handInfo));
+		ActivateHeldCards(playedHand);
+		ActivateJokers();
 		
 		AccumulateScore(Chip * Mult);
 	}
 	
-	public void AccumulateScore(double score)
+	private void EvaluateHand(List<Card> playedHand, out HandInfo handInfo)
+	{
+		handInfo = PokerHand.CheckHandRank(playedHand);
+		Debug.Log($"<color=orange>{handInfo.ToString()}</color>");
+        
+		Chip = s_baseScore[handInfo.Rank].Chip;
+		Mult = s_baseScore[handInfo.Rank].Mult;
+	}
+
+	private void ScoreCards(List<Card> scoredCards)
+	{
+		foreach (var card in scoredCards)
+		{
+			card.ActivateInPlay();
+		}
+	}
+
+	private void ActivateHeldCards(List<Card> playedHand)
+	{
+		foreach (Card card in DeckManager.Instance.Hand.CloneList())
+		{
+			if (playedHand.Contains(card))
+				continue;
+			card.ActivateInHeld();
+		}
+	}
+
+	private void ActivateJokers()
+	{
+		var jokers = Inventory.Instance.Jokers.CloneList();
+		foreach (Joker joker in jokers)
+		{
+			joker.Activate();
+		}
+	}
+	
+	private void AccumulateScore(double score)
 	{
 		TotalScore += score;
 		ScoreBoard.Instance.UpdateScore(TotalScore);

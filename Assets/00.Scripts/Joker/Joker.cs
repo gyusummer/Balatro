@@ -14,6 +14,8 @@ public abstract class Joker : ITradeable
     public int Price { get; set; } = 3;
     public abstract void Register();
     public abstract void Unregister();
+    public virtual void Activate() { }
+    
     public bool Buy()
     {
         if (Shop.Instance.Jokers.Contains(this) && Inventory.Instance.Jokers.IsFull == false)

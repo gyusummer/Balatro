@@ -131,7 +131,7 @@ public class Card
 				break;
 			case CardEnhancement.Lucky:
 				Chance.Roll(5, () => ScoreCalculator.Instance.AddMult(20));
-				// Chance.Roll(15, () => +20$)
+				Chance.Roll(15, () => Inventory.Instance.PlayerMoney += 20);
 				break;
 			default:
 				break;
@@ -139,10 +139,14 @@ public class Card
 		
 		IngameEventManager.CallEvent(new CardScoredEventArgs(this));
 	}
-
-	public void ActivateInHand()
+	
+	public void ActivateInHeld()
 	{
-		
+		if (Enhancement == CardEnhancement.Steel)
+		{
+			ScoreCalculator.Instance.ScaleMult(1.5d);
+		}
+		IngameEventManager.CallEvent(new CardHeldEventArgs(this));
 	}
 
 	public void Destroy()

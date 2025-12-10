@@ -53,7 +53,12 @@ public class CardScoredEventArgs : IngameEventArgs
 
 public class CardHeldEventArgs : IngameEventArgs
 {
+	public Card Card;
 	
+	public CardHeldEventArgs(Card card)
+	{
+		Card = card;
+	}
 }
 
 public class JokerActivatedEventArgs : IngameEventArgs

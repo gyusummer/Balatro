@@ -26,16 +26,16 @@ public enum HandRank
 public struct HandInfo
 {
     public HandRank Rank;
-    public List<Card> SelectedCards; // 선택된 카드
+    public List<Card> PlayedCards; // 플레이한 카드
     public List<Card> ScoredCards; // 족보를 이룬 카드 (특수 효과 발동 대상)
     public List<Card> ExtraCards;  // 나머지 카드 (키커)
     
-    public HandInfo(List<Card> hand)
+    public HandInfo(List<Card> played)
     {
         Rank = HandRank.HighCard;
-        SelectedCards = hand;
-        ScoredCards = hand.OrderByDescending(c => c.Rank).Take(1).ToList(); // 가장 높은 카드 1장만 scoredCards에 포함
-        ExtraCards = hand.OrderByDescending(c => c.Rank).Skip(1).ToList();
+        PlayedCards = played;
+        ScoredCards = played.OrderByDescending(c => c.Rank).Take(1).ToList(); // 가장 높은 카드 1장만 scoredCards에 포함
+        ExtraCards = played.OrderByDescending(c => c.Rank).Skip(1).ToList();
     }
 
     public override string ToString()

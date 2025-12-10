@@ -116,7 +116,7 @@ public class BlindManager : Singleton<BlindManager>
 			return false;
 		}
 		// Check Poker Hand
-		ScoreCalculator.Instance.ScoreHand(selectedCards);
+		ScoreCalculator.Instance.EvaluatePlay(selectedCards);
 		
 		foreach (Card card in selectedCards)
 		{
