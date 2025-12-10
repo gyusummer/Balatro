@@ -20,7 +20,6 @@ public abstract class Joker : ITradeable
         {
             Shop.Instance.Jokers.Remove(this);
             Inventory.Instance.Jokers.Add(this);
-            IsPlayerOwned = true;
             Debug.Log($"{this.Name} Buy");
             return true;
         }
@@ -33,7 +32,6 @@ public abstract class Joker : ITradeable
         {
             Inventory.Instance.Jokers.Remove(this);
             Debug.Log($"{this.Name} Sell");
-            IsPlayerOwned = false;
             return true;
         }
         return false;

@@ -38,7 +38,7 @@ public abstract class TarotCard : ConsumableCard
 	}
 }
 
-// UNDONE: Complete function / After : Money, Joker, Rearrange, Inventory
+// UNDONE: Complete WheelOfFortune / After : Edition
 
 // The Fool	Creates the last Tarot or Planet card used during this run
 // The Fool excluded
@@ -81,9 +81,15 @@ public class Magician : TarotCard
 // (Must have room)
 public class HighPriestess : TarotCard
 {
+	public override bool CheckCondition(int selectedCount)
+	{
+		return Inventory.Instance.Consumables.IsFull == false || this.IsPlayerOwned;
+	}
+	
 	protected override void Effect(List<Card> selectedCards)
 	{
-		
+		Inventory.Instance.Consumables.Add(PlanetFactory.Instance.CreateRandom(false));
+		Inventory.Instance.Consumables.Add(PlanetFactory.Instance.CreateRandom(false));
 	}
 }
 
@@ -106,13 +112,13 @@ public class Emperor : TarotCard
 {
 	public override bool CheckCondition(int selectedCount)
 	{
-		return Inventory.Instance.Consumables.IsFull == false;
+		return Inventory.Instance.Consumables.IsFull == false || this.IsPlayerOwned;
 	}
 
 	protected override void Effect(List<Card> selectedCards)
 	{
-		Inventory.Instance.Consumables.Add(PlanetFactory.Instance.CreateRandom(false));
-		Inventory.Instance.Consumables.Add(PlanetFactory.Instance.CreateRandom(false));
+		Inventory.Instance.Consumables.Add(TarotFactory.Instance.CreateRandom(false));
+		Inventory.Instance.Consumables.Add(TarotFactory.Instance.CreateRandom(false));
 	}
 }
 
@@ -162,6 +168,17 @@ public class Hermit : TarotCard
 {
 	protected override void Effect(List<Card> selectedCards)
 	{
+		int value = Inventory.Instance.PlayerMoney;
+		if (value < 0)
+		{
+			value = 0;
+		}
+		else if (value > 20)
+		{
+			value = 20;
+		}
+
+		Inventory.Instance.PlayerMoney += value;
 	}
 }
 
@@ -235,6 +252,19 @@ public class Temperance : TarotCard
 {
 	protected override void Effect(List<Card> selectedCards)
 	{
+		var jokers = Inventory.Instance.Jokers.CloneList();
+		int value = 0;
+		foreach (Joker joker in jokers)
+		{
+			value += joker.Price;
+		}
+
+		if (value > 50)
+		{
+			value = 50;
+		}
+		
+		Inventory.Instance.PlayerMoney += value;
 	}
 }
 // The Devil	Enhances 1 selected card into a Gold Card

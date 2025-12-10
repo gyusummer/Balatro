@@ -76,5 +76,4 @@ public class CustomList<T>
     {
         return new List<T>(_list);
     }
-
 }

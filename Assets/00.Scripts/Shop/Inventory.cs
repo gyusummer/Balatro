@@ -26,15 +26,20 @@ public class Inventory : Singleton<Inventory>
 	public void Start()
 	{
 		Jokers.OnAdded += ProcessView;
+		Jokers.OnAdded += joker => joker.Register();
+		Jokers.OnAdded += joker => joker.IsPlayerOwned = true;
 		Jokers.OnRemoved += joker => joker.Unregister();
+		Jokers.OnRemoved += joker => joker.IsPlayerOwned = false;
 		Jokers.OnRemoved += joker => Destroy(joker.View.gameObject);
+		
 		Consumables.OnAdded += ProcessView;
+		Consumables.OnAdded += consumable => consumable.IsPlayerOwned = true;
+		Consumables.OnRemoved += consumable => consumable.IsPlayerOwned = false;
 		Consumables.OnRemoved += consume => Destroy(consume.View.gameObject);
 	}
 
 	private void ProcessView(Joker joker)
 	{
-		joker.Register();
 		if (joker.View == null)
 		{
 			Debug.Log($"{joker.Name}'s View is null");

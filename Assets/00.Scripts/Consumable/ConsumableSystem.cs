@@ -20,8 +20,8 @@ public abstract class ConsumableCard : ITradeable
 			return false;
 		}
 
-		Effect(selectedCards);
 		Inventory.Instance.Consumables.Remove(this);
+		Effect(selectedCards);
 		IngameEventManager.CallEvent(new ConsumableConsumedEventArgs(this));
 		UnityEngine.Object.Destroy(View.gameObject);
 		return true;
@@ -33,7 +33,6 @@ public abstract class ConsumableCard : ITradeable
 		{
 			Shop.Instance.Consumables.Remove(this);
 			Inventory.Instance.Consumables.Add(this);
-			IsPlayerOwned = true;
 			Debug.Log($"{this.Name} Buy");
 			return true;
 		}
@@ -45,7 +44,6 @@ public abstract class ConsumableCard : ITradeable
 		if (Inventory.Instance.Consumables.Contains(this))
 		{
 			Inventory.Instance.Consumables.Remove(this);
-			IsPlayerOwned = false;
 			Debug.Log($"{this.Name} Sell");
 			return true;
 		}
