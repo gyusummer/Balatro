@@ -38,6 +38,7 @@ public class RunManager : Singleton<RunManager>
 	public void WinGame()
 	{
 		Debug.Log("<color=red>WinGame</color>");
+        RunResultPanel.SetActive(true);
 	}
 	
 	public void LoseGame()
@@ -84,6 +85,7 @@ public class RunManager : Singleton<RunManager>
     public GameObject AntePanel;
     public GameObject BlindPanel;
     public GameObject ShopPanel;
+    public GameObject RunResultPanel;
     
     public void ChangeState(int state)
     {
