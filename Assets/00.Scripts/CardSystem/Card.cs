@@ -80,6 +80,8 @@ public class Card
 		}
 	}
 
+	public Edition Edition = Edition.None;
+
 	[HideInInspector] public CardView View;
 
 	public Card(CardSuit suit, CardRank rank)
@@ -132,6 +134,21 @@ public class Card
 			case CardEnhancement.Lucky:
 				Chance.Roll(5, () => ScoreCalculator.Instance.AddMult(20));
 				Chance.Roll(15, () => Inventory.Instance.PlayerMoney += 20);
+				break;
+			default:
+				break;
+		}
+
+		switch (Edition)
+		{
+			case Edition.Foil:
+				ScoreCalculator.Instance.AddChip(50);
+				break;
+			case Edition.Holographic:
+				ScoreCalculator.Instance.AddMult(10);
+				break;
+			case Edition.Polychrome:
+				ScoreCalculator.Instance.ScaleMult(1.5d);
 				break;
 			default:
 				break;

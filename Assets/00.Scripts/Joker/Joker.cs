@@ -1,20 +1,36 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.SocialPlatforms.Impl;
 
-[System.Serializable]
+[Serializable]
 public abstract class Joker : ITradeable
 {
     public JokerView View;
     public string Name;
+    public Edition Edition = Edition.None;
     public bool IsPlayerOwned { get; set; }
     public int Price { get; set; } = 3;
     public abstract void Register();
     public abstract void Unregister();
-    public virtual void Activate() { }
+    public Action ActivateEffect { get; set; } = null;
+
+    public void Activate()
+    {
+        ActivateEffect?.Invoke();
+        switch (Edition)
+        {
+            case Edition.Foil:
+                ScoreCalculator.Instance.AddChip(50);
+                break;
+            case Edition.Holographic:
+                ScoreCalculator.Instance.AddMult(10);
+                break;
+            case Edition.Polychrome:
+                ScoreCalculator.Instance.ScaleMult(1.5d);
+                break;
+            default:
+                break;
+        }
+    }
     
     public bool Buy()
     {
@@ -40,15 +56,42 @@ public abstract class Joker : ITradeable
     }
 }
 
-[System.Serializable]
+public class ActivateJoker : Joker
+{
+    public ActivateJoker(string name, int price, Action activateEffect)
+    {
+        Name = name;
+        Price = price;
+        ActivateEffect = activateEffect;
+    }
+
+    public override void Register()
+    {
+        if (Edition == Edition.Negative)
+        {
+            Inventory.Instance.Jokers.Max++;
+        }
+    }
+
+    public override void Unregister()
+    {
+        if (Edition == Edition.Negative)
+        {
+            Inventory.Instance.Jokers.Max--;
+        }
+    }
+}
+
+[Serializable]
 public class Joker<TEventArgs> : Joker where TEventArgs : IngameEventArgs
 {
     private Predicate<TEventArgs> _condition;
     private Action _effect;
 
-    public Joker(string name, Predicate<TEventArgs> condition, Action effect)
+    public Joker(string name, int price, Predicate<TEventArgs> condition, Action effect)
     {
         Name = name;
+        Price = price;
         _condition = condition;
         _effect = effect;
     }

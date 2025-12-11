@@ -17,8 +17,10 @@ MonoBehaviour:
   - {fileID: 1118467602, guid: 48e41a7d0cf931a44a1a94ec6b9cdbbb, type: 3}
   - {fileID: -166756667, guid: 48e41a7d0cf931a44a1a94ec6b9cdbbb, type: 3}
   - {fileID: 1604400429, guid: 48e41a7d0cf931a44a1a94ec6b9cdbbb, type: 3}
+  - {fileID: 1456654583, guid: 48e41a7d0cf931a44a1a94ec6b9cdbbb, type: 3}
   ImageNames:
   - GreedyJoker
   - LustyJoker
   - WrathfulJoker
   - GluttonousJoker
+  - Jimbo

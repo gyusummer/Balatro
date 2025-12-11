@@ -3,6 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum Edition
+{
+	None = 0,
+	Foil,
+	Holographic,
+	Polychrome,
+	Negative
+}
+
 public class ScoreCalculator : Singleton<ScoreCalculator>
 {
 	private static Dictionary<HandRank, ScoreComponent> s_baseScore;
