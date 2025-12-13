@@ -35,13 +35,13 @@ MonoBehaviour:
     m_Value: 0
   m_Value:
     m_OverrideState: 1
-    m_Value: 0.02
+    m_Value: 0.01
   m_Tiling:
     m_OverrideState: 1
-    m_Value: 0.02
+    m_Value: 0.01
   m_Angle:
     m_OverrideState: 1
     m_Value: 75
   m_Motion:
     m_OverrideState: 1
-    m_Value: 0.429
+    m_Value: 0.194
