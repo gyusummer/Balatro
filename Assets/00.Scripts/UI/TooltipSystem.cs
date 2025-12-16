@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public interface ITooltipElement : IPointerEnterHandler, IPointerExitHandler
+public interface ITooltipSource : IPointerEnterHandler, IPointerExitHandler
 {
     public string Header { get; }
     public string Content { get; }
@@ -12,18 +12,21 @@ public interface ITooltipElement : IPointerEnterHandler, IPointerExitHandler
 
 public class TooltipSystem : Singleton<TooltipSystem>
 {
+    public JokerDescription JokerDescription;
+    
     [SerializeField] private Tooltip _tooltip;
     private static Tooltip Tooltip => Instance._tooltip;
     
-    public static void ShowTooltip(ITooltipElement element)
+    public static void ShowTooltip(ITooltipSource source)
     {
-        Tooltip.UpdateImmediately(element);
         Tooltip.gameObject.SetActive(true);
+        Tooltip.UpdateImmediately(source);
     }
 
     public static void HideTooltip()
     {
         Tooltip.gameObject.SetActive(false);
+        Tooltip.transform.SetParent(null);
         Tooltip.Clear();
     }
 }

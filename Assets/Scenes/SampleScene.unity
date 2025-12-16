@@ -4120,7 +4120,7 @@ MonoBehaviour:
   HeaderText: {fileID: 762582176}
   ContentText: {fileID: 1829399779}
   LayoutElement: {fileID: 742511636}
-  CharacterLimit: 15
+  CharacterLimit: 20
   Padding: {x: 0, y: 20}
 --- !u!114 &742511636
 MonoBehaviour:
@@ -4137,7 +4137,7 @@ MonoBehaviour:
   m_IgnoreLayout: 0
   m_MinWidth: -1
   m_MinHeight: -1
-  m_PreferredWidth: 280
+  m_PreferredWidth: 400
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
@@ -4494,7 +4494,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Header
+  m_text: Queen of <color=#f06b3f>Diamond</color>
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4557,7 +4557,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 10, y: 0, z: 10, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -7666,6 +7666,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayingCard
       objectReference: {fileID: 0}
+    - target: {fileID: 5947236146283197018, guid: 814c2924fb8e5f94187133508903f9b4,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5957092072872259520, guid: 814c2924fb8e5f94187133508903f9b4,
         type: 3}
       propertyPath: Tooltip
@@ -9055,7 +9060,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Con
+  m_text: asdfadsfasdfasdfsdfsdfda
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -9731,6 +9736,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88684f8fe5c4414281f02807be290549, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  JokerDescription: {fileID: 11400000, guid: 8eb878f1d057a2c4aa5f734e82b6ad66, type: 2}
   _tooltip: {fileID: 742511635}
 --- !u!1 &2138108318
 GameObject:

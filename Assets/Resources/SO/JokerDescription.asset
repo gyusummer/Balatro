@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eba67d9fe1dac0449ae81361b7f22084, type: 3}
+  m_Name: JokerDescription
+  m_EditorClassIdentifier: 
+  Texts:
+  - Name: Jimbo
+    Description: +4 Mult
+  - Name: GreedyJoker
+    Description: Played cards with  Diamond suit give +3 Mult when scored
+  - Name: LustyJoker
+    Description: Played cards with  Heart suit give +3 Mult when scored
+  - Name: WrathfulJoker
+    Description: Played cards with  Spade suit give +3 Mult when scored
+  - Name: GluttonousJoker
+    Description: Played cards with  Club suit give +3 Mult when scored

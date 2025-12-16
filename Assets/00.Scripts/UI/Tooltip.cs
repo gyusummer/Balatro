@@ -21,16 +21,16 @@ public class Tooltip : MonoBehaviour
 	{
 		uiCamera = Camera.main;
 	}
-
-	public void UpdateImmediately(ITooltipElement source)
+	
+	public void UpdateImmediately(ITooltipSource source)
 	{
 		SetText(source);
+		transform.SetParent(source.Transform);
 		LayoutRebuilder.ForceRebuildLayoutImmediate(transform as RectTransform);
 		SetPosition(source);
-		transform.SetParent(source.Transform);
 	}
-	
-	public void SetText(ITooltipElement source)
+
+	public void SetText(ITooltipSource source)
 	{
 		HeaderText.text = source.Header;
 		ContentText.text = source.Content;
@@ -47,7 +47,7 @@ public class Tooltip : MonoBehaviour
 		ContentText.text = "";
 	}
     
-	public void SetPosition(ITooltipElement source)
+	public void SetPosition(ITooltipSource source)
 	{
 		// Anchor
 		RectTransform selfRect = transform as RectTransform;
@@ -70,6 +70,8 @@ public class Tooltip : MonoBehaviour
         Vector2 tooltipScreenLB = RectTransformUtility.WorldToScreenPoint(uiCamera, tooltipCorners[0]);
         Vector2 tooltipScreenRT = RectTransformUtility.WorldToScreenPoint(uiCamera, tooltipCorners[2]);
         Vector2 tooltipScreenSize = tooltipScreenRT - tooltipScreenLB;
+        Debug.Log(tooltipScreenSize);
+        Debug.Log(selfRect.rect.size);
         
         Vector2 totalOffset = sourceScreenSize / 2 + tooltipScreenSize / 2f + Padding;
 
@@ -93,8 +95,7 @@ public class Tooltip : MonoBehaviour
         // Apply
         Vector2 localPointer;
         if (RectTransformUtility.ScreenPointToLocalPointInRectangle
-	            (transform.parent.GetComponent<RectTransform>(),
-		            finalScreenPos, uiCamera, out localPointer))
+	            (transform.parent.GetComponent<RectTransform>(), finalScreenPos, uiCamera, out localPointer))
         {
             selfRect.localPosition = localPointer;
         }

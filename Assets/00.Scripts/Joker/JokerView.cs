@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class JokerView : View<Joker>, ITradeableView, IBeginDragHandler, IEndDragHandler, IDragHandler
+public class JokerView : View<Joker>, ITradeableView, IBeginDragHandler, IEndDragHandler, IDragHandler, ITooltipSource
 {
     public ITradeable Tradeable => Source;
     public Joker Source;
@@ -73,4 +73,19 @@ public class JokerView : View<Joker>, ITradeableView, IBeginDragHandler, IEndDra
         canvasGroup.alpha = 1f;
     }
 
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        TooltipSystem.ShowTooltip(this);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (eventData.dragging == false)
+            TooltipSystem.HideTooltip();
+    }
+
+    public string Header => Source.Name;
+    public string Content => TooltipSystem.Instance.JokerDescription.GetJokerString(Source.Name).Description;
+    public RectTransform Rect => transform as RectTransform;
+    public Transform Transform => transform;
 }

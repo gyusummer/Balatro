@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IEndDragHandler, IDragHandler, ITooltipElement
+public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IEndDragHandler, IDragHandler, ITooltipSource
 {
 	public ImageContainer CardPapers;
 	public ImageContainer CardPictures;
@@ -108,7 +108,8 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 	{
 		// eventData.delta를 사용하여 부드럽게 위치 이동 (가장 효율적)
 		Rect.anchoredPosition += eventData.delta / Rect.localScale.x;
-		fanLayout.ManualSort(this);
+		if (fanLayout != null)
+			fanLayout.ManualSort(this);
 		
 
 		// **팁: eventData.delta 대신 eventData.position을 사용하면 Canvas 설정에 따라 움직임이 부자연스러울 수 있습니다.**
@@ -135,15 +136,13 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 
 	public void OnPointerExit(PointerEventData eventData)
 	{
-		TooltipSystem.HideTooltip();
+		if (eventData.dragging == false)
+			TooltipSystem.HideTooltip();
 	}
 
-	public string Header { get; set; } = "Card";
+	public string Header => Source.ToString();
 
-	public string Content { get; set; } = "first\n" +
-	                                          "second\n" +
-	                                          "third\n" +
-	                                          "fourth\n";
+	public string Content => $"+{Source.Chip} chips";
 
 	public RectTransform Rect { get; private set; }
 
