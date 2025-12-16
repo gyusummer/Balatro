@@ -3,9 +3,9 @@ Shader "Unlit/Background"
     Properties
     {
         _PixelSizeFactor ("Pixel Size Factor", Float) = 700
-        _Color1 ("Color1", Color) = (1,0,0, 1)
-        _Color2 ("Color2", Color) = (0,0,1, 1)
-        _Color3 ("Color3", Color) = (0,0,0, 1)
+        [HDR] _Color1 ("Color1", Color) = (1,0,0, 1)
+        [HDR] _Color2 ("Color2", Color) = (0,0,1, 1)
+        [HDR] _Color3 ("Color3", Color) = (0,0,0, 1)
         _Speed("Speed", Float) = 1
         _SpinAmount ("Spin Amount", Float) = 1
         _SpinEase ("Spin Ease", Float) = 1

@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class TestCode : MonoBehaviour
 {
+    private void Awake()
+    {
+        Application.targetFrameRate = 30;
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Keypad0))

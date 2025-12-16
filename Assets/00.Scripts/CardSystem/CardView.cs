@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
+public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IEndDragHandler, IDragHandler, ITooltipElement
 {
 	public ImageContainer CardPapers;
 	public ImageContainer CardPictures;
@@ -85,12 +85,11 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 	}
 
 	private CardFanLayout fanLayout;
-	private RectTransform rectTransform;
 	private CanvasGroup canvasGroup;
 
 	void Awake()
 	{
-		rectTransform = GetComponent<RectTransform>();
+		Rect = GetComponent<RectTransform>();
 		canvasGroup = GetComponent<CanvasGroup>();
 		fanLayout = transform.parent.GetComponent<CardFanLayout>();
 	}
@@ -101,14 +100,14 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 		// 드롭 타겟이 드래그 요소를 '통과하여' 그 아래에 있는 요소를 감지할 수 있도록 잠시 끕니다.
 		canvasGroup.blocksRaycasts = false; 
 		canvasGroup.alpha = 0.6f; // 살짝 반투명하게 만듦
-		if (fanLayout != null) fanLayout.DraggingChild = rectTransform;
+		if (fanLayout != null) fanLayout.DraggingChild = Rect;
 	}
 
 	// 2. 드래그 중: 마우스 포인터의 위치를 따라 요소의 위치를 업데이트합니다.
 	public void OnDrag(PointerEventData eventData)
 	{
 		// eventData.delta를 사용하여 부드럽게 위치 이동 (가장 효율적)
-		rectTransform.anchoredPosition += eventData.delta / rectTransform.localScale.x;
+		Rect.anchoredPosition += eventData.delta / Rect.localScale.x;
 		fanLayout.ManualSort(this);
 		
 
@@ -128,4 +127,25 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 		}
 		// **핵심:** 드롭 영역에 놓았는지 여부와 실제 효과는 DropTarget 스크립트에서 처리됩니다.
 	}
+
+	public void OnPointerEnter(PointerEventData eventData)
+	{
+		TooltipSystem.ShowTooltip(this);
+	}
+
+	public void OnPointerExit(PointerEventData eventData)
+	{
+		TooltipSystem.HideTooltip();
+	}
+
+	public string Header { get; set; } = "Card";
+
+	public string Content { get; set; } = "first\n" +
+	                                          "second\n" +
+	                                          "third\n" +
+	                                          "fourth\n";
+
+	public RectTransform Rect { get; private set; }
+
+	public Transform Transform => transform;
 }
