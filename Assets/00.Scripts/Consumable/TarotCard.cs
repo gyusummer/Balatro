@@ -7,7 +7,6 @@ using UnityEngine;
 public abstract class TarotCard : ConsumableCard
 {
 	public int MaxTarget = 1;
-	public override string Description => "Description";
 
 	public override bool CheckCondition(int selectedCount)
 	{
@@ -46,6 +45,10 @@ public abstract class TarotCard : ConsumableCard
 public class Fool : TarotCard
 {
 	private ConsumableCard lastCard => ConsumableSystem.Instance.LastConsumableCard;
+
+	public override string Description =>
+		"Creates the last Tarot or Planet card used during this run\nThe Fool excluded";
+
 	public override bool CheckCondition(int selectedCount)
 	{
 		if (lastCard is not Fool and not null)
@@ -72,6 +75,8 @@ public class Magician : TarotCard
 		MaxTarget = 2;
 	}
 
+	public override string Description => "Enhances 2 selected cards to Lucky Cards";
+
 	protected override void Effect(List<Card> selectedCards)
 	{
 		EnhanceCard(selectedCards, CardEnhancement.Lucky);
@@ -82,6 +87,8 @@ public class Magician : TarotCard
 // (Must have room)
 public class HighPriestess : TarotCard
 {
+	public override string Description => "Creates up to 2 random Planet cards\n(Must have room)";
+
 	public override bool CheckCondition(int selectedCount)
 	{
 		return Inventory.Instance.Consumables.IsFull == false || this.IsPlayerOwned;
@@ -97,6 +104,7 @@ public class HighPriestess : TarotCard
 // The Empress	Enhances 2 selected cards to Mult Cards
 public class Empress : TarotCard
 {
+	public override string Description => "Enhances 2 selected cards to Mult Cards";
 	public Empress()
 	{
 		MaxTarget = 2;
@@ -111,6 +119,7 @@ public class Empress : TarotCard
 // (Must have room)
 public class Emperor : TarotCard
 {
+	public override string Description => "Creates up to 2 random Tarot cards\n(Must have room)";
 	public override bool CheckCondition(int selectedCount)
 	{
 		return Inventory.Instance.Consumables.IsFull == false || this.IsPlayerOwned;
@@ -126,6 +135,7 @@ public class Emperor : TarotCard
 // The Hierophant	Enhances 2 selected cards to Bonus Cards
 public class Hierophant : TarotCard
 {
+	public override string Description => "Enhances 2 selected cards to Bonus Cards";
 	public Hierophant()
 	{
 		MaxTarget = 2;
@@ -139,6 +149,7 @@ public class Hierophant : TarotCard
 // The Lovers	Enhances 1 selected card into a Wild Card
 public class Lovers : TarotCard
 {
+	public override string Description => "Enhances 1 selected card into a Wild Card";
 	protected override void Effect(List<Card> selectedCards)
 	{
 		EnhanceCard(selectedCards, CardEnhancement.Wild);
@@ -148,6 +159,7 @@ public class Lovers : TarotCard
 // The Chariot	Enhances 1 selected card into a Steel Card
 public class Chariot : TarotCard
 {
+	public override string Description => "Enhances 1 selected card into a Steel Card";
 	protected override void Effect(List<Card> selectedCards)
 	{
 		EnhanceCard(selectedCards, CardEnhancement.Steel);
@@ -157,6 +169,7 @@ public class Chariot : TarotCard
 // Justice	Enhances 1 selected card into a Glass Card
 public class Justice : TarotCard
 {
+	public override string Description => "Enhances 1 selected card into a Glass Card";
 	protected override void Effect(List<Card> selectedCards)
 	{
 		EnhanceCard(selectedCards, CardEnhancement.Glass);
@@ -167,6 +180,12 @@ public class Justice : TarotCard
 // (Max of $20)
 public class Hermit : TarotCard
 {
+	public override string Description => "The Hermit Doubles money\n(Max of $20)";
+	public override bool CheckCondition(int selectedCount)
+	{
+		return true;
+	}
+
 	protected override void Effect(List<Card> selectedCards)
 	{
 		int value = Inventory.Instance.PlayerMoney;
@@ -186,6 +205,7 @@ public class Hermit : TarotCard
 // The Wheel of Fortune	1 in 4 chance to add Foil, Holographic, or Polychrome edition to a random Joker
 public class WheelOfFortune : TarotCard
 {
+	public override string Description => "1 in 4 chance to add Foil, Holographic, or Polychrome edition to a random Joker";
 	protected override void Effect(List<Card> selectedCards)
 	{
 	}
@@ -194,6 +214,7 @@ public class WheelOfFortune : TarotCard
 // Strength	Increases rank of up to 2 selected cards by 1
 public class Strength : TarotCard
 {
+	public override string Description => "Increases rank of up to 2 selected cards by 1";
 	public Strength()
 	{
 		MaxTarget = 2;
@@ -218,6 +239,7 @@ public class Strength : TarotCard
 // The Hanged Man	Destroys up to 2 selected cards
 public class HangedMan : TarotCard
 {
+	public override string Description => "Destroys up to 2 selected cards";
 	public HangedMan()
 	{
 		MaxTarget = 2;
@@ -236,6 +258,7 @@ public class HangedMan : TarotCard
 // (Drag to rearrange)
 public class Death : TarotCard
 {
+	public override string Description => "Select 2 cards, convert the left card into the right card\n(Drag to rearrange)";
 	public override bool CheckCondition(int selectedCount)
 	{
 		return selectedCount == 2;
@@ -251,6 +274,7 @@ public class Death : TarotCard
 // (Max of $50)
 public class Temperance : TarotCard
 {
+	public override string Description => "Gives the total sell value of all current Jokers\n(Max of $50)";
 	protected override void Effect(List<Card> selectedCards)
 	{
 		var jokers = Inventory.Instance.Jokers.CloneList();
@@ -271,6 +295,7 @@ public class Temperance : TarotCard
 // The Devil	Enhances 1 selected card into a Gold Card
 public class Devil : TarotCard
 {
+	public override string Description => "Enhances 1 selected card into a Gold Card";
 	protected override void Effect(List<Card> selectedCards)
 	{
 		EnhanceCard(selectedCards, CardEnhancement.Gold);
@@ -279,6 +304,7 @@ public class Devil : TarotCard
 // The Tower	Enhances 1 selected card into a Stone Card
 public class Tower : TarotCard
 {
+	public override string Description => "Enhances 1 selected card into a Stone Card";
 	protected override void Effect(List<Card> selectedCards)
 	{
 		EnhanceCard(selectedCards, CardEnhancement.Stone);
@@ -288,6 +314,7 @@ public class Tower : TarotCard
 // The Star	Converts up to 3 selected cards to  Diamonds
 public class Star : TarotCard
 {
+	public override string Description => "Converts up to 3 selected cards to Diamonds";
 	public Star()
 	{
 		MaxTarget = 3;
@@ -301,6 +328,7 @@ public class Star : TarotCard
 // The Moon	Converts up to 3 selected cards to  Clubs
 public class Moon : TarotCard
 {
+	public override string Description => "Converts up to 3 selected cards to Clubs";
 	public Moon()
 	{
 		MaxTarget = 3;
@@ -314,6 +342,7 @@ public class Moon : TarotCard
 // The Sun	Converts up to 3 selected cards to  Hearts
 public class Sun : TarotCard
 {
+	public override string Description => "Converts up to 3 selected cards to Hearts";
 	public Sun()
 	{
 		MaxTarget = 3;
@@ -328,6 +357,7 @@ public class Sun : TarotCard
 // 	(Must have room)
 public class Judgement : TarotCard
 {
+	public override string Description => "Creates a random Joker card\n(Must have room)";
 	public override bool CheckCondition(int selectedCount)
 	{
 		return Inventory.Instance.Jokers.IsFull == false;
@@ -342,6 +372,7 @@ public class Judgement : TarotCard
 // The World	Converts up to 3 selected cards to  Spades
 public class World : TarotCard
 {
+	public override string Description => "Converts up to 3 selected cards to Spades";
 	public World()
 	{
 		MaxTarget = 3;
