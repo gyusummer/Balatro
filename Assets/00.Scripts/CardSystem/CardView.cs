@@ -136,8 +136,7 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 
 	public void OnPointerExit(PointerEventData eventData)
 	{
-		if (eventData.dragging == false)
-			TooltipSystem.HideTooltip();
+		TooltipSystem.HideTooltip();
 	}
 
 	public string Header => Source.ToString();

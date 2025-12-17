@@ -14,8 +14,9 @@ public enum Edition
 
 public class ScoreCalculator : Singleton<ScoreCalculator>
 {
-	private static Dictionary<HandRank, ScoreComponent> s_baseScore;
-	private static Dictionary<HandRank, ScoreComponent> s_planetValue;
+	public static Dictionary<HandRank, int> s_PokerHandLevel;
+	public static Dictionary<HandRank, ScoreComponent> s_BaseScore;
+	public static Dictionary<HandRank, ScoreComponent> s_PlanetValue;
 
 	private double _chip;
 	public double Chip
@@ -42,7 +43,22 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 	protected override void Awake()
 	{
 		base.Awake();
-		s_baseScore = new Dictionary<HandRank, ScoreComponent>()
+		s_PokerHandLevel = new Dictionary<HandRank, int>()
+		{
+			[HandRank.HighCard] = 1,
+			[HandRank.Pair] = 1,
+			[HandRank.TwoPair] = 1,
+			[HandRank.ThreeOfAKind] = 1,
+			[HandRank.Straight] = 1,
+			[HandRank.Flush] = 1,
+			[HandRank.FullHouse] = 1,
+			[HandRank.FourOfAKind] = 1,
+			[HandRank.StraightFlush] = 1,
+			[HandRank.FiveOfAKind] = 1,
+			[HandRank.FlushHouse] = 1,
+			[HandRank.FlushFive] = 1
+		};
+		s_BaseScore = new Dictionary<HandRank, ScoreComponent>()
 		{
 			[HandRank.HighCard] = new ScoreComponent(5, 1),
 			[HandRank.Pair] = new ScoreComponent(10, 2),
@@ -57,7 +73,7 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 			[HandRank.FlushHouse] = new ScoreComponent(140, 14),
 			[HandRank.FlushFive] = new ScoreComponent(160, 16)
 		};
-		s_planetValue = new Dictionary<HandRank, ScoreComponent>()
+		s_PlanetValue = new Dictionary<HandRank, ScoreComponent>()
 		{
 			[HandRank.HighCard] = new ScoreComponent(10, 1),
 			[HandRank.Pair] = new ScoreComponent(15, 1),
@@ -110,8 +126,8 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 		handInfo = PokerHand.CheckHandRank(playedHand);
 		Debug.Log($"<color=orange>{handInfo.ToString()}</color>");
         
-		Chip = s_baseScore[handInfo.Rank].Chip;
-		Mult = s_baseScore[handInfo.Rank].Mult;
+		Chip = s_BaseScore[handInfo.Rank].Chip;
+		Mult = s_BaseScore[handInfo.Rank].Mult;
 	}
 
 	private void ScoreCards(List<Card> scoredCards)
@@ -149,12 +165,13 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 	
 	public void UpgradePokerHand(HandRank handRank)
 	{
-		ScoreComponent handValue = s_baseScore[handRank];
-		ScoreComponent planetValue = s_planetValue[handRank];
+		ScoreComponent handValue = s_BaseScore[handRank];
+		ScoreComponent planetValue = s_PlanetValue[handRank];
 		
 		handValue.Chip += planetValue.Chip;
 		handValue.Mult += planetValue.Mult;
 		
-		s_baseScore[handRank] = handValue;
+		s_BaseScore[handRank] = handValue;
+		s_PokerHandLevel[handRank] += 1;
 	}
 }

@@ -9,6 +9,7 @@ public abstract class ConsumableCard : ITradeable
 {
 	public ConsumableCardView View { get; set; }
 	public string Name => GetType().ToString();
+	public abstract string Description { get; }
 	public bool IsPlayerOwned { get; set; }
 	public int Price { get; set; }
 	public abstract bool CheckCondition(int selectedCount);

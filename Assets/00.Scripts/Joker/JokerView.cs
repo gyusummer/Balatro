@@ -80,8 +80,7 @@ public class JokerView : View<Joker>, ITradeableView, IBeginDragHandler, IEndDra
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (eventData.dragging == false)
-            TooltipSystem.HideTooltip();
+        TooltipSystem.HideTooltip();
     }
 
     public string Header => Source.Name;

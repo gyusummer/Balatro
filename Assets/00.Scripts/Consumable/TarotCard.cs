@@ -7,6 +7,7 @@ using UnityEngine;
 public abstract class TarotCard : ConsumableCard
 {
 	public int MaxTarget = 1;
+	public override string Description => "Description";
 
 	public override bool CheckCondition(int selectedCount)
 	{

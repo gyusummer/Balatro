@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public abstract class ConsumableCardView : View<ConsumableCard>, ITradeableView, IPointerClickHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
+public abstract class ConsumableCardView : View<ConsumableCard>, ITradeableView, IPointerClickHandler, IBeginDragHandler, IEndDragHandler, IDragHandler, ITooltipSource
 {
     public ITradeable Tradeable => Source;
 	public ConsumableCard Source;
@@ -85,4 +85,19 @@ public abstract class ConsumableCardView : View<ConsumableCard>, ITradeableView,
 	{
 		canvasGroup.blocksRaycasts = true;
 	}
+
+	public void OnPointerEnter(PointerEventData eventData)
+	{
+		TooltipSystem.ShowTooltip(this);
+	}
+
+	public void OnPointerExit(PointerEventData eventData)
+	{
+		TooltipSystem.HideTooltip();
+	}
+
+	public string Header => Source.Name;
+	public string Content => Source.Description;
+	public RectTransform Rect => rectTransform;
+	public Transform Transform => transform;
 }

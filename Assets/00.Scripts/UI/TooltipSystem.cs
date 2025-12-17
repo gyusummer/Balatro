@@ -26,7 +26,6 @@ public class TooltipSystem : Singleton<TooltipSystem>
     public static void HideTooltip()
     {
         Tooltip.gameObject.SetActive(false);
-        Tooltip.transform.SetParent(null);
         Tooltip.Clear();
     }
 }

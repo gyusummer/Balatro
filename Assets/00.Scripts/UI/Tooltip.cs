@@ -25,7 +25,7 @@ public class Tooltip : MonoBehaviour
 	public void UpdateImmediately(ITooltipSource source)
 	{
 		SetText(source);
-		transform.SetParent(source.Transform);
+		//transform.SetParent(source.Transform);
 		LayoutRebuilder.ForceRebuildLayoutImmediate(transform as RectTransform);
 		SetPosition(source);
 	}
@@ -45,6 +45,7 @@ public class Tooltip : MonoBehaviour
 	{
 		HeaderText.text = "";
 		ContentText.text = "";
+        //transform.SetParent(null);
 	}
     
 	public void SetPosition(ITooltipSource source)

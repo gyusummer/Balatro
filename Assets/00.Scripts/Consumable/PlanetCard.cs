@@ -2,10 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR;
 
 [Serializable]
 public abstract class PlanetCard : ConsumableCard
 {
+	public override string Description => $"(lvl.{ScoreCalculator.s_PokerHandLevel[HandRank]}) Level up\n" +
+	                                      $"{HandRank}\n" +
+	                                      $"+{ScoreCalculator.s_PlanetValue[HandRank].Mult} mult and\n" +
+	                                      $"+{ScoreCalculator.s_PlanetValue[HandRank].Chip} chips";
 	protected HandRank HandRank { get; set; }
     public override bool CheckCondition(int selectedCount)
     {
