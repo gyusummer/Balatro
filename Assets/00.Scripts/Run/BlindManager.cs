@@ -111,14 +111,14 @@ public class BlindManager : Singleton<BlindManager>
 		RunManager.Instance.ChangeState(3);
 	}
 	
-	public bool PlayHand(List<Card> selectedCards)
+	public IEnumerator PlayHand(List<Card> selectedCards)
 	{
 		if (HandsLeft <= 0)
 		{
-			return false;
+			yield break;
 		}
 		// Check Poker Hand
-		ScoreCalculator.Instance.EvaluatePlay(selectedCards);
+		yield return ScoreCalculator.Instance.EvaluatePlay(selectedCards);
 		
 		foreach (Card card in selectedCards)
 		{
@@ -127,7 +127,6 @@ public class BlindManager : Singleton<BlindManager>
 		HandsLeft--;
 
 		CheckBlindGoal();
-		return true;
 	}
 
 	public bool DiscardHand(List<Card> selectedCards)

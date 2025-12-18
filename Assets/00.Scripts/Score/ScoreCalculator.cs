@@ -117,13 +117,13 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 		Mult *= factor;
 	}
 
-	public void EvaluatePlay(List<Card> playedHand)
+	public IEnumerator EvaluatePlay(List<Card> playedHand)
 	{
 		HandInfo handInfo = PredictHandRank(playedHand);
-		ScoreCards(handInfo.ScoredCards);
+		yield return ScoreCards(handInfo.ScoredCards);
 		IngameEventManager.CallEvent(new HandPlayedEventArgs(handInfo));
-		ActivateHeldCards(playedHand);
-		ActivateJokers();
+		yield return ActivateHeldCards(playedHand);
+		yield return ActivateJokers();
 		
 		AccumulateScore(Chip * Mult);
 	}
@@ -148,21 +148,23 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 		Mult = s_BaseScore[handInfo.Rank].Mult;
 	}
 
-	private void ScoreCards(List<Card> scoredCards)
+	private IEnumerator ScoreCards(List<Card> scoredCards)
 	{
 		foreach (var card in scoredCards)
 		{
 			card.ActivateInPlay();
+			yield return new WaitForSeconds(0.5f);
 		}
 	}
 
-	private void ActivateHeldCards(List<Card> playedHand)
+	private IEnumerator ActivateHeldCards(List<Card> playedHand)
 	{
 		foreach (Card card in DeckManager.Instance.Hand.CloneList())
 		{
 			if (playedHand.Contains(card))
 				continue;
 			card.ActivateInHeld();
+			yield return new WaitForSeconds(0.5f);
 		}
 	}
 

@@ -104,10 +104,15 @@ public class HandController : Singleton<HandController>
 			return;
 		}
 
-		if (BlindManager.Instance.PlayHand(SortedSelected))
-		{
-			_selectedCards.Clear();
-		}
+		StartCoroutine(PlayHand_Co());
+	}
+
+	private IEnumerator PlayHand_Co()
+	{
+		Debug.Log("Playing Hand");
+		yield return BlindManager.Instance.PlayHand(SortedSelected);
+		Debug.Log("Playing Hand End");
+		_selectedCards.Clear();
 	}
 	
 	public void DiscardHand()
