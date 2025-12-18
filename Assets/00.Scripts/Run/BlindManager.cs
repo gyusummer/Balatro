@@ -28,6 +28,8 @@ public class BlindManager : Singleton<BlindManager>
 {
 	public TMP_Text HandsText;
 	public TMP_Text DiscardsText;
+	public TMP_Text GoalText;
+	public TMP_Text RoundScoreText;
 	
 	public Blind CurrentBlind;
 	public double BlindGoal = 450;
@@ -65,10 +67,10 @@ public class BlindManager : Singleton<BlindManager>
 	public void StartBlind(Blind blind)
 	{
 		InitBlind();
-		ScoreCalculator.Instance.TotalScore = 0;
+		ScoreCalculator.Instance.RoundScore = 0;
 		CurrentBlind = blind;
 		BlindGoal = blind.GoalScore;
-		ScoreBoard.Instance.UpdateGoal(BlindGoal);
+		GoalText.text = BlindGoal.ToString();
 		RunManager.Instance.Round++;
 		DeckManager.Instance.InitDrawPile();
 		DeckManager.Instance.Hand.Clear();
@@ -77,7 +79,7 @@ public class BlindManager : Singleton<BlindManager>
 	
 	public void CheckBlindGoal()
 	{
-		if (ScoreCalculator.Instance.TotalScore >= BlindGoal)
+		if (ScoreCalculator.Instance.RoundScore >= BlindGoal)
 		{
 			WinBlind();
 			return;

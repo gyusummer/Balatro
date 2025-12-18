@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public enum Edition
 {
@@ -14,6 +16,11 @@ public enum Edition
 
 public class ScoreCalculator : Singleton<ScoreCalculator>
 {
+	public TMP_Text ChipText;
+	public TMP_Text MultText;
+	public TMP_Text CalcUpperText;
+	public TMP_Text CalcUpperExtraText;
+	
 	public static Dictionary<HandRank, int> s_PokerHandLevel;
 	public static Dictionary<HandRank, ScoreComponent> s_BaseScore;
 	public static Dictionary<HandRank, ScoreComponent> s_PlanetValue;
@@ -25,7 +32,7 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 		set
 		{
 			_chip = value;
-			ScoreBoard.Instance.UpdateChip(value);
+			ChipText.text = value.ToString();
 		}
 	}
 	private double _mult;
@@ -35,10 +42,10 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 		set
 		{
 			_mult = value;
-			ScoreBoard.Instance.UpdateMult(value);
+			MultText.text = value.ToString();
 		}
 	}
-	public double TotalScore;
+	public double RoundScore;
 
 	protected override void Awake()
 	{
@@ -112,13 +119,24 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 
 	public void EvaluatePlay(List<Card> playedHand)
 	{
-		EvaluateHand(playedHand, out HandInfo handInfo);
+		HandInfo handInfo = PredictHandRank(playedHand);
 		ScoreCards(handInfo.ScoredCards);
 		IngameEventManager.CallEvent(new HandPlayedEventArgs(handInfo));
 		ActivateHeldCards(playedHand);
 		ActivateJokers();
 		
 		AccumulateScore(Chip * Mult);
+	}
+
+	public HandInfo PredictHandRank(List<Card> playedHand)
+	{
+		EvaluateHand(playedHand, out HandInfo handInfo);
+		HandRank handRank = handInfo.Rank;
+		CalcUpperText.text = handRank.ToString();
+		CalcUpperExtraText.text = $"lvl.{s_PokerHandLevel[handRank]}";
+		CalcUpperExtraText.gameObject.SetActive(true);
+		
+		return handInfo;
 	}
 	
 	private void EvaluateHand(List<Card> playedHand, out HandInfo handInfo)
@@ -148,19 +166,20 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 		}
 	}
 
-	private void ActivateJokers()
+	private IEnumerator ActivateJokers()
 	{
 		var jokers = Inventory.Instance.Jokers.CloneList();
 		foreach (Joker joker in jokers)
 		{
 			joker.Activate();
+			yield return new WaitForSeconds(0.5f);
 		}
 	}
 	
 	private void AccumulateScore(double score)
 	{
-		TotalScore += score;
-		ScoreBoard.Instance.UpdateScore(TotalScore);
+		RoundScore += score;
+		BlindManager.Instance.RoundScoreText.text = RoundScore.ToString();
 	}
 	
 	public void UpgradePokerHand(HandRank handRank)
