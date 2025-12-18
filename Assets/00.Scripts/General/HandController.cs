@@ -68,6 +68,8 @@ public class HandController : Singleton<HandController>
 		{
 			SelectCard(card);
 		}
+		
+		ScoreCalculator.Instance.PredictHandRank(_selectedCards);
 	}
 
 	public void SelectConsumable(ConsumableCard consumable)
