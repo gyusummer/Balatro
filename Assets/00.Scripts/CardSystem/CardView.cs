@@ -32,6 +32,8 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 	[SerializeField] private float duration = 0.2f;
 	[SerializeField] private int vib = 10;
 	[SerializeField] private float ela = 1f;
+
+	private float moveAnimTime = 0.1f;
 	
 	private bool isDragging = false;
 	private float lastFrameX;
@@ -70,8 +72,8 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 
 	public void MoveTo(Vector3 position, Quaternion rotation)
 	{
-		transform.DOLocalMove(position, 0.1f, true);
-		transform.DORotateQuaternion(rotation, 0.1f).SetEase(Ease.OutElastic);
+		transform.DOLocalMove(position, moveAnimTime, true);
+		transform.DORotateQuaternion(rotation, moveAnimTime).SetEase(Ease.OutElastic);
 	}
 
 	public void UpdatePaper()

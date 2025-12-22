@@ -80,6 +80,7 @@ public class CardFanLayout : MonoBehaviour
     //     }
     // }
 
+    private List<float> xList = new List<float>();
     private void ReCalculate(IList<Card> cards)
     {
         _cardViews.Clear();
@@ -110,6 +111,7 @@ public class CardFanLayout : MonoBehaviour
         }
 
         int N = _cardViews.Count;
+        xList.Clear();
 
         // 1. **시작 각도 및 각 카드 당 각도 계산**
         // 덱의 중앙을 0도로 설정하고, 시작 각도와 종료 각도를 계산합니다.
@@ -120,9 +122,6 @@ public class CardFanLayout : MonoBehaviour
         for (int i = 0; i < N; i++)
         {
             CardView card = _cardViews[i];
-
-            if (card.Rect == DraggingChild)
-                continue;
             
             // 2. **Slerp 보간 비율 (t)**
             // 인덱스 비율 t (0.0 ~ 1.0)
@@ -152,6 +151,7 @@ public class CardFanLayout : MonoBehaviour
 
             // X 위치: radius * sin(angle)
             float posX = radius * Mathf.Sin(angleRad);
+            xList.Add(posX);
 
             // Y 위치: radius * cos(angle) - radius (원 중심에서 Y축 거리를 빼서 곡선 시작점을 0으로 맞춥니다)
             float posY = (radius * Mathf.Cos(angleRad)) - radius;
@@ -165,30 +165,45 @@ public class CardFanLayout : MonoBehaviour
             // 따라서, **HorizontalLayoutGroup을 비활성화**하고 이 스크립트가 X, Y 위치를 모두 제어하게 하는 것이 좋습니다.
 
             // 6. **적용**
+
+            if (card.Rect == DraggingChild)
+                continue;
             card.MoveTo(new Vector3(posX, posY, card.transform.localPosition.z), targetRotation);
             
             card.Rect.SetSiblingIndex(i);
         }
     }
 
-    private int GetIndexByPosX(float posX)
+    private int GetIndexByPosX(CardView cardView)
     {
+        float posX = cardView.Rect.localPosition.x;
         int n = _cardViews.Count;
-        for (int i = 0; i < n; i++)
+        
+        for (int i = 0; i < n - 1; i++)
         {
-            if (_cardViews[i].Rect.position.x > posX)
+            //Debug.Log($"left {xList[i]:F2} | {posX:F2} | right {xList[i + 1]:F2}");
+            if (posX > xList[i] && posX < xList[i + 1])
             {
-                return i;
+                //Debug.Log($"<color=yellow>Found {i + 1}</color>");
+                if (_cardViews.IndexOf(cardView) < i + 1)
+                    return i;
+                return i + 1;
             }
         }
+        
+        if (posX < _cardViews[0].Rect.position.x)
+            return 0;
+        if (posX > _cardViews[n - 1].Rect.position.x)
+            return n - 1;
 
-        return n - 1;
+        //Debug.LogWarning("여기 오면 뭔가 문제 있는건데");
+        return 0;
     }
 
     public void ManualSort(CardView view)
     {
         int curIndex = _cardViews.IndexOf(view);
-        int newIndex = GetIndexByPosX(view.transform.position.x);
+        int newIndex = GetIndexByPosX(view);
 
         if (curIndex != newIndex)
         {
