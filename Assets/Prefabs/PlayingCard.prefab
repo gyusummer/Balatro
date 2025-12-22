@@ -135,9 +135,14 @@ MonoBehaviour:
     _rank: 14
     Chip: 0
     _enhancement: 0
+    Edition: 0
     View: {fileID: 0}
   Paper: {fileID: 7386192721501795462}
   Picture: {fileID: 975375633139306534}
+  punch: 0.1
+  duration: 0.2
+  vib: 10
+  ela: 1
 --- !u!225 &182057364064228921
 CanvasGroup:
   m_ObjectHideFlags: 0

@@ -16,7 +16,7 @@ public class CardFanLayout : MonoBehaviour
     [SerializeField] private float totalArcAngle = 10f; // 전체 덱의 좌우 최대 각도 (예: -30도에서 +30도)
 
     [Tooltip("자식 카드를 포함하는 목록. 동적으로 업데이트됩니다.")]
-    private List<RectTransform> _cardViews = new List<RectTransform>();
+    private List<CardView> _cardViews = new List<CardView>();
     private CardPile _source;
     
     public RectTransform DraggingChild;
@@ -87,7 +87,7 @@ public class CardFanLayout : MonoBehaviour
         {
             if (card.View == null)
                 Debug.LogWarning("Card View is null");
-            RectTransform childRect = card.View.transform as RectTransform;
+            CardView childRect = card.View;
             if (childRect)
             {
                 _cardViews.Add(childRect);
@@ -103,8 +103,7 @@ public class CardFanLayout : MonoBehaviour
             // 카드가 하나 이하면 효과를 적용할 필요가 없습니다.
             foreach (var card in _cardViews)
             {
-                card.localRotation = Quaternion.identity; // 회전 초기화
-                card.localPosition = Vector3.zero;
+                card.MoveTo(Vector3.one, Quaternion.identity);
             }
 
             return;
@@ -120,9 +119,9 @@ public class CardFanLayout : MonoBehaviour
         // Slerp의 보간 비율 (0.0 ~ 1.0)
         for (int i = 0; i < N; i++)
         {
-            RectTransform card = _cardViews[i];
+            CardView card = _cardViews[i];
 
-            if (card == DraggingChild)
+            if (card.Rect == DraggingChild)
                 continue;
             
             // 2. **Slerp 보간 비율 (t)**
@@ -166,10 +165,9 @@ public class CardFanLayout : MonoBehaviour
             // 따라서, **HorizontalLayoutGroup을 비활성화**하고 이 스크립트가 X, Y 위치를 모두 제어하게 하는 것이 좋습니다.
 
             // 6. **적용**
-            card.localRotation = targetRotation;
-            card.localPosition = new Vector3(posX, posY, card.localPosition.z);
+            card.MoveTo(new Vector3(posX, posY, card.transform.localPosition.z), targetRotation);
             
-            card.SetSiblingIndex(i);
+            card.Rect.SetSiblingIndex(i);
         }
     }
 
@@ -178,7 +176,7 @@ public class CardFanLayout : MonoBehaviour
         int n = _cardViews.Count;
         for (int i = 0; i < n; i++)
         {
-            if (_cardViews[i].position.x > posX)
+            if (_cardViews[i].Rect.position.x > posX)
             {
                 return i;
             }
@@ -189,7 +187,7 @@ public class CardFanLayout : MonoBehaviour
 
     public void ManualSort(CardView view)
     {
-        int curIndex = _cardViews.IndexOf(view.transform as RectTransform);
+        int curIndex = _cardViews.IndexOf(view);
         int newIndex = GetIndexByPosX(view.transform.position.x);
 
         if (curIndex != newIndex)
