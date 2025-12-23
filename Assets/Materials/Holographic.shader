@@ -2,7 +2,15 @@ Shader "Custom/Holographic"
 {
     Properties
     {
-        _MainTex ("Card Texture", 2D) = "white" {}
+        [Header(Atlas Setting)]
+        _AtlasUv ("Atlas UV", Vector) = (0,0,1,1) // C#에서 전달받을 변수
+        
+        [Header(Dissolve Settings)]
+        _Dissolve ("Dissolve Amount", Range(0, 1)) = 0
+        _DissolveDensity ("Dissolve Density", Range(1, 500)) = 25.0 // 디졸브 무늬 크기
+        _BurnCol1 ("Burn Inner Color", Color) = (1, 0.8, 0.2, 1)
+        _BurnCol2 ("Burn Outer Color", Color) = (1, 0.3, 0, 1)
+
         _GlossSpeed ("Gloss Speed", Range(0, 200)) = 50
         _Intensity ("Holo Intensity", Range(0, 5)) = 2.0
         _GridSize ("Grid Size", Range(0.1, 20.0)) = 5
@@ -33,9 +41,35 @@ Shader "Custom/Holographic"
 
             sampler2D _MainTex;
             float4 _MainTex_TexelSize;
+            float4 _AtlasUv, _BurnCol1, _BurnCol2;
+            float _Dissolve, _DissolveDensity;
             float _GlossSpeed, _Intensity, _GridSize;
             float2 _HoloParams;
 
+            float4 dissolve(float4 tex, float2 localUV) {
+                if (_Dissolve <= 0.001) return tex;
+
+                float adj_dissolve = (_Dissolve * _Dissolve * (3.0 - 2.0 * _Dissolve)) * 1.02 - 0.01;
+                float dt = _Time.y * 5.0 + 2003.0;
+                float2 uv_diss = (localUV - 0.5) * _DissolveDensity;
+                
+                float2 d1 = uv_diss + float2(sin(-dt / 14.3), cos(-dt / 9.9));
+                float2 d2 = uv_diss + float2(cos( dt / 5.3),  cos( dt / 6.1));
+                float2 d3 = uv_diss + float2(sin(-dt / 8.7), sin(-dt / 4.9));
+
+                float fieldD = (1.0 + (cos(length(d1) / 1.94) + sin(length(d2) / 3.31) * cos(d2.y / 1.57) + cos(length(d3) / 2.71) * sin(d3.x / 2.19))) / 2.0;
+                float resD = (0.5 + 0.5 * cos((adj_dissolve * 0.1) + (fieldD - 0.5) * 3.14));
+
+                // Burn Edge 효과
+                float burnWidth = 0.05 * (0.5 - abs(adj_dissolve - 0.5));
+                if (tex.a > 0.01 && resD < adj_dissolve + burnWidth * 2.0 && resD > adj_dissolve) {
+                    float4 burnColor = (resD < adj_dissolve + burnWidth) ? _BurnCol1 : _BurnCol2;
+                    return float4(burnColor.rgb, tex.a);
+                }
+
+                return (resD > adj_dissolve) ? tex : float4(0,0,0,0);
+            }
+            
             // --- HSL/RGB 유틸리티 함수 ---
             float hue(float s, float t, float h) {
                 h = frac(h);
@@ -77,12 +111,14 @@ Shader "Custom/Holographic"
             }
 
             fixed4 frag (v2f i) : SV_Target {
-                float2 uv = i.uv;
-                float4 tex = tex2D(_MainTex, uv);
+                float4 tex = tex2D(_MainTex, i.uv);
+                float2 localUV;
+                localUV.x = (i.uv.x - _AtlasUv.x) / (_AtlasUv.z - _AtlasUv.x);
+                localUV.y = (i.uv.y - _AtlasUv.y) / (_AtlasUv.w - _AtlasUv.y);
                 
                 // 1. [Pixelation] 원본 코드의 floor uv 재현
                 float2 res_size = _MainTex_TexelSize.zw; 
-                float2 floored_uv = floor(uv * res_size) / res_size;
+                float2 floored_uv = floor(localUV * res_size) / res_size;
                 
                 // 2. [HSL 변환] 원본 색상을 분석 (0.5 비율로 파란색 보정 포함)
                 float4 hsl = RGBtoHSL(0.5 * tex + 0.5 * float4(0, 0, 1, tex.a));
@@ -103,9 +139,9 @@ Shader "Custom/Holographic"
                 // 4. [Grid] 격자무늬 계산
                 float grid = _GridSize;
                 float fac = 0.5 * max(
-                    max(max(0.0, 7.0 * abs(cos(uv.x * grid * 20.0)) - 6.0),
-                        max(0.0, 7.0 * cos(uv.y * grid * 45.0 + uv.x * grid * 20.0) - 6.0)),
-                    max(0.0, 7.0 * cos(uv.y * grid * 45.0 - uv.x * grid * 20.0) - 6.0)
+                    max(max(0.0, 7.0 * abs(cos(localUV.x * grid * 20.0)) - 6.0),
+                        max(0.0, 7.0 * cos(localUV.y * grid * 45.0 + localUV.x * grid * 20.0) - 6.0)),
+                    max(0.0, 7.0 * cos(localUV.y * grid * 45.0 - localUV.x * grid * 20.0) - 6.0)
                 );
 
                 // 5. [HSL Manipulation] 색상 회전 및 강화
@@ -119,12 +155,12 @@ Shader "Custom/Holographic"
                 float delta = 0.2 + 0.3 * (high - low) + 0.1 * high; // 디테일 마스크
 
                 float4 holoRGB = HSLtoRGB(hsl) * float4(0.9, 0.8, 1.2, tex.a);
-                float4 finalCol = lerp(tex, holoRGB, delta * _Intensity);
+                float4 col = lerp(tex, holoRGB, delta * _Intensity);
 
                 // 투명도 처리 (원본 코드의 알파 컷오프 반영)
-                if (finalCol.a < 0.7) finalCol.a /= 3.0;
+                if (col.a < 0.7) col.a /= 3.0;
 
-                return finalCol;
+                return dissolve(col, localUV);
             }
             ENDHLSL
         }

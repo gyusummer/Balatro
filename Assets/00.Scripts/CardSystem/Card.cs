@@ -80,7 +80,17 @@ public class Card
 		}
 	}
 
-	public Edition Edition = Edition.None;
+	[SerializeField] private Edition _edition =  Edition.None;
+
+	public Edition Edition
+	{
+		get => _edition;
+		set
+		{
+			_edition = value;
+			View?.UpdateShader();
+		}
+	}
 
 	[HideInInspector] public CardView View;
 

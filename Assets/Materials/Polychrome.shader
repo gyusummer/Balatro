@@ -1,16 +1,18 @@
-Shader "Custom/Card_Final_Full_Effect"
+Shader "Custom/Polychrome"
 {
     Properties
     {
-        _MainTex ("Card Texture", 2D) = "white" {}
+        [Header(Atlas Setting)]
+        _AtlasUv ("Atlas UV", Vector) = (0,0,1,1) // C#에서 전달받을 변수
+        
         [Header(Dissolve Settings)]
         _Dissolve ("Dissolve Amount", Range(0, 1)) = 0
-        _DissolveScale ("Dissolve Density", Range(1, 50)) = 15.0 // 디졸브 무늬 크기
+        _DissolveDensity ("Dissolve Density", Range(1, 500)) = 25.0 // 디졸브 무늬 크기
         _BurnCol1 ("Burn Inner Color", Color) = (1, 0.8, 0.2, 1)
         _BurnCol2 ("Burn Outer Color", Color) = (1, 0.3, 0, 1)
 
         [Header(Polychrome Settings)]
-        _PoliScale ("Polychrome Density", Range(1, 500)) = 100.0 // 광택 촘촘함
+        _PoliScale ("Polychrome Density", Range(1, 500)) = 25.0 // 광택 촘촘함
         _Polychrome ("Shift (X) Speed (Y)", Vector) = (1.0, 1.0, 0, 0)
         _TimeSpeed ("Time Speed", Range(0, 5)) = 1.0
     }
@@ -38,9 +40,34 @@ Shader "Custom/Card_Final_Full_Effect"
             };
 
             sampler2D _MainTex;
-            float _Dissolve, _DissolveScale, _TimeSpeed, _PoliScale;
+            float4 _AtlasUv; // C#에서 넘겨준 (minX, minY, maxX, maxY)
+            float _Dissolve, _DissolveDensity, _TimeSpeed, _PoliScale;
             float4 _Polychrome, _BurnCol1, _BurnCol2;
             float _Hovering, _Distortion;
+
+            float4 dissolve(float4 tex, float2 localUV) {
+                if (_Dissolve <= 0.001) return tex;
+
+                float adj_dissolve = (_Dissolve * _Dissolve * (3.0 - 2.0 * _Dissolve)) * 1.02 - 0.01;
+                float dt = _Time.y * 5.0 + 2003.0;
+                float2 uv_diss = (localUV - 0.5) * _DissolveDensity;
+                
+                float2 d1 = uv_diss + float2(sin(-dt / 14.3), cos(-dt / 9.9));
+                float2 d2 = uv_diss + float2(cos( dt / 5.3),  cos( dt / 6.1));
+                float2 d3 = uv_diss + float2(sin(-dt / 8.7), sin(-dt / 4.9));
+
+                float fieldD = (1.0 + (cos(length(d1) / 1.94) + sin(length(d2) / 3.31) * cos(d2.y / 1.57) + cos(length(d3) / 2.71) * sin(d3.x / 2.19))) / 2.0;
+                float resD = (0.5 + 0.5 * cos((adj_dissolve * 0.1) + (fieldD - 0.5) * 3.14));
+
+                // Burn Edge 효과
+                float burnWidth = 0.05 * (0.5 - abs(adj_dissolve - 0.5));
+                if (tex.a > 0.01 && resD < adj_dissolve + burnWidth * 2.0 && resD > adj_dissolve) {
+                    float4 burnColor = (resD < adj_dissolve + burnWidth) ? _BurnCol1 : _BurnCol2;
+                    return float4(burnColor.rgb, tex.a);
+                }
+
+                return (resD > adj_dissolve) ? tex : float4(0,0,0,0);
+            }
 
             // --- HSL/RGB 유틸리티 ---
             float hue(float s, float t, float h) {
@@ -83,8 +110,10 @@ Shader "Custom/Card_Final_Full_Effect"
             }
 
             fixed4 frag (v2f i) : SV_Target {
-                float2 uv = i.uv;
-                float4 tex = tex2D(_MainTex, uv);
+                float4 tex = tex2D(_MainTex, i.uv);
+                float2 localUV;
+                localUV.x = (i.uv.x - _AtlasUv.x) / (_AtlasUv.z - _AtlasUv.x);
+                localUV.y = (i.uv.y - _AtlasUv.y) / (_AtlasUv.w - _AtlasUv.y);
                 
                 // 1. Polychrome 광택 로직 (움직임 계산부)
                 float low = min(tex.r, min(tex.g, tex.b));
@@ -98,7 +127,7 @@ Shader "Custom/Card_Final_Full_Effect"
                 // _Time.y는 유니티에서 제공하는 초 단위 시간입니다.
                 float pt = _Time.y * _TimeSpeed * _Polychrome.y; 
                 
-                float2 uv_poli = (uv - 0.5) * _PoliScale; 
+                float2 uv_poli = (localUV - 0.5) * _PoliScale; 
                 
                 // 간섭 패턴의 속도를 각각 다르게 설정하여 더 역동적으로 움직이게 함
                 float2 f1 = uv_poli + float2(sin(-pt * 0.7), cos(-pt * 0.9));
@@ -117,28 +146,10 @@ Shader "Custom/Card_Final_Full_Effect"
                 float3 colorEffect = HSLtoRGB(hsl).rgb;
                 if (tex.a < 0.7) tex.a /= 3.0;
 
-                // 2. 디졸브 및 번 효과 (세밀도 조정 버전)
-                float adj_dissolve = (_Dissolve * _Dissolve * (3.0 - 2.0 * _Dissolve)) * 1.02 - 0.01;
-                float dt = _Time.y * 5.0 + 2003.0;
-                float2 uv_diss = (uv - 0.5) * _DissolveScale; // 디졸브 밀도 조절
-                
-                float2 d1 = uv_diss + 50.0 * float2(sin(-dt / 143.6), cos(-dt / 99.4));
-                float2 d2 = uv_diss + 50.0 * float2(cos( dt / 53.1),  cos( dt / 61.4));
-                float2 d3 = uv_diss + 50.0 * float2(sin(-dt / 87.5), sin(-dt / 49.0));
-
-                float fieldD = (1.0 + (cos(length(d1) / 19.48) + sin(length(d2) / 33.15) * cos(d2.y / 15.73) + cos(length(d3) / 27.19) * sin(d3.x / 21.92))) / 2.0;
-                float resD = (0.5 + 0.5 * cos((adj_dissolve * 0.1) + (fieldD - 0.5) * 3.14));
-
                 // 최종 색상 결정
-                float4 finalTex = float4(colorEffect, tex.a);
+                float4 col = float4(colorEffect, tex.a);
                 
-                // Burn 테두리 계산
-                float burnWidth = 0.05 * (0.5 - abs(adj_dissolve - 0.5));
-                if (finalTex.a > 0.01 && resD < adj_dissolve + burnWidth * 2.0 && resD > adj_dissolve) {
-                    finalTex = (resD < adj_dissolve + burnWidth) ? _BurnCol1 : _BurnCol2;
-                }
-
-                return (resD > adj_dissolve) ? finalTex : float4(0,0,0,0);
+                return dissolve(col, localUV);
             }
             ENDHLSL
         }

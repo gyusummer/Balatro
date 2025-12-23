@@ -9,6 +9,8 @@ using UnityEngine.UI;
 
 public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IEndDragHandler, IDragHandler, ITooltipSource
 {
+	private static readonly int ATLAS_UV = Shader.PropertyToID("_AtlasUv");
+	
 	public string Header => Source.ToString();
 	public string Content => $"+{Source.Chip} chips";
 	public RectTransform Rect { get; private set; }
@@ -17,6 +19,7 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 	public ImageContainer CardPapers;
 	public ImageContainer CardPictures;
 	public ImageContainer CardSeals;
+	[SerializeField] private List<Shader> cardShaders;
 	
 	public Card Source;
 	public Image Paper;
@@ -41,6 +44,7 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 	{
 		UpdatePaper();
 		UpdatePicture();
+		UpdateShader();
 	}
 	
 	void Awake()
@@ -48,6 +52,11 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 		Rect = GetComponent<RectTransform>();
 		canvasGroup = GetComponent<CanvasGroup>();
 		fanLayout = transform.parent.GetComponent<CardFanLayout>();
+	}
+
+	private void Start()
+	{
+		UpdateAtlasUv();
 	}
 
 	public Image Backface;
@@ -82,6 +91,7 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 	public void UpdatePaper()
 	{
 		Paper.sprite = CardPapers.GetImageByNameOrFirst(Source.Enhancement.ToString());
+		UpdateAtlasUv();
 	}
 
 	public void UpdatePicture()
@@ -104,6 +114,7 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 				throw new ArgumentOutOfRangeException();
 		}
 		Picture.sprite = CardPictures.GetImage(pictureIndex);
+		UpdateAtlasUv();
 	}
 
 	public void OnSelected()
@@ -182,4 +193,23 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 	}
 
 	public static implicit operator RectTransform(CardView c) => c.Rect;
+
+	private void UpdateAtlasUv()
+	{
+		var paperSprite = Paper.sprite;
+		Vector4 paperUv = UnityEngine.Sprites.DataUtility.GetOuterUV(paperSprite);
+		Debug.Log(paperUv);
+		Paper.material.SetVector(ATLAS_UV, paperUv);
+		
+		var pictureSprite = Picture.sprite;
+		Vector4 pictureUv = UnityEngine.Sprites.DataUtility.GetOuterUV(pictureSprite);
+		Paper.material.SetVector(ATLAS_UV, pictureUv);
+	}
+
+	public void UpdateShader()
+	{
+		var shader = cardShaders[(int)Source.Edition];
+		Paper.material.shader = shader;
+		Picture.material.shader = shader;
+	}
 }

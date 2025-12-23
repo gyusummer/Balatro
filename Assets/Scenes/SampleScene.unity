@@ -493,12 +493,12 @@ MonoBehaviour:
   CardPapers: {fileID: 11400000, guid: 60328b7f3fef93d43935ed71b20eb6c7, type: 2}
   CardPictures: {fileID: 11400000, guid: 044b6c6ea1b6c32469cf040b0ae9b6f9, type: 2}
   CardSeals: {fileID: 11400000, guid: 1771ed7ca3820344a96dcdc0b4b7d584, type: 2}
+  cardShaders: []
   Source:
     _suit: 8
     _rank: 14
     Chip: 0
     _enhancement: 0
-    Edition: 0
     View: {fileID: 0}
   Paper: {fileID: 457897868}
   Picture: {fileID: 745475063}
@@ -1159,12 +1159,12 @@ MonoBehaviour:
   CardPapers: {fileID: 11400000, guid: 60328b7f3fef93d43935ed71b20eb6c7, type: 2}
   CardPictures: {fileID: 11400000, guid: 044b6c6ea1b6c32469cf040b0ae9b6f9, type: 2}
   CardSeals: {fileID: 11400000, guid: 1771ed7ca3820344a96dcdc0b4b7d584, type: 2}
+  cardShaders: []
   Source:
     _suit: 8
     _rank: 14
     Chip: 0
     _enhancement: 0
-    Edition: 0
     View: {fileID: 0}
   Paper: {fileID: 608057734}
   Picture: {fileID: 1903302307}
@@ -12679,12 +12679,16 @@ MonoBehaviour:
   CardPapers: {fileID: 11400000, guid: 60328b7f3fef93d43935ed71b20eb6c7, type: 2}
   CardPictures: {fileID: 11400000, guid: 044b6c6ea1b6c32469cf040b0ae9b6f9, type: 2}
   CardSeals: {fileID: 11400000, guid: 1771ed7ca3820344a96dcdc0b4b7d584, type: 2}
+  cardShaders:
+  - {fileID: 4800000, guid: 11ea8f1b5f70aa445a5e1ad4867f2686, type: 3}
+  - {fileID: 4800000, guid: 94c1dc6bc8b3d6f418bcf35459892288, type: 3}
+  - {fileID: 4800000, guid: 085748df6287c3841b6d12bfe3118674, type: 3}
+  - {fileID: 4800000, guid: d0012264ef954754aa1e1e9b0dd2d763, type: 3}
   Source:
     _suit: 8
     _rank: 14
     Chip: 0
     _enhancement: 0
-    Edition: 0
     View: {fileID: 0}
   Paper: {fileID: 6756812454011212254}
   Picture: {fileID: 3948875110758331774}

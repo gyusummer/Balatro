@@ -1,8 +1,16 @@
-Shader "Custom/Card_Combined_Negative_DarkHolo"
+Shader "Custom/Negative"
 {
     Properties
     {
-        _MainTex ("Card Texture", 2D) = "white" {}
+        [Header(Atlas Setting)]
+        _AtlasUv ("Atlas UV", Vector) = (0,0,1,1) // C#에서 전달받을 변수
+        
+        [Header(Dissolve Settings)]
+        _Dissolve ("Dissolve Amount", Range(0, 1)) = 0
+        _DissolveDensity ("Dissolve Density", Range(1, 500)) = 25.0 // 디졸브 무늬 크기
+        _BurnCol1 ("Burn Inner Color", Color) = (1, 0.8, 0.2, 1)
+        _BurnCol2 ("Burn Outer Color", Color) = (1, 0.3, 0, 1)
+        
         [Header(Negative Settings)]
         _InvertIntensity ("Invert Lightness", Range(0, 1)) = 1.0
         _HueOffset ("Hue Shift Offset", Range(0, 1)) = 0.2
@@ -11,8 +19,7 @@ Shader "Custom/Card_Combined_Negative_DarkHolo"
         [Header(Shine Settings)]
         _ShineSpeed ("Shine Speed", Range(0, 5)) = 0.3
         _ShineIntensity ("Shine Intensity", Range(0, 2)) = 1.0
-        _PatternScale ("Pattern Scale", Range(1, 20)) = 4.0
-        _CenterOffset ("Center Offset", Vector) = (0.5, 0.5, 0, 0)
+        _PatternScale ("Pattern Scale", Range(0.1, 10)) = 4.0
     }
     SubShader
     {
@@ -39,10 +46,35 @@ Shader "Custom/Card_Combined_Negative_DarkHolo"
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
+            float4 _AtlasUv, _BurnCol1, _BurnCol2;
+            float _Dissolve, _DissolveDensity;
             float _InvertIntensity, _HueOffset;
             float4 _Tint;
             float _ShineSpeed, _ShineIntensity, _PatternScale;
-            float2 _CenterOffset;
+
+            float4 dissolve(float4 tex, float2 localUV) {
+                if (_Dissolve <= 0.001) return tex;
+
+                float adj_dissolve = (_Dissolve * _Dissolve * (3.0 - 2.0 * _Dissolve)) * 1.02 - 0.01;
+                float dt = _Time.y * 5.0 + 2003.0;
+                float2 uv_diss = (localUV - 0.5) * _DissolveDensity;
+                
+                float2 d1 = uv_diss + float2(sin(-dt / 14.3), cos(-dt / 9.9));
+                float2 d2 = uv_diss + float2(cos( dt / 5.3),  cos( dt / 6.1));
+                float2 d3 = uv_diss + float2(sin(-dt / 8.7), sin(-dt / 4.9));
+
+                float fieldD = (1.0 + (cos(length(d1) / 1.94) + sin(length(d2) / 3.31) * cos(d2.y / 1.57) + cos(length(d3) / 2.71) * sin(d3.x / 2.19))) / 2.0;
+                float resD = (0.5 + 0.5 * cos((adj_dissolve * 0.1) + (fieldD - 0.5) * 3.14));
+
+                // Burn Edge 효과
+                float burnWidth = 0.05 * (0.5 - abs(adj_dissolve - 0.5));
+                if (tex.a > 0.01 && resD < adj_dissolve + burnWidth * 2.0 && resD > adj_dissolve) {
+                    float4 burnColor = (resD < adj_dissolve + burnWidth) ? _BurnCol1 : _BurnCol2;
+                    return float4(burnColor.rgb, tex.a);
+                }
+
+                return (resD > adj_dissolve) ? tex : float4(0,0,0,0);
+            }
 
             // --- HSL 유틸리티 ---
             float hueHelper(float s, float t, float h) {
@@ -86,7 +118,9 @@ Shader "Custom/Card_Combined_Negative_DarkHolo"
 
             fixed4 frag (v2f i) : SV_Target {
                 float4 tex = tex2D(_MainTex, i.uv);
-                float2 uv = i.uv - _CenterOffset;
+                float2 localUV;
+                localUV.x = (i.uv.x - _AtlasUv.x) / (_AtlasUv.z - _AtlasUv.x);
+                localUV.y = (i.uv.y - _AtlasUv.y) / (_AtlasUv.w - _AtlasUv.y);
                 float t = _Time.y * _ShineSpeed;
                 float s = _PatternScale;
 
@@ -105,11 +139,11 @@ Shader "Custom/Card_Combined_Negative_DarkHolo"
                 float high = max(tex.r, max(tex.g, tex.b));
                 float delta = high - low - 0.1;
 
-                float fac  = 0.8 + 0.9 * sin(s * (11.*uv.x + 4.32*uv.y) + t*12. + cos(t*5.3 + uv.y*4.2 - uv.x*4.));
-                float fac2 = 0.5 + 0.5 * sin(s * (8.*uv.x + 2.32*uv.y) + t*5. - cos(t*2.3 + uv.x*8.2));
-                float fac3 = 0.5 + 0.5 * sin(s * (10.*uv.x + 5.32*uv.y) + t*6.11 + sin(t*5.3 + uv.y*3.2));
-                float fac4 = 0.5 + 0.5 * sin(s * (3.*uv.x + 2.32*uv.y) + t*8.11 + sin(t*1.3 + uv.y*11.2));
-                float fac5 = sin(0.9 * 16. * uv.x + 5.32*uv.y + t*12. + cos(t*5.3 + uv.y*4.2 - uv.x*4.));
+                float fac  = 0.8 + 0.9 * sin(s * (11.*localUV.x + 4.32*localUV.y) + t*12. + cos(t*5.3 + localUV.y*4.2 - localUV.x*4.));
+                float fac2 = 0.5 + 0.5 * sin(s * (8.*localUV.x + 2.32*localUV.y) + t*5. - cos(t*2.3 + localUV.x*8.2));
+                float fac3 = 0.5 + 0.5 * sin(s * (10.*localUV.x + 5.32*localUV.y) + t*6.11 + sin(t*5.3 + localUV.y*3.2));
+                float fac4 = 0.5 + 0.5 * sin(s * (3.*localUV.x + 2.32*localUV.y) + t*8.11 + sin(t*1.3 + localUV.y*11.2));
+                float fac5 = sin(0.9 * 16. * localUV.x + 5.32*localUV.y + t*12. + cos(t*5.3 + localUV.y*4.2 - localUV.x*4.));
 
                 float maxfac = 0.7 * max(max(fac, max(fac2, max(fac3, 0.0))) + (fac + fac2 + fac3 * fac4), 0.0);
 
@@ -122,10 +156,12 @@ Shader "Custom/Card_Combined_Negative_DarkHolo"
                 // 4. 강도 조절 및 알파 처리
                 float3 combinedRGB = lerp(baseRGB, finalFoil, _ShineIntensity);
                 
-                float finalA = tex.a;
-                if (finalA < 0.7) finalA /= 3.0; // 원본 코드의 알파 컷오프 유지
+                float alpha = tex.a;
+                if (alpha < 0.7) alpha /= 3.0; // 원본 코드의 알파 컷오프 유지
 
-                return fixed4(saturate(combinedRGB), finalA);
+                float4 col = float4(saturate(combinedRGB), alpha);
+
+                return dissolve(col, localUV);
             }
             ENDHLSL
         }
