@@ -1,9 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 // 1. Manage Deck and Hand
 // 2. Display Cards
@@ -11,6 +10,7 @@ public class DeckManager : Singleton<DeckManager>
 {
 	[SerializeField] private CardView viewPrefab;
 	[SerializeField] private Transform handHolder;
+	[SerializeField] private Transform deckPosition;
 	
 	public CardPile Deck;
 	public CardPile DrawPile;
@@ -69,12 +69,20 @@ public class DeckManager : Singleton<DeckManager>
 			return;
 		}
 
+		StartCoroutine(Draw_Co(n));
+		
+		Hand.SortByRank();
+	}
+
+	[SerializeField] private float drawTerm;
+	private IEnumerator Draw_Co(int n)
+	{
 		for(int k = 0; k < n; k++)
 		{
 			Draw();
+			Hand.SortByRank();
+			yield return new WaitForSeconds(drawTerm);
 		}
-		
-		Hand.SortByRank();
 	}
 	
 	private void Draw()
@@ -95,7 +103,7 @@ public class DeckManager : Singleton<DeckManager>
 		{
 			uiParent = handHolder;
 		}
-		CardView cardView = Instantiate(viewPrefab, uiParent);
+		CardView cardView = Instantiate(viewPrefab, deckPosition.position, Quaternion.Euler(0, 180, 0), uiParent);
 		cardView.Init(card);
 		return cardView;
 	}

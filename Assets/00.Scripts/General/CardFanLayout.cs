@@ -13,7 +13,9 @@ public class CardFanLayout : MonoBehaviour
     [SerializeField] private float radius = 5000f; // 적절한 초기값 (픽셀 단위)
 
     [Tooltip("전체 카드 덱이 차지할 최대 각도")]
-    [SerializeField] private float totalArcAngle = 10f; // 전체 덱의 좌우 최대 각도 (예: -30도에서 +30도)
+    [SerializeField] private float maxArcAngle = 10f; // 전체 덱의 좌우 최대 각도 (90일 경우 좌우로 45도씩)
+    [Tooltip("최대 각도를 이루는 카드 수")]
+    [SerializeField] private int maxAngleQuantity = 10; // 예: 10장이상일때 최대 각도
 
     [Tooltip("자식 카드를 포함하는 목록. 동적으로 업데이트됩니다.")]
     private List<CardView> _cardViews = new List<CardView>();
@@ -25,63 +27,13 @@ public class CardFanLayout : MonoBehaviour
     {
         if (_source != null)
         {
-            _source.OnOrderChanged -= ReCalculate;
+            _source.OnOrderChanged -= UpdateLayout;
         }
         _source = cardPile;
-        _source.OnOrderChanged += ReCalculate;
+        _source.OnOrderChanged += UpdateLayout;
     }
 
-    // private void Start()
-    // {
-    //     DeckManager.Instance.Hand.OnOrderChanged += UpdateCardList;
-    //     DeckManager.Instance.Hand.SortByRank();
-    //     ApplyFanEffect();
-    // }
-
-    // private void OnCardAddedFromHand(Card card)
-    // {
-    //     RectTransform childRect = card.View.transform as RectTransform;
-    //     _cardViews.Add(childRect);
-    //     ApplyFanEffect();
-    // }
-    //
-    // private void OnCardRemovedFromHand(Card card)
-    // {
-    //     RectTransform childRect = card.View.transform as RectTransform;
-    //     _cardViews.Remove(childRect);
-    //     ApplyFanEffect();
-    // }
-
-//     void Update()
-//     {
-//         // 에디터에서 변경사항을 실시간으로 반영
-// #if UNITY_EDITOR
-//         if (!Application.isPlaying)
-//         {
-//             UpdateCardList();
-//         }
-// #endif
-//
-//         // 레이아웃 그룹의 계산이 끝난 후 정렬을 시작합니다.
-//         //ApplyFanEffect();
-//     }
-
-    // 자식 카드의 목록을 업데이트합니다.
-    // private void UpdateCardList()
-    // {
-    //     _cardViews.Clear();
-    //     foreach (Transform child in transform)
-    //     {
-    //         RectTransform childRect = child as RectTransform;
-    //         if (childRect != null && child.gameObject.activeInHierarchy)
-    //         {
-    //             _cardViews.Add(childRect);
-    //         }
-    //     }
-    // }
-
-    private List<float> xList = new List<float>();
-    private void ReCalculate(IList<Card> cards)
+    private void UpdateLayout(IList<Card> cards)
     {
         _cardViews.Clear();
         foreach (Card card in cards)
@@ -94,38 +46,36 @@ public class CardFanLayout : MonoBehaviour
                 _cardViews.Add(childRect);
             }
         }
+        CalculatePose(cards.Count);
         ApplyFanEffect();
     }
 
-    public void ApplyFanEffect()
+    private List<Pose> poses = new List<Pose>();
+    private void CalculatePose(int n)
     {
-        if (_cardViews.Count <= 1)
+        poses.Clear();
+
+        float targetArcAngle;
+        if (n >= maxAngleQuantity)
         {
-            // 카드가 하나 이하면 효과를 적용할 필요가 없습니다.
-            foreach (var card in _cardViews)
-            {
-                card.MoveTo(Vector3.one, Quaternion.identity);
-            }
-
-            return;
+            targetArcAngle = maxArcAngle;
         }
-
-        int N = _cardViews.Count;
-        xList.Clear();
-
-        // 1. **시작 각도 및 각 카드 당 각도 계산**
-        // 덱의 중앙을 0도로 설정하고, 시작 각도와 종료 각도를 계산합니다.
-        float startAngle = totalArcAngle / 2f; // 예: 30도 (좌측 시작)
-        float endAngle = -totalArcAngle / 2f;  // 예: -30도 (우측 종료)
+        else
+        {
+            targetArcAngle = (float)n / maxAngleQuantity * maxArcAngle;
+        }
+        
+        float startAngle = targetArcAngle / 2f; // 예: 30도 (좌측 시작)
+        float endAngle = -targetArcAngle / 2f;  // 예: -30도 (우측 종료)
 
         // Slerp의 보간 비율 (0.0 ~ 1.0)
-        for (int i = 0; i < N; i++)
+        for (int i = 0; i < n; i++)
         {
-            CardView card = _cardViews[i];
-            
             // 2. **Slerp 보간 비율 (t)**
             // 인덱스 비율 t (0.0 ~ 1.0)
-            float t = (float)i / (N - 1);
+            float t = (float)i / (n - 1);
+            if (i == 0)
+                t = 0;
 
             // 3. **Slerp을 이용한 회전 각도 계산**
             // Quaternion.Euler를 사용하여 시작점과 끝점의 회전을 정의합니다.
@@ -151,7 +101,6 @@ public class CardFanLayout : MonoBehaviour
 
             // X 위치: radius * sin(angle)
             float posX = radius * Mathf.Sin(angleRad);
-            xList.Add(posX);
 
             // Y 위치: radius * cos(angle) - radius (원 중심에서 Y축 거리를 빼서 곡선 시작점을 0으로 맞춥니다)
             float posY = (radius * Mathf.Cos(angleRad)) - radius;
@@ -163,12 +112,20 @@ public class CardFanLayout : MonoBehaviour
 
             // **중요:** Slerp을 사용하는 경우, HorizontalLayoutGroup의 X 계산을 버리고 Slerp 위치만 사용해야 곡선이 유지됩니다.
             // 따라서, **HorizontalLayoutGroup을 비활성화**하고 이 스크립트가 X, Y 위치를 모두 제어하게 하는 것이 좋습니다.
+            
+            poses.Add(new Pose(new Vector3(posX, posY, 0), targetRotation));
+        }
+    }
 
-            // 6. **적용**
+    public void ApplyFanEffect()
+    {
+        for (int i = 0; i < _cardViews.Count; i++)
+        {
+            CardView card = _cardViews[i];
 
             if (card.Rect == DraggingChild)
                 continue;
-            card.MoveTo(new Vector3(posX, posY, card.transform.localPosition.z), targetRotation);
+            card.MoveTo(poses[i].position, poses[i].rotation);
             
             card.Rect.SetSiblingIndex(i);
         }
@@ -181,10 +138,8 @@ public class CardFanLayout : MonoBehaviour
         
         for (int i = 0; i < n - 1; i++)
         {
-            //Debug.Log($"left {xList[i]:F2} | {posX:F2} | right {xList[i + 1]:F2}");
-            if (posX > xList[i] && posX < xList[i + 1])
+            if (posX > poses[i].position.x && posX < poses[i + 1].position.x)
             {
-                //Debug.Log($"<color=yellow>Found {i + 1}</color>");
                 if (_cardViews.IndexOf(cardView) < i + 1)
                     return i;
                 return i + 1;
@@ -196,7 +151,6 @@ public class CardFanLayout : MonoBehaviour
         if (posX > _cardViews[n - 1].Rect.position.x)
             return n - 1;
 
-        //Debug.LogWarning("여기 오면 뭔가 문제 있는건데");
         return 0;
     }
 

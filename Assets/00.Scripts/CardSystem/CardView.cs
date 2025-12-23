@@ -28,8 +28,7 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 	public Action<CardView> OnClick;
 	
 	[Header("Click Animation Var")]
-	[SerializeField] private float punch = 0.2f;
-	[SerializeField] private float duration = 0.2f;
+	[SerializeField] private float punchScale = 0.2f;
 	[SerializeField] private int vib = 10;
 	[SerializeField] private float ela = 1f;
 
@@ -50,7 +49,8 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 		canvasGroup = GetComponent<CanvasGroup>();
 		fanLayout = transform.parent.GetComponent<CardFanLayout>();
 	}
-	
+
+	public Image Backface;
 	private void LateUpdate()
 	{
 		if (isDragging)
@@ -60,6 +60,9 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 			Rect.localRotation = Quaternion.Lerp(Rect.localRotation, newRot, 0.5f);
 			lastFrameX = curX;
 		}
+
+		var back = transform.forward.z;
+		Backface.enabled = back < 0;
 	}
 
 	public void Init(Card card)
@@ -73,7 +76,7 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 	public void MoveTo(Vector3 position, Quaternion rotation)
 	{
 		transform.DOLocalMove(position, moveAnimTime, true);
-		transform.DORotateQuaternion(rotation, moveAnimTime).SetEase(Ease.OutElastic);
+		transform.DORotateQuaternion(rotation, moveAnimTime * 2);//.SetEase(Ease.OutElastic);
 	}
 
 	public void UpdatePaper()
@@ -126,7 +129,7 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 	public void OnPointerClick(PointerEventData eventData)
 	{
 		OnClick?.Invoke(this);
-		transform.DOPunchScale(Vector3.one * punch, duration, vib, ela);
+		transform.DOPunchScale(Vector3.one * punchScale, AnimationManager.PunchTime, vib, ela);
 	}
 	
 	// 1. 드래그 시작 시: 투명도를 조절하고, raycastTarget을 꺼서 다른 요소 위로 드래그될 수 있도록 합니다.

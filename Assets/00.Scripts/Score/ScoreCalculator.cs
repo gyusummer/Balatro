@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -31,8 +32,14 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 		get => _chip;
 		set
 		{
+			if (_chip == value) return;
 			_chip = value;
 			ChipText.text = value.ToString();
+
+			for (int i = 0; i < ChipText.text.Length; i++)
+			{
+				chipTextAnimator.DOPunchCharScale(i, 1.1f, 0.1f);
+			}
 		}
 	}
 	private double _mult;
@@ -41,11 +48,20 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 		get => _mult;
 		set
 		{
+			if (_mult == value) return;
 			_mult = value;
 			MultText.text = value.ToString();
+			
+			for (int i = 0; i < MultText.text.Length; i++)
+			{
+				multTextAnimator.DOPunchCharScale(i, 1.1f, AnimationManager.PunchTime);
+			}
 		}
 	}
 	public double RoundScore;
+
+	private DOTweenTMPAnimator chipTextAnimator;
+	private DOTweenTMPAnimator multTextAnimator;
 
 	protected override void Awake()
 	{
@@ -95,6 +111,9 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 			[HandRank.FlushHouse] = new ScoreComponent(40, 4),
 			[HandRank.FlushFive] = new ScoreComponent(50, 3)
 		};
+		
+		chipTextAnimator = new DOTweenTMPAnimator(ChipText);
+		multTextAnimator = new DOTweenTMPAnimator(MultText);
 	}
 
 	public void AddChip(double amount)

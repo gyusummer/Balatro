@@ -2,25 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AnimationManager : MonoBehaviour
+public class AnimationManager : Singleton<AnimationManager>
 {
-    public static AnimationManager Instance { get; private set; }
-
+    public static float PunchTime = 0.1f;
+    
     private Queue<IEnumerator> _animationQueue = new Queue<IEnumerator>();
     private bool _isPlayingAnimation = false;
-
-    void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(this);
-        }
-        else
-        {
-            Instance = this;
-        }
-    }
-
+    
     public void EnqueueAnimation(IEnumerator animationCoroutine)
     {
         _animationQueue.Enqueue(animationCoroutine);
