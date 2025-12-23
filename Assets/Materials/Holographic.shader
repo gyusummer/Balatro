@@ -12,8 +12,8 @@ Shader "Custom/Holographic"
         _BurnCol2 ("Burn Outer Color", Color) = (1, 0.3, 0, 1)
 
         _GlossSpeed ("Gloss Speed", Range(0, 200)) = 50
-        _Intensity ("Holo Intensity", Range(0, 5)) = 2.0
-        _GridSize ("Grid Size", Range(0.1, 20.0)) = 5
+        _Intensity ("Holo Intensity", Range(0, 5)) = 1.5
+        _GridSize ("Grid Size", Range(0.1, 20.0)) = 1
         _HoloParams ("Holo X: Shift, Y: Speed", Vector) = (1.0, 1.0, 0, 0)
     }
     SubShader

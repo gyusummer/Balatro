@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = System.Random;
 
 [Serializable]
 public abstract class TarotCard : ConsumableCard
@@ -37,8 +38,6 @@ public abstract class TarotCard : ConsumableCard
 		HandController.Instance.DeselectAllCards();
 	}
 }
-
-// UNDONE: Complete WheelOfFortune / After : Edition
 
 // The Fool	Creates the last Tarot or Planet card used during this run
 // The Fool excluded
@@ -206,8 +205,20 @@ public class Hermit : TarotCard
 public class WheelOfFortune : TarotCard
 {
 	public override string Description => "1 in 4 chance to add Foil, Holographic, or Polychrome edition to a random Joker";
+	public override bool CheckCondition(int selectedCount)
+	{
+		return Inventory.Instance.Jokers.Count > 0;
+	}
+
 	protected override void Effect(List<Card> selectedCards)
 	{
+		Chance.Roll(4, () =>
+			{
+				Debug.Log("Yes! Fortune!");
+				Joker j = Inventory.Instance.Jokers.CloneList().GetRandom();
+				j.Edition = (Edition)UnityEngine.Random.Range(1, 4);
+			}
+		);
 	}
 }
 

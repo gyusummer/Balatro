@@ -198,7 +198,6 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 	{
 		var paperSprite = Paper.sprite;
 		Vector4 paperUv = UnityEngine.Sprites.DataUtility.GetOuterUV(paperSprite);
-		Debug.Log(paperUv);
 		Paper.material.SetVector(ATLAS_UV, paperUv);
 		
 		var pictureSprite = Picture.sprite;

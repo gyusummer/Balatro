@@ -6,7 +6,17 @@ public abstract class Joker : ITradeable
 {
     public JokerView View;
     public string Name;
-    public Edition Edition = Edition.None;
+    private Edition _edition = Edition.None;
+
+    public Edition Edition
+    {
+        get => _edition;
+        set
+        {
+            _edition = value;
+            View?.UpdateShader();
+        }
+    }
     public bool IsPlayerOwned { get; set; }
     public int Price { get; set; } = 3;
     public abstract void Register();

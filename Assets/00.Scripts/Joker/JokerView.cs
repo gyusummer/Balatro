@@ -1,21 +1,31 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class JokerView : View<Joker>, ITradeableView, IBeginDragHandler, IEndDragHandler, IDragHandler, ITooltipSource
 {
+	private static readonly int ATLAS_UV = Shader.PropertyToID("_AtlasUv");
+    
+    public string Header => Source.Name;
+    public string Content => TooltipSystem.Instance.JokerDescription.GetJokerString(Source.Name).Description;
+    public RectTransform Rect => transform as RectTransform;
+    public Transform Transform => transform;
+    
     public ITradeable Tradeable => Source;
     public Joker Source;
     public ImageContainer JokerImageSet;
     public Image Paper;
+	[SerializeField] private List<Shader> cardShaders;
 
     public Action<JokerView> OnClick;
 
     private void OnValidate()
     {
         UpdatePaper();
+        UpdateShader();
     }
 
     public override void Init(Joker joker)
@@ -33,6 +43,7 @@ public class JokerView : View<Joker>, ITradeableView, IBeginDragHandler, IEndDra
                   $"{Source.Name}");
         Paper.sprite = JokerImageSet.GetImageByNameOrFirst(Source.Name);
         Paper.SetNativeSize();
+        UpdateAtlasUv();
     }
     
     private void OnDestroy()
@@ -82,9 +93,21 @@ public class JokerView : View<Joker>, ITradeableView, IBeginDragHandler, IEndDra
     {
         TooltipSystem.HideTooltip();
     }
+    
+    private void UpdateAtlasUv()
+    {
+        var paperSprite = Paper.sprite;
+        Vector4 paperUv = UnityEngine.Sprites.DataUtility.GetOuterUV(paperSprite);
+        Paper.material.SetVector(ATLAS_UV, paperUv);
+    }
 
-    public string Header => Source.Name;
-    public string Content => TooltipSystem.Instance.JokerDescription.GetJokerString(Source.Name).Description;
-    public RectTransform Rect => transform as RectTransform;
-    public Transform Transform => transform;
+    public void UpdateShader()
+    {
+        if (Source == null) return;
+        
+        Material newMat = new Material(Paper.material); 
+        var shader = cardShaders[(int)Source.Edition];
+        newMat.shader = shader;
+        Paper.material = newMat;
+    }
 }

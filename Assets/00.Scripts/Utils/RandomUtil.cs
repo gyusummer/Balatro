@@ -93,4 +93,9 @@ public static class RandomUtil
     {
         return GetShuffled<T>(list.ToArray()).ToList();
     }
+
+    public static T GetRandom<T>(this List<T> list)
+    {
+        return GetShuffled(list)[0];
+    }
 }

@@ -123,26 +123,26 @@ Material:
     - _GridDensity: 130
     - _GridDensityX: 253
     - _GridDensityY: 180
-    - _GridSize: 5
+    - _GridSize: 1
     - _GridThickness: 0.0953
     - _Hovering: 1
-    - _HueOffset: 0.2
-    - _Intensity: 1
+    - _HueOffset: 0.757
+    - _Intensity: 1.5
     - _InvertIntensity: 1
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
-    - _PatternScale: 0.56
+    - _PatternScale: 2.6
     - _PatternSize: 25
-    - _PoliScale: 100
+    - _PoliScale: 20
     - _QueueOffset: 0
     - _RayDensity: 5
     - _RayDistance: 5
     - _ReceiveShadows: 1
     - _Seed: 1422832
-    - _ShineIntensity: 1
-    - _ShineSpeed: 0.31
+    - _ShineIntensity: 0.259
+    - _ShineSpeed: 0.19
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
@@ -175,5 +175,5 @@ Material:
     - _ShineParams: {r: 1, g: 1, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _SpriteUvRect: {r: 0.14293373, g: 0.80008006, b: 0.2856377, a: 0.9999198}
-    - _Tint: {r: 0.30899996, g: 0.38799998, b: 0.40299997, a: 0}
+    - _Tint: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
