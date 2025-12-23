@@ -1,172 +1,133 @@
-Shader "Unlit/Negative"
+Shader "Custom/Card_Combined_Negative_DarkHolo"
 {
     Properties
     {
-        _MainTex ("Texture", 2D) = "white" {}
-    	_Color ("Color", Color) = (0,0,0,0)
-        _Negative ("Negative", Vector) = (0,0,0,0)
-        dissolve ("Dissolve", Float) = 0
-        texture_details ("Texture Details", Vector) = (0,0,0,0)
-        _ImageDetails ("Image Details", Vector) = (0,0,0,0)
-        _Shadow ("Shadow", Integer) = 0
-        burn_colour_1 ("burn_colour_1", Vector) = (0,0,0,0)
-        burn_colour_2 ("burn_colour_1", Vector) = (0,0,0,0)
+        _MainTex ("Card Texture", 2D) = "white" {}
+        [Header(Negative Settings)]
+        _InvertIntensity ("Invert Lightness", Range(0, 1)) = 1.0
+        _HueOffset ("Hue Shift Offset", Range(0, 1)) = 0.2
+        _Tint ("Base Tint Color", Color) = (0.309, 0.388, 0.403, 0.0)
+        
+        [Header(Shine Settings)]
+        _ShineSpeed ("Shine Speed", Range(0, 5)) = 0.3
+        _ShineIntensity ("Shine Intensity", Range(0, 2)) = 1.0
+        _PatternScale ("Pattern Scale", Range(1, 20)) = 4.0
+        _CenterOffset ("Center Offset", Vector) = (0.5, 0.5, 0, 0)
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
-        LOD 100
+        Tags { "Queue"="Transparent" "RenderType"="Transparent" }
+        ZWrite Off
+        Blend SrcAlpha OneMinusSrcAlpha
 
         Pass
         {
-            CGPROGRAM
+            HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            // make fog work
-            #pragma multi_compile_fog
-
             #include "UnityCG.cginc"
-            #include "UnityCG.glslinc"
 
-            struct appdata
-            {
+            struct appdata {
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
-                float4 color : COLOR;
             };
 
-            struct v2f
-            {
+            struct v2f {
                 float2 uv : TEXCOORD0;
-                UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
-                float4 color : COLOR;
             };
-            
+
             sampler2D _MainTex;
             float4 _MainTex_ST;
-            
-            float2 _Negative;
-            float4 _Color;
-            float dissolve;
-            //float time = _Time.y;
-            float4 texture_details;
-            float2 _ImageDetails;
-            int _Shadow;
-            float4 burn_colour_1;
-            float4 burn_colour_2;
-            
-            float4 dissolve_mask(float4 tex, float2 texture_coords, float2 uv)
-            {
-                bool shadow = _Shadow > 0;
-                if (dissolve < 0.001) {
-                    return float4(shadow ? float3(0.,0.,0.) : tex.xyz, shadow ? tex.a*0.3: tex.a);
-                }
-            
-                float adjusted_dissolve = (dissolve*dissolve*(3.-2.*dissolve))*1.02 - 0.01; //Adjusting 0.0-1.0 to fall to -0.1 - 1.1 scale so the mask does not pause at extreme values
-            
-            	float t = _Time.y * 10.0 + 2003.;
-            	float2 floored_uv = (floor((uv*texture_details.ba)))/max(texture_details.b, texture_details.a);
-                float2 uv_scaled_centered = (floored_uv - 0.5) * 2.3 * max(texture_details.b, texture_details.a);
-            	
-            	float2 field_part1 = uv_scaled_centered + 50.*float2(sin(-t / 143.6340), cos(-t / 99.4324));
-            	float2 field_part2 = uv_scaled_centered + 50.*float2(cos( t / 53.1532),  cos( t / 61.4532));
-            	float2 field_part3 = uv_scaled_centered + 50.*float2(sin(-t / 87.53218), sin(-t / 49.0000));
-            
-                float field = (1.+ (
-                    cos(length(field_part1) / 19.483) + sin(length(field_part2) / 33.155) * cos(field_part2.y / 15.73) +
-                    cos(length(field_part3) / 27.193) * sin(field_part3.x / 21.92) ))/2.;
-                float2 borders = float2(0.2, 0.8);
-            
-                float res = (.5 + .5* cos( (adjusted_dissolve) / 82.612 + ( field + -.5 ) *3.14))
-                - (floored_uv.x > borders.y ? (floored_uv.x - borders.y)*(5. + 5.*dissolve) : 0.)*(dissolve)
-                - (floored_uv.y > borders.y ? (floored_uv.y - borders.y)*(5. + 5.*dissolve) : 0.)*(dissolve)
-                - (floored_uv.x < borders.x ? (borders.x - floored_uv.x)*(5. + 5.*dissolve) : 0.)*(dissolve)
-                - (floored_uv.y < borders.x ? (borders.x - floored_uv.y)*(5. + 5.*dissolve) : 0.)*(dissolve);
-            
-                if (tex.a > 0.01 && burn_colour_1.a > 0.01 && !shadow && res < adjusted_dissolve + 0.8*(0.5-abs(adjusted_dissolve-0.5)) && res > adjusted_dissolve) {
-                    if (!shadow && res < adjusted_dissolve + 0.5*(0.5-abs(adjusted_dissolve-0.5)) && res > adjusted_dissolve) {
-                        tex.rgba = burn_colour_1.rgba;
-                    } else if (burn_colour_2.a > 0.01) {
-                        tex.rgba = burn_colour_2.rgba;
-                    }
-                }
-            
-                return float4(shadow ? float3(0.,0.,0.) : tex.xyz, res > adjusted_dissolve ? (shadow ? tex.a*0.3: tex.a) : .0);
-            }
-            
-            float hue(float s, float t, float h)
-            {
-            	float hs = fmod(h, 1.)*6.;
-            	if (hs < 1.) return (t-s) * hs + s;
-            	if (hs < 3.) return t;
-            	if (hs < 4.) return (t-s) * (4.-hs) + s;
-            	return s;
-            }
-            
-            float4 RGB(float4 c)
-            {
-            	if (c.y < 0.0001)
-            		return float4(c.zzz, c.a);
-            
-            	float t = (c.z < .5) ? c.y*c.z + c.z : -c.y*c.z + (c.y+c.z);
-            	float s = 2.0 * c.z - t;
-            	return float4(hue(s,t,c.x + 1./3.), hue(s,t,c.x), hue(s,t,c.x - 1./3.), c.w);
-            }
-            
-            float4 HSL(float4 c)
-            {
-            	float low = min(c.r, min(c.g, c.b));
-            	float high = max(c.r, max(c.g, c.b));
-            	float delta = high - low;
-            	float sum = high+low;
-            
-            	float4 hsl = float4(.0, .0, .5 * sum, c.a);
-            	if (delta == .0)
-            		return hsl;
-            
-            	hsl.y = (hsl.z < .5) ? delta / sum : delta / (2.0 - sum);
-            
-            	if (high == c.r)
-            		hsl.x = (c.g - c.b) / delta;
-            	else if (high == c.g)
-            		hsl.x = (c.b - c.r) / delta + 2.0;
-            	else
-            		hsl.x = (c.r - c.g) / delta + 4.0;
-            
-            	hsl.x = fmod(hsl.x / 6., 1.);
-            	return hsl;
+            float _InvertIntensity, _HueOffset;
+            float4 _Tint;
+            float _ShineSpeed, _ShineIntensity, _PatternScale;
+            float2 _CenterOffset;
+
+            // --- HSL 유틸리티 ---
+            float hueHelper(float s, float t, float h) {
+                h = frac(h);
+                float hs = h * 6.0;
+                if (hs < 1.0) return (t - s) * hs + s;
+                if (hs < 3.0) return t;
+                if (hs < 4.0) return (t - s) * (4.0 - hs) + s;
+                return s;
             }
 
-            v2f vert (appdata v)
-            {
+            float4 RGBtoHSL(float4 c) {
+                float low = min(c.r, min(c.g, c.b));
+                float high = max(c.r, max(c.g, c.b));
+                float delta = high - low;
+                float sum = high + low;
+                float4 hsl = float4(0, 0, 0.5 * sum, c.a);
+                if (delta > 0.0) {
+                    hsl.y = (hsl.z < 0.5) ? delta / sum : delta / (2.0 - sum);
+                    if (high == c.r) hsl.x = (c.g - c.b) / delta;
+                    else if (high == c.g) hsl.x = (c.b - c.r) / delta + 2.0;
+                    else hsl.x = (c.r - c.g) / delta + 4.0;
+                    hsl.x = frac(hsl.x / 6.0);
+                }
+                return hsl;
+            }
+
+            float4 HSLtoRGB(float4 c) {
+                if (c.y < 0.0001) return float4(c.zzz, c.a);
+                float t = (c.z < 0.5) ? c.y * c.z + c.z : -c.y * c.z + (c.y + c.z);
+                float s = 2.0 * c.z - t;
+                return float4(hueHelper(s, t, c.x + 1.0/3.0), hueHelper(s, t, c.x), hueHelper(s, t, c.x - 1.0/3.0), c.a);
+            }
+
+            v2f vert (appdata v) {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                UNITY_TRANSFER_FOG(o,o.vertex);
-                o.color = v.color;
                 return o;
             }
 
-            fixed4 frag (v2f i) : SV_Target
-            {
+            fixed4 frag (v2f i) : SV_Target {
                 float4 tex = tex2D(_MainTex, i.uv);
-            	float2 uv = (((i.uv)*(_ImageDetails)) - texture_details.xy*texture_details.ba)/texture_details.ba;
-            
-                float4 SAT = HSL(tex);
-            
-            	if (_Negative.g > 0.0 || _Negative.g < 0.0) {
-            		SAT.b = (1.-SAT.b);
-            	}
-            	SAT.r = -SAT.r+0.2;
-            
-                tex = RGB(SAT) + _Color;//0.8*float4(79./255., 99./255.,103./255.,0.);
-            
-            	if (tex[3] < 0.7)
-            		tex[3] = tex[3]/3.;
-            	return dissolve_mask(tex*i.color, i.uv, uv);
+                float2 uv = i.uv - _CenterOffset;
+                float t = _Time.y * _ShineSpeed;
+                float s = _PatternScale;
+
+                // 1. [Inversion 로직] HSL 변환 및 네거티브 적용
+                float4 hsl = RGBtoHSL(tex);
+                if (_InvertIntensity > 0) {
+                    hsl.z = lerp(hsl.z, 1.0 - hsl.z, _InvertIntensity);
+                }
+                hsl.x = frac(-hsl.x + _HueOffset);
+                
+                // 베이스 색상 결정 (반전된 HSL + 틴트)
+                float3 baseRGB = HSLtoRGB(hsl).rgb + 0.8 * _Tint.rgb;
+
+                // 2. [Shine 로직] 간섭 파동 계산
+                float low = min(tex.r, min(tex.g, tex.b));
+                float high = max(tex.r, max(tex.g, tex.b));
+                float delta = high - low - 0.1;
+
+                float fac  = 0.8 + 0.9 * sin(s * (11.*uv.x + 4.32*uv.y) + t*12. + cos(t*5.3 + uv.y*4.2 - uv.x*4.));
+                float fac2 = 0.5 + 0.5 * sin(s * (8.*uv.x + 2.32*uv.y) + t*5. - cos(t*2.3 + uv.x*8.2));
+                float fac3 = 0.5 + 0.5 * sin(s * (10.*uv.x + 5.32*uv.y) + t*6.11 + sin(t*5.3 + uv.y*3.2));
+                float fac4 = 0.5 + 0.5 * sin(s * (3.*uv.x + 2.32*uv.y) + t*8.11 + sin(t*1.3 + uv.y*11.2));
+                float fac5 = sin(0.9 * 16. * uv.x + 5.32*uv.y + t*12. + cos(t*5.3 + uv.y*4.2 - uv.x*4.));
+
+                float maxfac = 0.7 * max(max(fac, max(fac2, max(fac3, 0.0))) + (fac + fac2 + fac3 * fac4), 0.0);
+
+                // 3. [통합] 반전된 베이스 위에 다크 샤인 효과 얹기
+                float3 finalFoil;
+                finalFoil.r = baseRGB.r - delta + delta * maxfac * (0.7 + fac5 * 0.27) - 0.1;
+                finalFoil.g = baseRGB.g - delta + delta * maxfac * (0.7 - fac5 * 0.27) - 0.1;
+                finalFoil.b = baseRGB.b - delta + delta * maxfac * 0.7 - 0.1;
+
+                // 4. 강도 조절 및 알파 처리
+                float3 combinedRGB = lerp(baseRGB, finalFoil, _ShineIntensity);
+                
+                float finalA = tex.a;
+                if (finalA < 0.7) finalA /= 3.0; // 원본 코드의 알파 컷오프 유지
+
+                return fixed4(saturate(combinedRGB), finalA);
             }
-            ENDCG
+            ENDHLSL
         }
     }
 }

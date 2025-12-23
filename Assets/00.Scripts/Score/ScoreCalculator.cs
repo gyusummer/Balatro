@@ -172,7 +172,7 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 		foreach (var card in scoredCards)
 		{
 			card.ActivateInPlay();
-			yield return new WaitForSeconds(0.5f);
+			yield return new WaitForSeconds(AnimationManager.PunchTime);
 		}
 	}
 
@@ -183,7 +183,7 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 			if (playedHand.Contains(card))
 				continue;
 			card.ActivateInHeld();
-			yield return new WaitForSeconds(0.5f);
+			yield return new WaitForSeconds(AnimationManager.PunchTime);
 		}
 	}
 
@@ -193,7 +193,7 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 		foreach (Joker joker in jokers)
 		{
 			joker.Activate();
-			yield return new WaitForSeconds(0.5f);
+			yield return new WaitForSeconds(AnimationManager.PunchTime);
 		}
 	}
 	
