@@ -286,6 +286,11 @@ public class Death : TarotCard
 public class Temperance : TarotCard
 {
 	public override string Description => "Gives the total sell value of all current Jokers\n(Max of $50)";
+	public override bool CheckCondition(int selectedCount)
+	{
+		return true;
+	}
+
 	protected override void Effect(List<Card> selectedCards)
 	{
 		var jokers = Inventory.Instance.Jokers.CloneList();

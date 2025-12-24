@@ -147,12 +147,23 @@ public class RunManager : Singleton<RunManager>
 
         CurrentState = newState;
         seq.AppendCallback(() => statePanels[newState].SetActive(true));
+
+        switch (CurrentState)
+        {
+            case RunState.None:
+                break;
+            case RunState.BlindSelect:
+                break;
+            case RunState.InBlind:
+                seq.AppendCallback(() => DeckManager.Instance.Hand.Clear());
+                break;
+            case RunState.Shop:
+                seq.AppendCallback(() => Shop.Instance.RefreshGoods());
+                break;
+        }
+        
         seq.Append(CenterPanel.transform.DOLocalMoveY(CenterPanel.transform.localPosition.y, 1f, true));
 
-        if (CurrentState == RunState.Shop)
-        {
-            seq.AppendCallback(() => Shop.Instance.RefreshGoods());
-        }
         yield return seq.WaitForCompletion();
     }
 
