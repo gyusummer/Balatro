@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
@@ -98,7 +99,7 @@ public class BlindManager : Singleton<BlindManager>
 		Debug.Log("<color=red>WinBlind</color>");
 		// broadcast blind end event
 		// earn money;
-		IngameEventManager.CallEvent(new BlindFinished());
+		IngameEventManager.CallEvent(new BlindFinished(DOTween.Sequence()));
 		Economy.GetInterest();
 		Inventory.Instance.PlayerMoney += HandsLeft;
 		

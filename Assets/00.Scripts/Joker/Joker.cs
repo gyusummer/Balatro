@@ -1,5 +1,7 @@
 using System;
+using DG.Tweening;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [Serializable]
 public abstract class Joker : ITradeable
@@ -22,24 +24,37 @@ public abstract class Joker : ITradeable
     public abstract void Register();
     public abstract void Unregister();
     public Action ActivateEffect { get; set; } = null;
+	public Sequence ActivateAnimation => View.ActivateAnimation();
 
-    public void Activate()
+    public Sequence Activate()
     {
-        ActivateEffect?.Invoke();
+        Sequence seq = DOTween.Sequence();
+        
+        if (ActivateEffect != null)
+        {
+            seq.Append(ActivateAnimation);
+            seq.JoinCallback(() => ActivateEffect.Invoke());
+        }
+        
         switch (Edition)
         {
             case Edition.Foil:
-                ScoreCalculator.Instance.AddChip(50);
+                seq.Append(ActivateAnimation);
+                seq.JoinCallback(() => ScoreCalculator.Instance.AddChip(50));
                 break;
             case Edition.Holographic:
-                ScoreCalculator.Instance.AddMult(10);
+                seq.Append(ActivateAnimation);
+                seq.JoinCallback(() => ScoreCalculator.Instance.AddMult(10));
                 break;
             case Edition.Polychrome:
-                ScoreCalculator.Instance.ScaleMult(1.5d);
+                seq.Append(ActivateAnimation);
+                seq.JoinCallback(() => ScoreCalculator.Instance.ScaleMult(1.5d));
                 break;
             default:
                 break;
         }
+
+        return seq;
     }
     
     public bool Buy()
@@ -93,12 +108,12 @@ public class ActivateJoker : Joker
 }
 
 [Serializable]
-public class Joker<TEventArgs> : Joker where TEventArgs : IngameEventArgs
+public class EventJoker<TEventArgs> : Joker where TEventArgs : IngameEventArgs
 {
     private Predicate<TEventArgs> _condition;
     private Action _effect;
 
-    public Joker(string name, int price, Predicate<TEventArgs> condition, Action effect)
+    public EventJoker(string name, int price, Predicate<TEventArgs> condition, Action effect)
     {
         Name = name;
         Price = price;
@@ -110,15 +125,23 @@ public class Joker<TEventArgs> : Joker where TEventArgs : IngameEventArgs
     {
         IngameEventManager.AddListener<TEventArgs>(ApplyEffect);
     }
-
+    
     private void ApplyEffect(TEventArgs eventArgs)
     {
-        if (_condition(eventArgs))
+        if (_condition(eventArgs) == false)
         {
-            _effect.Invoke();
+            return;
+        }
+
+        Sequence seq = eventArgs.Sequence;
+        seq.Append(ActivateAnimation);
+        seq.JoinCallback(() => _effect.Invoke());
+        if (eventArgs is CardActivateEventArgs args)
+        {
+            seq.Join(args.Card.ActivateAnimation);
         }
     }
-
+    
     public override void Unregister()
     {
         IngameEventManager.RemoveListener<TEventArgs>(ApplyEffect);

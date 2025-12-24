@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -23,7 +24,7 @@ public abstract class ConsumableCard : ITradeable
 
 		Inventory.Instance.Consumables.Remove(this);
 		Effect(selectedCards);
-		IngameEventManager.CallEvent(new ConsumableConsumedEventArgs(this));
+		IngameEventManager.CallEvent(new ConsumableConsumedEventArgs(this, DOTween.Sequence()));
 		UnityEngine.Object.Destroy(View.gameObject);
 		return true;
 	}

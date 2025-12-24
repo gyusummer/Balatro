@@ -137,7 +137,7 @@ public class RunManager : Singleton<RunManager>
         // 2. 패널 내용물을 교체한다.
         // 3. 중앙 패널을 올린다.
         Sequence seq = DOTween.Sequence();
-        seq.Append(CenterPanel.transform.DOLocalMoveY(CenterPanel.transform.localPosition.y - 1000, 1f, true));
+        seq.Append(CenterPanel.transform.DOLocalMoveY(CenterPanel.transform.localPosition.y - 1000, 0.5f, true));
         
         GameObject panel = statePanels[CurrentState];
         if (panel != null)
@@ -162,7 +162,7 @@ public class RunManager : Singleton<RunManager>
                 break;
         }
         
-        seq.Append(CenterPanel.transform.DOLocalMoveY(CenterPanel.transform.localPosition.y, 1f, true));
+        seq.Append(CenterPanel.transform.DOLocalMoveY(CenterPanel.transform.localPosition.y, 0.5f, true));
 
         yield return seq.WaitForCompletion();
     }

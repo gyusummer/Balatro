@@ -82,14 +82,14 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 
 	public void LocalMoveTo(Vector3 position, Quaternion rotation)
 	{
-		transform.DOLocalMove(position, AnimationManager.CardMoveTime, true);
-		transform.DORotateQuaternion(rotation, AnimationManager.CardMoveTime * 2);//.SetEase(Ease.OutElastic);
+		transform.DOLocalMove(position, AnimationVariable.CardMoveTime, true);
+		transform.DORotateQuaternion(rotation, AnimationVariable.CardMoveTime * 2);//.SetEase(Ease.OutElastic);
 	}
 
 	public void WorldMoveTo(Vector3 position, Quaternion rotation)
 	{
-		transform.DOMove(position, AnimationManager.CardMoveTime, true);
-		transform.DORotateQuaternion(rotation, AnimationManager.CardMoveTime * 2);
+		transform.DOMove(position, AnimationVariable.CardMoveTime, true);
+		transform.DORotateQuaternion(rotation, AnimationVariable.CardMoveTime * 2);
 	}
 
 	public void UpdatePaper()
@@ -141,10 +141,17 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 		Source = null;
 	}
 
+	public Sequence ActivateAnimation()
+	{
+		Sequence seq = DOTween.Sequence();
+		seq.Append(transform.DOPunchScale(Vector3.one * AnimationVariable.ActivatePunchScale, AnimationVariable.ActivatePunchTime, vib, ela));
+		return seq;
+	}
+
 	public void OnPointerClick(PointerEventData eventData)
 	{
 		OnClick?.Invoke(this);
-		transform.DOPunchScale(Vector3.one * punchScale, AnimationManager.PunchTime, vib, ela);
+		transform.DOPunchScale(Vector3.one * punchScale, AnimationVariable.ClickPunchTime, vib, ela);
 	}
 	
 	// 1. 드래그 시작 시: 투명도를 조절하고, raycastTarget을 꺼서 다른 요소 위로 드래그될 수 있도록 합니다.

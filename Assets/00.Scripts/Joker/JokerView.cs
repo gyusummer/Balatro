@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -60,6 +61,13 @@ public class JokerView : View<Joker>, ITradeableView, IBeginDragHandler, IEndDra
     
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
+    
+    public Sequence ActivateAnimation()
+    {
+        Sequence seq = DOTween.Sequence();
+        seq.Append(transform.DOPunchScale(Vector3.one * AnimationVariable.ActivatePunchScale, AnimationVariable.ActivatePunchTime));
+        return seq;
+    }
 
     void Awake()
     {

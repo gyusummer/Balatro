@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEditor;
 using UnityEngine;
 
@@ -81,7 +82,7 @@ public class DeckManager : Singleton<DeckManager>
 		{
 			Draw();
 			Hand.SortByRank();
-			yield return new WaitForSeconds(AnimationManager.CardSequenceGap);
+			yield return new WaitForSeconds(AnimationVariable.CardSequenceGap);
 		}
 	}
 	
@@ -109,11 +110,11 @@ public class DeckManager : Singleton<DeckManager>
 		foreach (Card card in selectedCards)
 		{
 			card.View.WorldMoveTo(discardPosition.position, discardPosition.rotation);
-			yield return new WaitForSeconds(AnimationManager.CardSequenceGap);
+			yield return new WaitForSeconds(AnimationVariable.CardSequenceGap);
 		}
 		
 		// wait for all discard animation
-		float waitTime = AnimationManager.CardMoveTime * 2 - AnimationManager.CardSequenceGap;
+		float waitTime = AnimationVariable.CardMoveTime * 2 - AnimationVariable.CardSequenceGap;
 		if (waitTime > 0)
 		{
 			yield return new WaitForSeconds(waitTime);
@@ -122,7 +123,7 @@ public class DeckManager : Singleton<DeckManager>
 		foreach (Card card in selectedCards)
 		{
 			Hand.Remove(card);
-			IngameEventManager.CallEvent(new CardDiscardedEventArgs(card));
+			IngameEventManager.CallEvent(new CardDiscardedEventArgs(card, DOTween.Sequence()));
 		}
 
 		FillHand();

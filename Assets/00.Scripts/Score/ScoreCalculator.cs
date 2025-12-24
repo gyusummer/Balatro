@@ -57,7 +57,7 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 			
 			for (int i = 0; i < MultText.text.Length; i++)
 			{
-				multTextAnimator.DOPunchCharScale(i, 1.1f, AnimationManager.PunchTime);
+				multTextAnimator.DOPunchCharScale(i, 1.1f, AnimationVariable.ClickPunchTime);
 			}
 		}
 	}
@@ -75,7 +75,7 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 
 			for (int i = 0; i < RoundScoreText.text.Length; i++)
 			{
-				roundScoreTextAnimator.DOPunchCharScale(i, 1.1f, AnimationManager.PunchTime);
+				roundScoreTextAnimator.DOPunchCharScale(i, 1.1f, AnimationVariable.ClickPunchTime);
 			}
 		}
 	}
@@ -161,10 +161,14 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 	public IEnumerator EvaluatePlay(List<Card> playedHand)
 	{
 		HandInfo handInfo = PredictHandRank(playedHand);
-		yield return ScoreCards(handInfo.ScoredCards);
-		IngameEventManager.CallEvent(new HandPlayedEventArgs(handInfo));
-		yield return ActivateHeldCards(playedHand);
-		yield return ActivateJokers();
+		yield return ScoreCards(handInfo.ScoredCards).WaitForCompletion();
+		
+		Sequence seq = DOTween.Sequence();
+		IngameEventManager.CallEvent(new HandPlayedEventArgs(handInfo, seq));
+		seq.WaitForCompletion();
+		
+		yield return ActivateHeldCards(playedHand).WaitForCompletion();
+		yield return ActivateJokers().WaitForCompletion();
 		
 		AccumulateScore(Chip * Mult);
 	}
@@ -189,34 +193,39 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 		Mult = s_BaseScore[handInfo.Rank].Mult;
 	}
 
-	private IEnumerator ScoreCards(List<Card> scoredCards)
+	private Sequence ScoreCards(List<Card> scoredCards)
 	{
+		Sequence seq = DOTween.Sequence();
 		foreach (var card in scoredCards)
 		{
-			card.ActivateInPlay();
-			yield return new WaitForSeconds(AnimationManager.PunchTime);
+			seq.Append(card.ActivateInPlay());
 		}
+		return seq;
 	}
 
-	private IEnumerator ActivateHeldCards(List<Card> playedHand)
+	private Sequence ActivateHeldCards(List<Card> playedHand)
 	{
+		Sequence seq = DOTween.Sequence();
 		foreach (Card card in DeckManager.Instance.Hand.CloneList())
 		{
 			if (playedHand.Contains(card))
 				continue;
-			card.ActivateInHeld();
-			yield return new WaitForSeconds(AnimationManager.PunchTime);
+			seq.Append(card.ActivateInHeld());
 		}
+
+		return seq;
 	}
 
-	private IEnumerator ActivateJokers()
+	private Sequence ActivateJokers()
 	{
+		Sequence seq = DOTween.Sequence();
 		var jokers = Inventory.Instance.Jokers.CloneList();
 		foreach (Joker joker in jokers)
 		{
-			joker.Activate();
-			yield return new WaitForSeconds(AnimationManager.PunchTime);
+			seq.Append(joker.Activate());
 		}
+
+		return seq;
 	}
 	
 	private void AccumulateScore(double score)

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using UnityEngine;
 
 [Flags]
@@ -38,7 +39,13 @@ public enum CardRank
 public class Card
 {
 	public static readonly CardSuit[] ALL_EACH_SUITS = new CardSuit[]{ CardSuit.Diamond , CardSuit.Club, CardSuit.Heart, CardSuit.Spade };
+
 	[SerializeField] private CardSuit _suit = CardSuit.Spade;
+	[SerializeField] private CardRank _rank = CardRank.King;
+	[SerializeField] private CardEnhancement _enhancement;
+	[SerializeField] private Edition _edition =  Edition.None;
+	public int Chip;
+	
 	public CardSuit SuitOrigin => _suit;
 	public CardSuit Suit
 	{
@@ -56,8 +63,6 @@ public class Card
 			View?.UpdatePicture();
 		}
 	}
-
-	[SerializeField] private CardRank _rank = CardRank.King;
 	public CardRank Rank
 	{
 		get => _rank;
@@ -67,9 +72,6 @@ public class Card
 			View?.UpdatePicture();
 		}
 	}
-	public int Chip;
-	
-	[SerializeField] private CardEnhancement _enhancement;
 	public CardEnhancement Enhancement
 	{
 		get => _enhancement;
@@ -79,9 +81,6 @@ public class Card
 			View?.UpdatePaper();
 		}
 	}
-
-	[SerializeField] private Edition _edition =  Edition.None;
-
 	public Edition Edition
 	{
 		get => _edition;
@@ -91,6 +90,7 @@ public class Card
 			View?.UpdateShader();
 		}
 	}
+	public Sequence ActivateAnimation => View.ActivateAnimation();
 
 	[HideInInspector] public CardView View;
 
@@ -120,60 +120,77 @@ public class Card
 		Chip = chip;
 	}
 
-	public void ActivateInPlay()
+	public Sequence ActivateInPlay()
 	{
+		Sequence seq = ActivateAnimation;
+		// base
 		if (Enhancement != CardEnhancement.Stone)
 		{
-			ScoreCalculator.Instance.AddChip(Chip);
+			seq.JoinCallback(() => ScoreCalculator.Instance.AddChip(Chip));
 		}
 
+		// enhance
 		switch (Enhancement)
 		{
 			case CardEnhancement.Bonus:
-				ScoreCalculator.Instance.AddChip(30);
+				seq.Append(ActivateAnimation);
+				seq.JoinCallback(() => ScoreCalculator.Instance.AddChip(30));
 				break;
 			case CardEnhancement.Mult:
-				ScoreCalculator.Instance.AddMult(4);
+				seq.Append(ActivateAnimation);
+				seq.JoinCallback(() => ScoreCalculator.Instance.AddMult(4));
 				break;
 			case CardEnhancement.Glass:
-				ScoreCalculator.Instance.ScaleMult(2);
+				seq.Append(ActivateAnimation);
+				seq.JoinCallback(() => ScoreCalculator.Instance.ScaleMult(2));
 				break;
 			case CardEnhancement.Stone:
-				ScoreCalculator.Instance.AddChip(50);
+				seq.Append(ActivateAnimation);
+				seq.JoinCallback(() => ScoreCalculator.Instance.AddChip(50));
 				break;
 			case CardEnhancement.Lucky:
-				Chance.Roll(5, () => ScoreCalculator.Instance.AddMult(20));
-				Chance.Roll(15, () => Inventory.Instance.PlayerMoney += 20);
+				seq.Append(ActivateAnimation);
+				seq.JoinCallback(() => Chance.Roll(5, () => ScoreCalculator.Instance.AddMult(20)));
+				seq.Append(ActivateAnimation);
+				seq.JoinCallback(() => Chance.Roll(15, () => Inventory.Instance.PlayerMoney += 20));
 				break;
 			default:
 				break;
 		}
 
+		// edition
 		switch (Edition)
 		{
 			case Edition.Foil:
-				ScoreCalculator.Instance.AddChip(50);
+				seq.Append(ActivateAnimation);
+				seq.JoinCallback(() => ScoreCalculator.Instance.AddChip(50));
 				break;
 			case Edition.Holographic:
-				ScoreCalculator.Instance.AddMult(10);
+				seq.Append(ActivateAnimation);
+				seq.JoinCallback(() => ScoreCalculator.Instance.AddMult(10));
 				break;
 			case Edition.Polychrome:
-				ScoreCalculator.Instance.ScaleMult(1.5d);
+				seq.Append(ActivateAnimation);
+				seq.JoinCallback(() => ScoreCalculator.Instance.ScaleMult(1.5d));
 				break;
 			default:
 				break;
 		}
 		
-		IngameEventManager.CallEvent(new CardScoredEventArgs(this));
+		IngameEventManager.CallEvent(new CardScoredEventArgs(this, seq));
+		return seq;
 	}
 	
-	public void ActivateInHeld()
+	public Sequence ActivateInHeld()
 	{
+		Sequence seq = DOTween.Sequence();
 		if (Enhancement == CardEnhancement.Steel)
 		{
-			ScoreCalculator.Instance.ScaleMult(1.5d);
+			seq.Append(ActivateAnimation);
+			seq.JoinCallback(() => ScoreCalculator.Instance.ScaleMult(1.5d));
 		}
-		IngameEventManager.CallEvent(new CardHeldEventArgs(this));
+		IngameEventManager.CallEvent(new CardHeldEventArgs(this, seq));
+		return seq;
 	}
 
 	public void Destroy()
