@@ -108,7 +108,7 @@ public class BlindManager : Singleton<BlindManager>
 		}
 		
 		// go to shop;
-		RunManager.Instance.ChangeState(3);
+		RunManager.Instance.ChangeState(RunManager.RunState.Shop);
 	}
 	
 	public IEnumerator PlayHand(List<Card> selectedCards)

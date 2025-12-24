@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
@@ -9,14 +10,16 @@ public class RunManager : Singleton<RunManager>
 {
 	public static class Variables
 	{
-		// last played consumable
-		// tarot consume count
-		// skipped count
 		public static int Hands = 4;
 		public static int Discards = 3;
 		public static int HandCapacity = 8;
 	}
 
+    public GameObject CenterPanel;
+    public GameObject BlindSelectPanel;
+    public GameObject BlindPanel;
+    public GameObject ShopPanel;
+    public GameObject RunResultPanel;
     public TMP_Text AnteText;
     public TMP_Text RoundText;
     
@@ -46,6 +49,20 @@ public class RunManager : Singleton<RunManager>
     public Blind Small;
     public Blind Big;
     public Blind Boss;
+    
+    private Dictionary<RunState, GameObject> statePanels = new Dictionary<RunState, GameObject>();
+
+    protected override void Awake()
+    {
+        base.Awake();
+        statePanels = new Dictionary<RunState, GameObject>()
+        {
+            [RunState.None] = null,
+            [RunState.BlindSelect] = BlindSelectPanel,
+            [RunState.InBlind] = BlindPanel,
+            [RunState.Shop] = ShopPanel
+        };
+    }
 
     public void WinAnte()
     {
@@ -101,67 +118,68 @@ public class RunManager : Singleton<RunManager>
     public enum RunState
     {
         None,
-        Ante,
-        Blind,
+        BlindSelect,
+        InBlind,
         Shop
     }
 
-    public GameObject AntePanel;
-    public GameObject BlindPanel;
-    public GameObject ShopPanel;
-    public GameObject RunResultPanel;
-    
-    public void ChangeState(int state)
+    public RunState CurrentState = RunState.None;
+
+    public void ChangeState(RunState newState)
     {
-        RunState newState = (RunState)state;
-        switch (newState)
+        StartCoroutine(ChangeState_Co(newState));
+    }
+    
+    private IEnumerator ChangeState_Co(RunState newState)
+    {
+        // 전환 애니메이션
+        // 1. 중앙 패널을 내린다.
+        // 2. 패널 내용물을 교체한다.
+        // 3. 중앙 패널을 올린다.
+        Sequence seq = DOTween.Sequence();
+        seq.Append(CenterPanel.transform.DOLocalMoveY(CenterPanel.transform.localPosition.y - 1000, 1f, true));
+        
+        GameObject panel = statePanels[CurrentState];
+        if (panel != null)
         {
-            case RunState.None:
-                AntePanel.SetActive(false);
-                BlindPanel.SetActive(false);
-                ShopPanel.SetActive(false);
-                break;
-            case RunState.Ante:
-                AntePanel.SetActive(true);
-                BlindPanel.SetActive(false);
-                ShopPanel.SetActive(false);
-                break;
-            case RunState.Blind:
-                AntePanel.SetActive(false);
-                BlindPanel.SetActive(true);
-                ShopPanel.SetActive(false);
-                break;
-            case RunState.Shop:
-                Shop.Instance.FillGoods();
-                AntePanel.SetActive(false);
-                BlindPanel.SetActive(false);
-                ShopPanel.SetActive(true);
-                break;
+            seq.AppendCallback(() => panel.SetActive(false));
         }
+
+        CurrentState = newState;
+        seq.AppendCallback(() => statePanels[newState].SetActive(true));
+        seq.Append(CenterPanel.transform.DOLocalMoveY(CenterPanel.transform.localPosition.y, 1f, true));
+        yield return seq.WaitForCompletion();
     }
 
     public void StartGame()
     {
         InitNewAnte();
-        ChangeState(1);
+        ChangeState(RunState.BlindSelect);
+    }
+
+    private void EnterBlind(Blind blind)
+    {
+        StartCoroutine(EnterBlind_Co(blind));
+    }
+
+    private IEnumerator EnterBlind_Co(Blind blind)
+    {
+        yield return ChangeState_Co(RunState.InBlind);
+        BlindManager.Instance.StartBlind(blind);
     }
 
     public void StartSmallBlind()
     {
-        ChangeState(2);
-        BlindManager.Instance.StartBlind(Small);
+        EnterBlind(Small);
     }
     public void StartBigBlind()
     {
-        ChangeState(2);
-        BlindManager.Instance.StartBlind(Big);
+        EnterBlind(Big);
     }
     public void StartBossBlind()
     {
-        ChangeState(2);
-        BlindManager.Instance.StartBlind(Boss);
+        EnterBlind(Boss);
     }
-    
     
     #endregion
 }
