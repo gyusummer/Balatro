@@ -113,7 +113,7 @@ public class DeckManager : Singleton<DeckManager>
 		}
 		
 		// wait for all discard animation
-		float waitTime = (AnimationManager.CardMoveTime * 2) - AnimationManager.CardSequenceGap * selectedCards.Count;
+		float waitTime = AnimationManager.CardMoveTime * 2 - AnimationManager.CardSequenceGap;
 		if (waitTime > 0)
 		{
 			yield return new WaitForSeconds(waitTime);

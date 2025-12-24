@@ -103,15 +103,7 @@ public class HandController : Singleton<HandController>
 		{
 			return;
 		}
-
-		StartCoroutine(PlayHand_Co());
-	}
-
-	private IEnumerator PlayHand_Co()
-	{
-		Debug.Log("Playing Hand");
-		yield return BlindManager.Instance.PlayHand(SortedSelected);
-		Debug.Log("Playing Hand End");
+		BlindManager.Instance.PlayHand(SortedSelected);
 		_selectedCards.Clear();
 	}
 	

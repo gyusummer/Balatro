@@ -111,13 +111,18 @@ public class BlindManager : Singleton<BlindManager>
 		RunManager.Instance.ChangeState(RunManager.RunState.Shop);
 	}
 	
-	public IEnumerator PlayHand(List<Card> selectedCards)
+	public void PlayHand(List<Card> selectedCards)
 	{
 		if (HandsLeft <= 0)
 		{
-			yield break;
+			return;
 		}
-		// Check Poker Hand
+
+		StartCoroutine(PlayHand_Co(selectedCards));
+	}
+
+	private IEnumerator PlayHand_Co(List<Card> selectedCards)
+	{
 		yield return ScoreCalculator.Instance.EvaluatePlay(selectedCards);
 		
 		foreach (Card card in selectedCards)
