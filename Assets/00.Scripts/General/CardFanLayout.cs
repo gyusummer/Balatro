@@ -125,7 +125,7 @@ public class CardFanLayout : MonoBehaviour
 
             if (card.Rect == DraggingChild)
                 continue;
-            card.MoveTo(poses[i].position, poses[i].rotation);
+            card.LocalMoveTo(poses[i].position, poses[i].rotation);
             
             card.Rect.SetSiblingIndex(i);
         }

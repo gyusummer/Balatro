@@ -117,15 +117,13 @@ public class HandController : Singleton<HandController>
 	
 	public void DiscardHand()
 	{
-		if (_selectedCards.Count <= 0)
+		if (_selectedCards.Count <= 0 || BlindManager.Instance.CanDiscard == false)
 		{
 			return;
 		}
 
-		if(BlindManager.Instance.DiscardHand(SortedSelected))
-		{
-			_selectedCards.Clear();
-		}
+		DeckManager.Instance.DiscardHand(SortedSelected);
+		_selectedCards.Clear();
 	}
 
 	private void OnDestroy()

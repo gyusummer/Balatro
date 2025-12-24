@@ -129,26 +129,13 @@ public class BlindManager : Singleton<BlindManager>
 		CheckBlindGoal();
 	}
 
-	public bool DiscardHand(List<Card> selectedCards)
+	public void DiscardHand(List<Card> selectedCards)
 	{
-		if (DiscardsLeft <= 0)
-		{
-			return false;
-		}
-		
-		foreach (Card card in selectedCards)
-		{
-			DeckManager.Instance.Hand.Remove(card);
-			IngameEventManager.CallEvent(new CardDiscardedEventArgs(card));
-		}
-		DiscardsLeft--;
-
-		FillHand();
-		return true;
+		DeckManager.Instance.DiscardHand(selectedCards);
 	}
 
 	public void FillHand()
 	{
-		DeckManager.Instance.Draw(HandCapacity - DeckManager.Instance.Hand.Count);
+		DeckManager.Instance.FillHand();
 	}
 }

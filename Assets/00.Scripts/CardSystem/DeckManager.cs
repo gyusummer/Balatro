@@ -11,6 +11,7 @@ public class DeckManager : Singleton<DeckManager>
 	[SerializeField] private CardView viewPrefab;
 	[SerializeField] private Transform handHolder;
 	[SerializeField] private Transform deckPosition;
+	[SerializeField] private Transform discardPosition;
 	
 	public CardPile Deck;
 	public CardPile DrawPile;
@@ -40,7 +41,7 @@ public class DeckManager : Singleton<DeckManager>
 		}
 		
 		Hand.OnAdded += PrintHandCard;
-		Hand.OnRemoved += DestroyHandCard;
+		Hand.OnRemoved += DestroyCardView;
 	}
 
 	private void PrintHandCard(Card card)
@@ -48,7 +49,7 @@ public class DeckManager : Singleton<DeckManager>
 		PrintCard(card, handHolder);
 	}
 	
-	private void DestroyHandCard(Card card)
+	private void DestroyCardView(Card card)
 	{
 		Debug.Log($"remove {card} from hand");
 		Destroy(card.View.gameObject);
@@ -74,14 +75,13 @@ public class DeckManager : Singleton<DeckManager>
 		Hand.SortByRank();
 	}
 
-	[SerializeField] private float drawTerm;
 	private IEnumerator Draw_Co(int n)
 	{
 		for(int k = 0; k < n; k++)
 		{
 			Draw();
 			Hand.SortByRank();
-			yield return new WaitForSeconds(drawTerm);
+			yield return new WaitForSeconds(AnimationManager.CardSequenceGap);
 		}
 	}
 	
@@ -95,6 +95,43 @@ public class DeckManager : Singleton<DeckManager>
 		Card c = DrawPile.First();
 		DrawPile.Remove(c);
 		Hand.Add(c);
+	}
+	
+	public void DiscardHand(List<Card> selectedCards)
+	{
+		StartCoroutine(DiscardHand_Co(selectedCards));
+	}
+
+	private IEnumerator DiscardHand_Co(List<Card> selectedCards)
+	{
+		BlindManager.Instance.DiscardsLeft--;
+		
+		foreach (Card card in selectedCards)
+		{
+			card.View.WorldMoveTo(discardPosition.position, discardPosition.rotation);
+			yield return new WaitForSeconds(AnimationManager.CardSequenceGap);
+		}
+		
+		// wait for all discard animation
+		float waitTime = (AnimationManager.CardMoveTime * 2) - AnimationManager.CardSequenceGap * selectedCards.Count;
+		Debug.Log($"{AnimationManager.CardMoveTime * 2} - {AnimationManager.CardSequenceGap} * {selectedCards.Count}");
+		if (waitTime > 0)
+		{
+			yield return new WaitForSeconds(waitTime);
+		}
+
+		foreach (Card card in selectedCards)
+		{
+			Hand.Remove(card);
+			IngameEventManager.CallEvent(new CardDiscardedEventArgs(card));
+		}
+
+		FillHand();
+	}
+	
+	public void FillHand()
+	{
+		Draw(BlindManager.Instance.HandCapacity - Hand.Count);
 	}
 
 	public CardView PrintCard(Card card, Transform uiParent = null)

@@ -5,6 +5,8 @@ using UnityEngine;
 public class AnimationManager : Singleton<AnimationManager>
 {
     public static float PunchTime = 0.1f;
+    public static float CardMoveTime = 0.2f;
+    public static float CardSequenceGap = 0.1f;
     
     private Queue<IEnumerator> _animationQueue = new Queue<IEnumerator>();
     private bool _isPlayingAnimation = false;
