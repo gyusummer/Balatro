@@ -5826,8 +5826,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1239537965}
   - {fileID: 1000730694}
+  - {fileID: 1239537965}
   - {fileID: 1200072158}
   m_Father: {fileID: 870982682}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -11226,7 +11226,7 @@ GameObject:
   - component: {fileID: 2118569233}
   - component: {fileID: 2118569235}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: Managers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11304,9 +11304,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ChipText: {fileID: 440275207}
   MultText: {fileID: 1548488121}
+  RoundScoreText: {fileID: 1945277844}
   CalcUpperText: {fileID: 481190370}
   CalcUpperExtraText: {fileID: 1995632644}
-  RoundScore: 0
 --- !u!114 &2118569230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11399,7 +11399,6 @@ MonoBehaviour:
   HandsText: {fileID: 1821355416}
   DiscardsText: {fileID: 545831647}
   GoalText: {fileID: 1819469858}
-  RoundScoreText: {fileID: 1945277844}
   BlindGoal: 450
   HandCapacity: 8
 --- !u!114 &2118569235
@@ -11500,10 +11499,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2118569233}
-        m_TargetAssemblyTypeName: RunManager, Assembly-CSharp
-        m_MethodName: ChangeState
-        m_Mode: 3
+      - m_Target: {fileID: 2118569232}
+        m_TargetAssemblyTypeName: Shop, Assembly-CSharp
+        m_MethodName: NextRound
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

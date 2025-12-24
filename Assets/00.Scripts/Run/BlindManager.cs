@@ -29,7 +29,7 @@ public class BlindManager : Singleton<BlindManager>
 	public TMP_Text HandsText;
 	public TMP_Text DiscardsText;
 	public TMP_Text GoalText;
-	public TMP_Text RoundScoreText;
+	//public TMP_Text RoundScoreText;
 	
 	public Blind CurrentBlind;
 	public double BlindGoal = 450;

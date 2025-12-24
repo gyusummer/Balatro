@@ -19,6 +19,7 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 {
 	public TMP_Text ChipText;
 	public TMP_Text MultText;
+	public TMP_Text RoundScoreText;
 	public TMP_Text CalcUpperText;
 	public TMP_Text CalcUpperExtraText;
 	
@@ -35,6 +36,7 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 			if (_chip == value) return;
 			_chip = value;
 			ChipText.text = value.ToString();
+			ChipText.ForceMeshUpdate();
 
 			for (int i = 0; i < ChipText.text.Length; i++)
 			{
@@ -51,6 +53,7 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 			if (_mult == value) return;
 			_mult = value;
 			MultText.text = value.ToString();
+			MultText.ForceMeshUpdate();
 			
 			for (int i = 0; i < MultText.text.Length; i++)
 			{
@@ -58,10 +61,28 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 			}
 		}
 	}
-	public double RoundScore;
+	private double _roundScore;
+
+	public double RoundScore
+	{
+		get => _roundScore;
+		set
+		{
+			if (_roundScore == value) return;
+			_roundScore = value;
+			RoundScoreText.text = value.ToString();
+			RoundScoreText.ForceMeshUpdate();
+
+			for (int i = 0; i < RoundScoreText.text.Length; i++)
+			{
+				roundScoreTextAnimator.DOPunchCharScale(i, 1.1f, AnimationManager.PunchTime);
+			}
+		}
+	}
 
 	private DOTweenTMPAnimator chipTextAnimator;
 	private DOTweenTMPAnimator multTextAnimator;
+	private DOTweenTMPAnimator roundScoreTextAnimator;
 
 	protected override void Awake()
 	{
@@ -114,6 +135,7 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 		
 		chipTextAnimator = new DOTweenTMPAnimator(ChipText);
 		multTextAnimator = new DOTweenTMPAnimator(MultText);
+		roundScoreTextAnimator = new DOTweenTMPAnimator(RoundScoreText);
 	}
 
 	public void AddChip(double amount)
@@ -200,7 +222,6 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 	private void AccumulateScore(double score)
 	{
 		RoundScore += score;
-		BlindManager.Instance.RoundScoreText.text = RoundScore.ToString();
 	}
 	
 	public void UpgradePokerHand(HandRank handRank)

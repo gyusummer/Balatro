@@ -148,6 +148,11 @@ public class RunManager : Singleton<RunManager>
         CurrentState = newState;
         seq.AppendCallback(() => statePanels[newState].SetActive(true));
         seq.Append(CenterPanel.transform.DOLocalMoveY(CenterPanel.transform.localPosition.y, 1f, true));
+
+        if (CurrentState == RunState.Shop)
+        {
+            seq.AppendCallback(() => Shop.Instance.RefreshGoods());
+        }
         yield return seq.WaitForCompletion();
     }
 

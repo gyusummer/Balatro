@@ -25,7 +25,7 @@ public class Shop : Singleton<Shop>
 	public CustomList<Joker> Jokers = new CustomList<Joker>(3);
 	public CustomList<ConsumableCard> Consumables = new CustomList<ConsumableCard>(3);
 
-	public void FillGoods()
+	public void RefreshGoods()
 	{
 		Jokers.ClearWith(joker => Destroy(joker.View.gameObject));
 		for (int i = 0; i < Jokers.Max; i++)
@@ -40,5 +40,10 @@ public class Shop : Singleton<Shop>
 			ConsumableCard consume = ConsumableSystem.Instance.CreateRandom(true, LowerList);
 			Consumables.Add(consume);
 		}
+	}
+
+	public void NextRound()
+	{
+		RunManager.Instance.ChangeState(RunManager.RunState.BlindSelect);
 	}
 }

@@ -38,7 +38,7 @@ public class TestCode : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            Shop.Instance.FillGoods();
+            Shop.Instance.RefreshGoods();
         }
         
         if (Input.GetKeyDown(KeyCode.J))
