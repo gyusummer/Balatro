@@ -212,7 +212,13 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 	public void UpdateShader()
 	{
 		var shader = cardShaders[(int)Source.Edition];
-		Paper.material.shader = shader;
-		Picture.material.shader = shader;
+		
+        Material newPaperMat = new Material(Paper.material); 
+        newPaperMat.shader = shader;
+        Paper.material = newPaperMat;
+        
+        Material newPictureMat = new Material(Picture.material); 
+        newPictureMat.shader = shader;
+        Picture.material = newPictureMat;
 	}
 }
