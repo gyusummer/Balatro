@@ -161,7 +161,7 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - _AtlasUv: {r: 0.6999999, g: 0.87500006, b: 0.80135834, a: 0.9379753}
+    - _AtlasUv: {r: 0.9285353, g: 0.015889633, b: 0.9945417, a: 0.23411037}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _BurnCol1: {r: 1, g: 0.5, b: 0, a: 1}
     - _BurnCol2: {r: 1, g: 0, b: 0, a: 1}

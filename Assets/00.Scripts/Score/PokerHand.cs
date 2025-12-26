@@ -114,8 +114,7 @@ public static class PokerHand
     public static HandInfo CheckHandRank(List<Card> hand)
     {
         PreprocessedHand pHand = Preprocess(hand);
-    
-        // 1. 가장 높은 족보부터 검사 (우선순위 역순)
+        
         HandInfo result = new HandInfo(hand);
         
 #pragma warning disable 0642
@@ -131,8 +130,8 @@ public static class PokerHand
         else if (IsTwoPair(pHand, hand, ref result));
         else if (IsPair(pHand, hand, ref result)) ;
 #pragma warning restore 0642
-    
-        // 2. 일치하는 족보가 없으면 '하이 카드'로 처리
+
+        result.ScoredCards = result.ScoredCards.OrderBy((card) => result.PlayedCards.IndexOf(card)).ToList();
         return result;
     }
 
