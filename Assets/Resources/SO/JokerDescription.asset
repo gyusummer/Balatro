@@ -15,11 +15,33 @@ MonoBehaviour:
   Texts:
   - Name: Jimbo
     Description: +4 Mult
-  - Name: GreedyJoker
+  - Name: Greedy Joker
     Description: Played cards with  Diamond suit give +3 Mult when scored
-  - Name: LustyJoker
+  - Name: Lusty Joker
     Description: Played cards with  Heart suit give +3 Mult when scored
-  - Name: WrathfulJoker
+  - Name: Wrathful Joker
     Description: Played cards with  Spade suit give +3 Mult when scored
-  - Name: GluttonousJoker
+  - Name: Gluttonous Joker
     Description: Played cards with  Club suit give +3 Mult when scored
+  - Name: Jolly Joker
+    Description: +8 Mult if played hand contains a Pair
+  - Name: Zany Joker
+    Description: +12 Mult if played hand contains a Three of a Kind
+  - Name: Mad Joker
+    Description: +10 Mult if played hand contains a Two Pair
+  - Name: Crazy Joker
+    Description: +12 Mult if played hand contains a Straight
+  - Name: Droll Joker
+    Description: +10 Mult if played hand contains a Flush
+  - Name: Sly Joker
+    Description: +50 Chips if played hand contains a Pair
+  - Name: Wily Joker
+    Description: +100 Chips if played hand contains a Three of a Kind
+  - Name: Clever Joker
+    Description: +80 Chips if played hand contains a Two Pair
+  - Name: Devious Joker
+    Description: +100 Chips if played hand contains a Straight
+  - Name: Crafty Joker
+    Description: +80 Chips if played hand contains a Flush
+  - Name: Half Joker
+    Description: +20 Mult if played hand contains 3 or fewer cards

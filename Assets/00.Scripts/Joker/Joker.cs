@@ -23,17 +23,18 @@ public abstract class Joker : ITradeable
     public int Price { get; set; } = 3;
     public abstract void Register();
     public abstract void Unregister();
-    public Action ActivateEffect { get; set; } = null;
+    public Predicate<HandInfo> ActivateCondition { get; set; } = null;
+    public Action<HandInfo> ActivateEffect { get; set; } = null;
 	public Sequence ActivateAnimation => View.ActivateAnimation();
 
-    public Sequence Activate()
+    public Sequence Activate(HandInfo handInfo)
     {
         Sequence seq = DOTween.Sequence();
         
-        if (ActivateEffect != null)
+        if (ActivateEffect != null && ActivateCondition(handInfo))
         {
             seq.Append(ActivateAnimation);
-            seq.JoinCallback(() => ActivateEffect.Invoke());
+            seq.JoinCallback(() => ActivateEffect.Invoke(handInfo));
         }
         
         switch (Edition)
@@ -83,27 +84,28 @@ public abstract class Joker : ITradeable
 
 public class ActivateJoker : Joker
 {
-    public ActivateJoker(string name, int price, Action activateEffect)
+    public ActivateJoker(string name, int price, Action<HandInfo> activateEffect)
     {
         Name = name;
         Price = price;
+        ActivateCondition = (handInfo) => true;
+        ActivateEffect = activateEffect;
+    }
+    
+    public ActivateJoker(string name, int price, Predicate<HandInfo> activateCondition, Action<HandInfo> activateEffect)
+    {
+        Name = name;
+        Price = price;
+        ActivateCondition = activateCondition;
         ActivateEffect = activateEffect;
     }
 
     public override void Register()
     {
-        if (Edition == Edition.Negative)
-        {
-            Inventory.Instance.Jokers.Max++;
-        }
     }
 
     public override void Unregister()
     {
-        if (Edition == Edition.Negative)
-        {
-            Inventory.Instance.Jokers.Max--;
-        }
     }
 }
 

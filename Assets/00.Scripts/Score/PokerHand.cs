@@ -390,4 +390,50 @@ public static class PokerHand
         }
         return false;
     }
+
+    public static bool Is(HandRank rank, List<Card> cards)
+    {
+        PreprocessedHand pHand = Preprocess(cards);
+        HandInfo result = new HandInfo(cards);
+        bool reVal = false;
+
+        switch (rank)
+        {
+            case HandRank.Pair:
+                reVal = (IsPair(pHand, cards, ref result));
+                break;
+            case HandRank.TwoPair:
+                reVal = (IsTwoPair(pHand, cards, ref result));
+                break;
+            case HandRank.ThreeOfAKind:
+                reVal = (IsThreeOfAKind(pHand, cards, ref result));
+                break;
+            case HandRank.Straight:
+                reVal = (IsStraight(pHand, cards, ref result));
+                break;
+            case HandRank.Flush:
+                reVal = (IsFlush(pHand, cards, ref result));
+                break;
+            case HandRank.FullHouse:
+                reVal = (IsFullHouse(pHand, cards, ref result));
+                break;
+            case HandRank.FourOfAKind:
+                reVal = (IsFourOfAKind(pHand, cards, ref result));
+                break;
+            case HandRank.StraightFlush:
+                reVal = (IsStraightFlush(pHand, cards, ref result));
+                break;
+            case HandRank.FiveOfAKind:
+                reVal = (IsFiveOfAKind(pHand, cards, ref result));
+                break;
+            case HandRank.FlushHouse:
+                reVal = (IsFlushHouse(pHand, cards, ref result));
+                break;
+            case HandRank.FlushFive:
+                reVal = (IsFlushFive(pHand, cards, ref result));
+                break;
+        }
+        
+        return reVal;
+    }
 }

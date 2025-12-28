@@ -168,7 +168,7 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 		seq.WaitForCompletion();
 		
 		yield return ActivateHeldCards(playedHand).WaitForCompletion();
-		yield return ActivateJokers().WaitForCompletion();
+		yield return ActivateJokers(handInfo).WaitForCompletion();
 		
 		AccumulateScore(Chip * Mult);
 	}
@@ -216,13 +216,13 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 		return seq;
 	}
 
-	private Sequence ActivateJokers()
+	private Sequence ActivateJokers(HandInfo handInfo)
 	{
 		Sequence seq = DOTween.Sequence();
 		var jokers = Inventory.Instance.Jokers.CloneList();
 		foreach (Joker joker in jokers)
 		{
-			seq.Append(joker.Activate());
+			seq.Append(joker.Activate(handInfo));
 		}
 
 		return seq;

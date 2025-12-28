@@ -7,7 +7,7 @@ using UnityEngine;
 public class JokerText
 {
 	public string Name;
-	[TextArea] public string Description;
+	public string Description;
 }
 
 [CreateAssetMenu(fileName = "Joker Description", menuName = "Game Data/Joker Description")]

@@ -18,9 +18,31 @@ MonoBehaviour:
   - {fileID: -166756667, guid: 48e41a7d0cf931a44a1a94ec6b9cdbbb, type: 3}
   - {fileID: 1604400429, guid: 48e41a7d0cf931a44a1a94ec6b9cdbbb, type: 3}
   - {fileID: 1456654583, guid: 48e41a7d0cf931a44a1a94ec6b9cdbbb, type: 3}
+  - {fileID: 1357272450, guid: 48e41a7d0cf931a44a1a94ec6b9cdbbb, type: 3}
+  - {fileID: 1594586069, guid: 48e41a7d0cf931a44a1a94ec6b9cdbbb, type: 3}
+  - {fileID: 1624394763, guid: 48e41a7d0cf931a44a1a94ec6b9cdbbb, type: 3}
+  - {fileID: -749344499, guid: 48e41a7d0cf931a44a1a94ec6b9cdbbb, type: 3}
+  - {fileID: 257034292, guid: 48e41a7d0cf931a44a1a94ec6b9cdbbb, type: 3}
+  - {fileID: 48825162, guid: 48e41a7d0cf931a44a1a94ec6b9cdbbb, type: 3}
+  - {fileID: -247891422, guid: 48e41a7d0cf931a44a1a94ec6b9cdbbb, type: 3}
+  - {fileID: 917274814, guid: 48e41a7d0cf931a44a1a94ec6b9cdbbb, type: 3}
+  - {fileID: 643126895, guid: 48e41a7d0cf931a44a1a94ec6b9cdbbb, type: 3}
+  - {fileID: -211498559, guid: 48e41a7d0cf931a44a1a94ec6b9cdbbb, type: 3}
+  - {fileID: 2138597842, guid: 48e41a7d0cf931a44a1a94ec6b9cdbbb, type: 3}
   ImageNames:
-  - GreedyJoker
-  - LustyJoker
-  - WrathfulJoker
-  - GluttonousJoker
+  - Greedy Joker
+  - Lusty Joker
+  - Wrathful Joker
+  - Gluttonous Joker
   - Jimbo
+  - Jolly Joker
+  - Zany Joker
+  - Mad Joker
+  - Crazy Joker
+  - Droll Joker
+  - Sly Joker
+  - Wily Joker
+  - Clever Joker
+  - Devious Joker
+  - Crafty Joker
+  - Half Joker
