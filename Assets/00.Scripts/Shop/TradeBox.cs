@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class TradeDrop : MonoBehaviour, IDropHandler
+public class TradeBox : MonoBehaviour, IDropHandler
 {
 	public void OnDrop(PointerEventData eventData)
 	{
@@ -13,14 +13,16 @@ public class TradeDrop : MonoBehaviour, IDropHandler
 		
 		var tradeable = view.Tradeable;
 		
-		Debug.Log(tradeable.IsPlayerOwned);
 		if (tradeable.IsPlayerOwned)
 		{
 			Sell(tradeable);
 		}
 		else
 		{
-			Buy(tradeable);
+			if (Buy(tradeable) == false)
+			{
+				view.Back();
+			}
 		}
 	}
 
@@ -30,12 +32,17 @@ public class TradeDrop : MonoBehaviour, IDropHandler
 		set => Inventory.Instance.PlayerMoney = value;
 	}
 	
-	public void Buy(ITradeable item)
+	public bool Buy(ITradeable item)
 	{
 		if (PlayerMoney >= item.Price)
 		{
 			PlayerMoney -= item.Price;
 			item.Buy();
+			return true;
+		}
+		else
+		{
+			return false;
 		}
 	}
 

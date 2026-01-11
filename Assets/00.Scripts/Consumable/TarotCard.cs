@@ -62,7 +62,7 @@ public class Fool : TarotCard
 	protected override void Effect(List<Card> selectedCards)
 	{
 		// Add LastCard to player inventory
-		ConsumableSystem.Instance.Print(lastCard);
+		Inventory.Instance.Consumables.Add(lastCard);
 	}
 }
 
@@ -278,6 +278,7 @@ public class Death : TarotCard
 	protected override void Effect(List<Card> selectedCards)
 	{
 		selectedCards[1].CopyTo(selectedCards[0]);
+		HandController.Instance.DeselectAllCards();
 	}
 }
 
@@ -396,5 +397,14 @@ public class World : TarotCard
 	protected override void Effect(List<Card> selectedCards)
 	{
 		TransformCardSuit(selectedCards, CardSuit.Spade);
+	}
+}
+
+public class Aura : TarotCard
+{
+	public override string Description => "Add Foil, Holographic, or Polychrome effect to 1 selected card in hand";
+	protected override void Effect(List<Card> selectedCards)
+	{
+		selectedCards[0].Edition = (Edition)UnityEngine.Random.Range(0, 4);
 	}
 }

@@ -16,6 +16,11 @@ public class JokerView : View<Joker>, ITradeableView, IBeginDragHandler, IEndDra
     public Transform Transform => transform;
     
     public ITradeable Tradeable => Source;
+    public void Back()
+    {
+        transform.position = restorePosition;
+    }
+
     public Joker Source;
     public ImageContainer JokerImageSet;
     public Image Paper;
@@ -75,10 +80,11 @@ public class JokerView : View<Joker>, ITradeableView, IBeginDragHandler, IEndDra
         canvasGroup = GetComponent<CanvasGroup>();
     }
 	
+    private Vector3 restorePosition;
     public void OnBeginDrag(PointerEventData eventData)
     {
-        canvasGroup.blocksRaycasts = false; 
-        canvasGroup.alpha = 0.6f; // 살짝 반투명하게 만듦
+        canvasGroup.blocksRaycasts = false;
+        restorePosition = transform.position;
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -89,7 +95,6 @@ public class JokerView : View<Joker>, ITradeableView, IBeginDragHandler, IEndDra
     public void OnEndDrag(PointerEventData eventData)
     {
         canvasGroup.blocksRaycasts = true;
-        canvasGroup.alpha = 1f;
     }
 
     public void OnPointerEnter(PointerEventData eventData)

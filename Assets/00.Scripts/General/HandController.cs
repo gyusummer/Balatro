@@ -94,6 +94,7 @@ public class HandController : Singleton<HandController>
 		if (_selectedConsumable.Use(SortedSelected))
 		{
 			_selectedConsumable = null;
+			TooltipSystem.HideTooltip();
 		}
 	}
 

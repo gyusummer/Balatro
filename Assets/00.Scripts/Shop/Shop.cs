@@ -15,6 +15,7 @@ public interface ITradeable
 public interface ITradeableView
 {
 	public ITradeable Tradeable { get; }
+	public void Back();
 }
 
 public class Shop : Singleton<Shop>

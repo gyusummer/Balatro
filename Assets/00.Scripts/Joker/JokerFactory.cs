@@ -11,10 +11,10 @@ public class JokerFactory  : Factory<Joker, JokerView>
         base.Awake();
         s_constructors = new Dictionary<int, Func<Joker>>
         {
-            { 0, () => new EventJoker<CardScoredEventArgs>("Greedy Joker", 5,(eventArgs) => eventArgs.Card.Suit == CardSuit.Diamond, () => ScoreCalculator.Instance.AddMult(4))},
-            { 1, () => new EventJoker<CardScoredEventArgs>("Lusty Joker", 5,(eventArgs) => eventArgs.Card.Suit == CardSuit.Heart, () => ScoreCalculator.Instance.AddMult(4))},
-            { 2, () => new EventJoker<CardScoredEventArgs>("Wrathful Joker", 5,(eventArgs) => eventArgs.Card.Suit == CardSuit.Spade, () => ScoreCalculator.Instance.AddMult(4))},
-            { 3, () => new EventJoker<CardScoredEventArgs>("Gluttonous Joker", 5,(eventArgs) => eventArgs.Card.Suit == CardSuit.Club, () => ScoreCalculator.Instance.AddMult(4))},
+            { 0, () => new EventJoker<CardScoredEventArgs>("Greedy Joker", 5,eventArgs => eventArgs.Card.Suit.HasFlag(CardSuit.Diamond), () => AddMult(4))},
+            { 1, () => new EventJoker<CardScoredEventArgs>("Lusty Joker", 5,eventArgs => eventArgs.Card.Suit.HasFlag(CardSuit.Heart), () => AddMult(4))},
+            { 2, () => new EventJoker<CardScoredEventArgs>("Wrathful Joker", 5,eventArgs => eventArgs.Card.Suit.HasFlag(CardSuit.Spade), () => AddMult(4))},
+            { 3, () => new EventJoker<CardScoredEventArgs>("Gluttonous Joker", 5,eventArgs => eventArgs.Card.Suit.HasFlag(CardSuit.Club), () => AddMult(4))},
             { 4, () => new ActivateJoker("Jimbo",  2,(handInfo) => AddMult(2))},
             { 5, () => new ActivateJoker("Jolly Joker",  3, info => PokerHand.Is(HandRank.Pair, info.PlayedCards),(handInfo) => AddMult(8))},
             { 6, () => new ActivateJoker("Zany Joker",  4, info => PokerHand.Is(HandRank.ThreeOfAKind, info.PlayedCards),(handInfo) => AddMult(12))},

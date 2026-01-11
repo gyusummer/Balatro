@@ -82,8 +82,28 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 
 	public void LocalMoveTo(Vector3 position, Quaternion rotation)
 	{
-		transform.DOLocalMove(position, AnimationVariable.CardMoveTime, true);
-		transform.DORotateQuaternion(rotation, AnimationVariable.CardMoveTime * 2);//.SetEase(Ease.OutElastic);
+		Sequence seq = DOTween.Sequence();
+		
+		float rot = transform.rotation.eulerAngles.z;
+		float diffX = transform.localPosition.x - position.x;
+		if (diffX > 0.5)
+		{
+			rot = 30;
+		}
+		else if (diffX < -0.5)
+		{
+			rot = -30;
+		}
+		//Debug.Log(diffX);
+		Quaternion moveRot = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, rot);
+		transform.rotation = moveRot;
+		
+		//seq.Append(transform.DORotateQuaternion(moveRot, AnimationVariable.CardMoveTime * 0.5f));
+		seq.Append(transform.DOLocalMove(position, AnimationVariable.CardMoveTime, true));
+		seq.Join(transform.DORotateQuaternion(rotation, AnimationVariable.CardMoveTime * 0.5f));
+		
+		// transform.DOLocalMove(position, AnimationVariable.CardMoveTime, true);
+		// transform.DORotateQuaternion(rotation, AnimationVariable.CardMoveTime * 2);
 	}
 
 	public void WorldMoveTo(Vector3 position, Quaternion rotation)
@@ -96,6 +116,14 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 	{
 		Paper.sprite = CardPapers.GetImageByNameOrFirst(Source.Enhancement.ToString());
 		UpdateAtlasUv();
+		if (Source.Enhancement == CardEnhancement.Stone)
+		{
+			Picture.enabled = false;
+		}
+		else
+		{
+			Picture.enabled = true;
+		}
 	}
 
 	public void UpdatePicture()
@@ -123,7 +151,7 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 
 	public void OnSelected()
 	{
-		Paper.color = Color.black;
+		Paper.color = Color.gray;
 	}
 
 	public void OnDeselected()
@@ -160,7 +188,6 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 		isDragging = true;
 		// 드롭 타겟이 드래그 요소를 '통과하여' 그 아래에 있는 요소를 감지할 수 있도록 잠시 끕니다.
 		canvasGroup.blocksRaycasts = false; 
-		canvasGroup.alpha = 0.6f; // 살짝 반투명하게 만듦
 		if (fanLayout != null) fanLayout.DraggingChild = Rect;
 	}
 
@@ -181,7 +208,6 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 	{
 		isDragging = false;
 		canvasGroup.blocksRaycasts = true;
-		canvasGroup.alpha = 1f;
 
 		if (fanLayout != null)
 		{

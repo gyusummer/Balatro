@@ -165,7 +165,7 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 		
 		Sequence seq = DOTween.Sequence();
 		IngameEventManager.CallEvent(new HandPlayedEventArgs(handInfo, seq));
-		seq.WaitForCompletion();
+		yield return seq.WaitForCompletion();
 		
 		yield return ActivateHeldCards(playedHand).WaitForCompletion();
 		yield return ActivateJokers(handInfo).WaitForCompletion();

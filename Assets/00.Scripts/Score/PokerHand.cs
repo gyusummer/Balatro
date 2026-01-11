@@ -64,7 +64,7 @@ public struct PreprocessedHand
 {
     public Dictionary<CardRank, List<Card>> RankGroups; // 랭크별 그룹핑 (페어, 트리플 등)
     public Dictionary<CardSuit, List<Card>> SuitGroups; // 무늬별 그룹핑 (플러시)
-    public List<CardRank> SortedUniqueRanks;                   // 정렬된 고유 랭크 (스트레이트)
+    public List<CardRank> SortedUniqueRanks;            // 정렬된 고유 랭크 (스트레이트)
 }
 
 public struct ScoreComponent
@@ -131,8 +131,22 @@ public static class PokerHand
         else if (IsPair(pHand, hand, ref result)) ;
 #pragma warning restore 0642
 
-        result.ScoredCards = result.ScoredCards.OrderBy((card) => result.PlayedCards.IndexOf(card)).ToList();
-        return result;
+        return PostProcessHand(result);
+    }
+
+    private static HandInfo PostProcessHand(HandInfo handInfo)
+    {
+        // ExtraCards중에 Enhancement가 Stone인 카드들을 ScoredCards에 추가
+        var stoneCards = handInfo.ExtraCards.Where(c => c.Enhancement == CardEnhancement.Stone).ToList();
+        
+        foreach (var card in stoneCards)
+        {
+            handInfo.ScoredCards.Add(card);
+            handInfo.ExtraCards.Remove(card);
+        }
+        
+        handInfo.ScoredCards = handInfo.ScoredCards.OrderBy((card) => handInfo.PlayedCards.IndexOf(card)).ToList();
+        return handInfo;
     }
 
     public static bool IsFlushFive(PreprocessedHand pHand, List<Card> hand, ref HandInfo result)

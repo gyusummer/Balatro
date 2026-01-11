@@ -122,10 +122,12 @@ public class Card
 
 	public Sequence ActivateInPlay()
 	{
-		Sequence seq = ActivateAnimation;
+		#region 카드 효과 적용
+		Sequence seq = DOTween.Sequence();
 		// base
 		if (Enhancement != CardEnhancement.Stone)
 		{
+			seq.Append(ActivateAnimation);
 			seq.JoinCallback(() => ScoreCalculator.Instance.AddChip(Chip));
 		}
 
@@ -149,10 +151,16 @@ public class Card
 				seq.JoinCallback(() => ScoreCalculator.Instance.AddChip(50));
 				break;
 			case CardEnhancement.Lucky:
-				seq.Append(ActivateAnimation);
-				seq.JoinCallback(() => Chance.Roll(5, () => ScoreCalculator.Instance.AddMult(20)));
-				seq.Append(ActivateAnimation);
-				seq.JoinCallback(() => Chance.Roll(15, () => Inventory.Instance.PlayerMoney += 20));
+				Chance.Roll(5, () =>
+				{
+					seq.Append(ActivateAnimation);
+					seq.JoinCallback(() => ScoreCalculator.Instance.AddMult(20));
+				});
+				Chance.Roll(15, () =>
+				{
+					seq.Append(ActivateAnimation);
+					seq.JoinCallback(() => Inventory.Instance.PlayerMoney += 20);
+				});
 				break;
 			default:
 				break;
@@ -176,7 +184,9 @@ public class Card
 			default:
 				break;
 		}
+#endregion
 		
+		// 이벤트 전달
 		IngameEventManager.CallEvent(new CardScoredEventArgs(this, seq));
 		return seq;
 	}

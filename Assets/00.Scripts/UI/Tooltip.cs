@@ -89,9 +89,9 @@ public class Tooltip : MonoBehaviour
 	        finalScreenPos.y += totalOffset.y;
         }
         
-        Debug.Log($"SourceScreenPos {sourceScreenPos}");
-        Debug.Log($"Offset {sourceScreenSize.y + totalOffset.y}");
-        Debug.Log($"finalScreenPos {finalScreenPos}");
+        // Debug.Log($"SourceScreenPos {sourceScreenPos}");
+        // Debug.Log($"Offset {sourceScreenSize.y + totalOffset.y}");
+        // Debug.Log($"finalScreenPos {finalScreenPos}");
         
         // Apply
         Vector2 localPointer;

@@ -29,7 +29,8 @@ public class TarotFactory : Factory<ConsumableCard, TarotCardView>
             { 18, () => new Moon() },
             { 19, () => new Sun() },
             { 20, () => new Judgement() },
-            { 21, () => new World() }
+            { 21, () => new World() },
+            { 22, () => new Aura() }
         };
     }
 }

@@ -8,7 +8,12 @@ using UnityEngine.UI;
 public abstract class ConsumableCardView : View<ConsumableCard>, ITradeableView, IPointerClickHandler, IBeginDragHandler, IEndDragHandler, IDragHandler, ITooltipSource
 {
     public ITradeable Tradeable => Source;
-	public ConsumableCard Source;
+    public void Back()
+    {
+	    transform.position = restorePosition;
+    }
+
+    public ConsumableCard Source;
 	public ImageContainer ImageSet;
 	public Image Paper;
 
@@ -70,10 +75,12 @@ public abstract class ConsumableCardView : View<ConsumableCard>, ITradeableView,
 		rectTransform = GetComponent<RectTransform>();
 		canvasGroup = GetComponent<CanvasGroup>();
 	}
-	
+
+	private Vector3 restorePosition;
 	public void OnBeginDrag(PointerEventData eventData)
 	{
-		canvasGroup.blocksRaycasts = false; 
+		canvasGroup.blocksRaycasts = false;
+		restorePosition = transform.position;
 	}
 
 	public void OnDrag(PointerEventData eventData)

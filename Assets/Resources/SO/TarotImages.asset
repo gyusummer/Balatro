@@ -35,6 +35,7 @@ MonoBehaviour:
   - {fileID: -1512348099, guid: 62b743109f1b6a84f84f5e062ba253e7, type: 3}
   - {fileID: -1306711209, guid: 62b743109f1b6a84f84f5e062ba253e7, type: 3}
   - {fileID: -2021410573, guid: 62b743109f1b6a84f84f5e062ba253e7, type: 3}
+  - {fileID: 1850135153, guid: 62b743109f1b6a84f84f5e062ba253e7, type: 3}
   ImageNames:
   - Fool
   - Magician
@@ -58,3 +59,4 @@ MonoBehaviour:
   - Sun
   - Judgement
   - World
+  - Aura

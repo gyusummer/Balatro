@@ -12,7 +12,7 @@ public class Inventory : Singleton<Inventory>
 	public CustomList<Joker> Jokers = new CustomList<Joker>(5);
 	public CustomList<ConsumableCard> Consumables = new CustomList<ConsumableCard>(2);
 
-	private int _playerMoney = 4;
+	[SerializeField] private int _playerMoney = 4;
 	public int PlayerMoney
 	{
 		get => _playerMoney;
@@ -28,12 +28,14 @@ public class Inventory : Singleton<Inventory>
 		Jokers.OnAdded += ProcessView;
 		Jokers.OnAdded += joker => joker.Register();
 		Jokers.OnAdded += joker => joker.IsPlayerOwned = true;
+		
 		Jokers.OnRemoved += joker => joker.Unregister();
 		Jokers.OnRemoved += joker => joker.IsPlayerOwned = false;
 		Jokers.OnRemoved += joker => Destroy(joker.View.gameObject);
 		
 		Consumables.OnAdded += ProcessView;
 		Consumables.OnAdded += consumable => consumable.IsPlayerOwned = true;
+		
 		Consumables.OnRemoved += consumable => consumable.IsPlayerOwned = false;
 		Consumables.OnRemoved += consume => Destroy(consume.View.gameObject);
 	}

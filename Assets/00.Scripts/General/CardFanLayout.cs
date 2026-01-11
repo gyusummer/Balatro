@@ -126,6 +126,8 @@ public class CardFanLayout : MonoBehaviour
             if (card.Rect == DraggingChild)
                 continue;
             card.LocalMoveTo(poses[i].position, poses[i].rotation);
+            // card.transform.localPosition = poses[i].position;
+            // card.transform.localRotation = poses[i].rotation;
             
             card.Rect.SetSiblingIndex(i);
         }
@@ -133,25 +135,27 @@ public class CardFanLayout : MonoBehaviour
 
     private int GetIndexByPosX(CardView cardView)
     {
-        float posX = cardView.Rect.localPosition.x;
-        int n = _cardViews.Count;
-        
-        for (int i = 0; i < n - 1; i++)
+        Transform parentTransform = cardView.transform.parent;
+        int newIndex = 0;
+        float posX = cardView.transform.position.x;
+
+        for (int i = 0; i < parentTransform.childCount; i++)
         {
-            if (posX > poses[i].position.x && posX < poses[i + 1].position.x)
+            Transform child = parentTransform.GetChild(i);
+
+            if (child == cardView.transform) continue;
+
+            if (posX > child.position.x)
             {
-                if (_cardViews.IndexOf(cardView) < i + 1)
-                    return i;
-                return i + 1;
+                newIndex++;
+            }
+            else
+            {
+                break; 
             }
         }
-        
-        if (posX < _cardViews[0].Rect.position.x)
-            return 0;
-        if (posX > _cardViews[n - 1].Rect.position.x)
-            return n - 1;
 
-        return 0;
+        return newIndex;
     }
 
     public void ManualSort(CardView view)
