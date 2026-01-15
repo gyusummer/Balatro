@@ -85,6 +85,7 @@ public class RunManager : Singleton<RunManager>
 	public void LoseGame()
 	{
 		Debug.Log("<color=red>LoseGame</color>");
+        RunResultPanel.SetActive(true);
 	}
 
     [SerializeField] private TMP_Text _smallScore;

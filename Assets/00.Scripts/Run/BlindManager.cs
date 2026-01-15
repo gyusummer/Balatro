@@ -108,6 +108,8 @@ public class BlindManager : Singleton<BlindManager>
 			RunManager.Instance.WinAnte();
 		}
 		
+		ScoreCalculator.Instance.ClearUI();
+		
 		// go to shop;
 		RunManager.Instance.ChangeState(RunManager.RunState.Shop);
 	}

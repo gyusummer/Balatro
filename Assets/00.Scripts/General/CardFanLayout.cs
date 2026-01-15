@@ -133,6 +133,17 @@ public class CardFanLayout : MonoBehaviour
         }
     }
 
+    public void ManualSort(CardView view)
+    {
+        int curIndex = _cardViews.IndexOf(view);
+        int newIndex = GetIndexByPosX(view);
+
+        if (curIndex != newIndex)
+        {
+            _source.ManualInsert(view.Source, newIndex);
+        }
+    }
+    
     private int GetIndexByPosX(CardView cardView)
     {
         Transform parentTransform = cardView.transform.parent;
@@ -156,16 +167,5 @@ public class CardFanLayout : MonoBehaviour
         }
 
         return newIndex;
-    }
-
-    public void ManualSort(CardView view)
-    {
-        int curIndex = _cardViews.IndexOf(view);
-        int newIndex = GetIndexByPosX(view);
-
-        if (curIndex != newIndex)
-        {
-            _source.ManualInsert(view.Source, newIndex);
-        }
     }
 }

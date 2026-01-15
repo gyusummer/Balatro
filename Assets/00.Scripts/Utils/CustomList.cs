@@ -65,7 +65,6 @@ public class CustomList<T>
 
     public void Clear()
     {
-        Debug.Log("Custom List Clear");
         for (int i = Count - 1; i >= 0; i--)
         {
             Remove(_list[i]);

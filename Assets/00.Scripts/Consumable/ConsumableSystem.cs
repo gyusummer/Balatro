@@ -13,10 +13,10 @@ public abstract class ConsumableCard : ITradeable
 	public abstract string Description { get; }
 	public bool IsPlayerOwned { get; set; }
 	public int Price { get; set; } = 1;
+	
 	public abstract bool CheckCondition(int selectedCount);
 	public bool Use(List<Card> selectedCards)
 	{
-		Debug.Log($"Consumable Use : {this.GetType().Name}");
 		if (CheckCondition(selectedCards.Count) == false)
 		{
 			return false;
@@ -28,6 +28,7 @@ public abstract class ConsumableCard : ITradeable
 		UnityEngine.Object.Destroy(View.gameObject);
 		return true;
 	}
+	
 	protected abstract void Effect(List<Card> selectedCards);
 	public bool Buy()
 	{

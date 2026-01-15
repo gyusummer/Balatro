@@ -191,16 +191,12 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 		if (fanLayout != null) fanLayout.DraggingChild = Rect;
 	}
 
-	// 2. 드래그 중: 마우스 포인터의 위치를 따라 요소의 위치를 업데이트합니다.
 	public void OnDrag(PointerEventData eventData)
 	{
-		// eventData.delta를 사용하여 부드럽게 위치 이동 (가장 효율적)
 		Rect.anchoredPosition += eventData.delta / Rect.localScale.x;
 		
 		if (fanLayout != null)
 			fanLayout.ManualSort(this);
-
-		// **팁: eventData.delta 대신 eventData.position을 사용하면 Canvas 설정에 따라 움직임이 부자연스러울 수 있습니다.**
 	}
 
 	// 3. 드래그 끝 시: 원래 상태로 되돌리고, 드롭 이벤트를 발생시킬 준비를 합니다.

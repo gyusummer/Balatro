@@ -244,4 +244,13 @@ public class ScoreCalculator : Singleton<ScoreCalculator>
 		s_BaseScore[handRank] = handValue;
 		s_PokerHandLevel[handRank] += 1;
 	}
+
+	public void ClearUI()
+	{
+		Chip = 0;
+		Mult = 0;
+		
+		CalcUpperText.text = "";
+		CalcUpperExtraText.text = "";
+	}
 }

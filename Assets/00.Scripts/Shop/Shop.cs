@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
@@ -46,5 +47,20 @@ public class Shop : Singleton<Shop>
 	public void NextRound()
 	{
 		RunManager.Instance.ChangeState(RunManager.RunState.BlindSelect);
+		rerollCost = 3;
+		rerollText.text = $"Reroll\n${rerollCost.ToString()}";
+	}
+
+	private int rerollCost = 3;
+	public TMP_Text rerollText;
+	public void Reroll()
+	{
+		if (Inventory.Instance.PlayerMoney >= rerollCost)
+		{
+			Inventory.Instance.PlayerMoney -= rerollCost;
+			RefreshGoods();
+			rerollCost++;
+			rerollText.text = $"Reroll\n${rerollCost.ToString()}";
+		}
 	}
 }

@@ -38,9 +38,6 @@ public abstract class TarotCard : ConsumableCard
 		HandController.Instance.DeselectAllCards();
 	}
 }
-
-// The Fool	Creates the last Tarot or Planet card used during this run
-// The Fool excluded
 public class Fool : TarotCard
 {
 	private ConsumableCard lastCard => ConsumableSystem.Instance.LastConsumableCard;
@@ -65,8 +62,6 @@ public class Fool : TarotCard
 		Inventory.Instance.Consumables.Add(lastCard);
 	}
 }
-
-// The Magician	Enhances 2 selected cards to Lucky Cards
 public class Magician : TarotCard
 {
 	public Magician()
@@ -81,9 +76,6 @@ public class Magician : TarotCard
 		EnhanceCard(selectedCards, CardEnhancement.Lucky);
 	}
 }
-
-// The High Priestess	Creates up to 2 random Planet cards
-// (Must have room)
 public class HighPriestess : TarotCard
 {
 	public override string Description => "Creates up to 2 random Planet cards\n(Must have room)";
@@ -99,8 +91,6 @@ public class HighPriestess : TarotCard
 		Inventory.Instance.Consumables.Add(PlanetFactory.Instance.CreateRandom(false));
 	}
 }
-
-// The Empress	Enhances 2 selected cards to Mult Cards
 public class Empress : TarotCard
 {
 	public override string Description => "Enhances 2 selected cards to Mult Cards";
@@ -113,9 +103,6 @@ public class Empress : TarotCard
 		EnhanceCard(selectedCards, CardEnhancement.Mult);
 	}
 }
-
-// The Emperor	Creates up to 2 random Tarot cards
-// (Must have room)
 public class Emperor : TarotCard
 {
 	public override string Description => "Creates up to 2 random Tarot cards\n(Must have room)";
@@ -130,8 +117,6 @@ public class Emperor : TarotCard
 		Inventory.Instance.Consumables.Add(TarotFactory.Instance.CreateRandom(false));
 	}
 }
-
-// The Hierophant	Enhances 2 selected cards to Bonus Cards
 public class Hierophant : TarotCard
 {
 	public override string Description => "Enhances 2 selected cards to Bonus Cards";
@@ -144,8 +129,6 @@ public class Hierophant : TarotCard
 		EnhanceCard(selectedCards, CardEnhancement.Bonus);
 	}
 }
-
-// The Lovers	Enhances 1 selected card into a Wild Card
 public class Lovers : TarotCard
 {
 	public override string Description => "Enhances 1 selected card into a Wild Card";
@@ -154,8 +137,6 @@ public class Lovers : TarotCard
 		EnhanceCard(selectedCards, CardEnhancement.Wild);
 	}
 }
-
-// The Chariot	Enhances 1 selected card into a Steel Card
 public class Chariot : TarotCard
 {
 	public override string Description => "Enhances 1 selected card into a Steel Card";
@@ -164,8 +145,6 @@ public class Chariot : TarotCard
 		EnhanceCard(selectedCards, CardEnhancement.Steel);
 	}
 }
-
-// Justice	Enhances 1 selected card into a Glass Card
 public class Justice : TarotCard
 {
 	public override string Description => "Enhances 1 selected card into a Glass Card";
@@ -174,9 +153,6 @@ public class Justice : TarotCard
 		EnhanceCard(selectedCards, CardEnhancement.Glass);
 	}
 }
-
-// The Hermit	Doubles money
-// (Max of $20)
 public class Hermit : TarotCard
 {
 	public override string Description => "The Hermit Doubles money\n(Max of $20)";
@@ -200,8 +176,6 @@ public class Hermit : TarotCard
 		Inventory.Instance.PlayerMoney += value;
 	}
 }
-
-// The Wheel of Fortune	1 in 4 chance to add Foil, Holographic, or Polychrome edition to a random Joker
 public class WheelOfFortune : TarotCard
 {
 	public override string Description => "1 in 4 chance to add Foil, Holographic, or Polychrome edition to a random Joker";
@@ -221,8 +195,6 @@ public class WheelOfFortune : TarotCard
 		);
 	}
 }
-
-// Strength	Increases rank of up to 2 selected cards by 1
 public class Strength : TarotCard
 {
 	public override string Description => "Increases rank of up to 2 selected cards by 1";
@@ -246,8 +218,6 @@ public class Strength : TarotCard
 		HandController.Instance.DeselectAllCards();
 	}
 }
-
-// The Hanged Man	Destroys up to 2 selected cards
 public class HangedMan : TarotCard
 {
 	public override string Description => "Destroys up to 2 selected cards";
@@ -264,9 +234,6 @@ public class HangedMan : TarotCard
 		HandController.Instance.DeselectAllCards();
 	}
 }
-
-// Death	Select 2 cards, convert the left card into the right card
-// (Drag to rearrange)
 public class Death : TarotCard
 {
 	public override string Description => "Select 2 cards, convert the left card into the right card\n(Drag to rearrange)";
@@ -281,9 +248,6 @@ public class Death : TarotCard
 		HandController.Instance.DeselectAllCards();
 	}
 }
-
-// Temperance	Gives the total sell value of all current Jokers
-// (Max of $50)
 public class Temperance : TarotCard
 {
 	public override string Description => "Gives the total sell value of all current Jokers\n(Max of $50)";
@@ -309,7 +273,6 @@ public class Temperance : TarotCard
 		Inventory.Instance.PlayerMoney += value;
 	}
 }
-// The Devil	Enhances 1 selected card into a Gold Card
 public class Devil : TarotCard
 {
 	public override string Description => "Enhances 1 selected card into a Gold Card";
@@ -318,7 +281,6 @@ public class Devil : TarotCard
 		EnhanceCard(selectedCards, CardEnhancement.Gold);
 	}
 }
-// The Tower	Enhances 1 selected card into a Stone Card
 public class Tower : TarotCard
 {
 	public override string Description => "Enhances 1 selected card into a Stone Card";
@@ -327,8 +289,6 @@ public class Tower : TarotCard
 		EnhanceCard(selectedCards, CardEnhancement.Stone);
 	}
 }
-
-// The Star	Converts up to 3 selected cards to  Diamonds
 public class Star : TarotCard
 {
 	public override string Description => "Converts up to 3 selected cards to Diamonds";
@@ -341,8 +301,6 @@ public class Star : TarotCard
 		TransformCardSuit(selectedCards, CardSuit.Diamond);
 	}
 }
-
-// The Moon	Converts up to 3 selected cards to  Clubs
 public class Moon : TarotCard
 {
 	public override string Description => "Converts up to 3 selected cards to Clubs";
@@ -355,8 +313,6 @@ public class Moon : TarotCard
 		TransformCardSuit(selectedCards, CardSuit.Club);
 	}
 }
-
-// The Sun	Converts up to 3 selected cards to  Hearts
 public class Sun : TarotCard
 {
 	public override string Description => "Converts up to 3 selected cards to Hearts";
@@ -369,9 +325,6 @@ public class Sun : TarotCard
 		TransformCardSuit(selectedCards, CardSuit.Heart);
 	}
 }
-
-// Judgement	Creates a random Joker card
-// 	(Must have room)
 public class Judgement : TarotCard
 {
 	public override string Description => "Creates a random Joker card\n(Must have room)";
@@ -385,8 +338,6 @@ public class Judgement : TarotCard
 		Inventory.Instance.Jokers.Add(JokerFactory.Instance.CreateRandom(false));
 	}
 }
-
-// The World	Converts up to 3 selected cards to  Spades
 public class World : TarotCard
 {
 	public override string Description => "Converts up to 3 selected cards to Spades";
@@ -399,7 +350,6 @@ public class World : TarotCard
 		TransformCardSuit(selectedCards, CardSuit.Spade);
 	}
 }
-
 public class Aura : TarotCard
 {
 	public override string Description => "Add Foil, Holographic, or Polychrome effect to 1 selected card in hand";
