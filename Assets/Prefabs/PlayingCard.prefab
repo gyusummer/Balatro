@@ -57,7 +57,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: 246e280f3f6fe9d4992ac88b964e1d00, type: 2}
+  m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -140,9 +140,9 @@ MonoBehaviour:
   Source:
     _suit: 8
     _rank: 14
-    Chip: 0
     _enhancement: 0
     _edition: 0
+    Chip: 0
     View: {fileID: 0}
   Paper: {fileID: 7386192721501795462}
   Picture: {fileID: 975375633139306534}
@@ -150,6 +150,7 @@ MonoBehaviour:
   vib: 10
   ela: 1
   Backface: {fileID: 4413581104275099686}
+  SmoothTime: 0.0093
 --- !u!225 &182057364064228921
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -294,7 +295,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: 246e280f3f6fe9d4992ac88b964e1d00, type: 2}
+  m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}

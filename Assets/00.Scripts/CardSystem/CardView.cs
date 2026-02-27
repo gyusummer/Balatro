@@ -37,6 +37,12 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 	
 	private bool isDragging = false;
 	private float lastFrameX;
+	
+	private Vector3 targetLocalPosition;
+	private Quaternion targetLocalRotation;
+	private Vector3 velocity;
+	private float rotVelocity;
+	private bool isTargetSet = false;
 
 	private void OnValidate()
 	{
@@ -58,14 +64,46 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 	}
 
 	public Image Backface;
+	[Range(0.0001f, 0.15f)]public float SmoothTime;
 	private void LateUpdate()
 	{
 		if (isDragging)
 		{
 			float curX = transform.position.x;
-			Quaternion newRot = Quaternion.Euler(0, 0, (lastFrameX - curX) * 2);
-			Rect.localRotation = Quaternion.Lerp(Rect.localRotation, newRot, 0.5f);
+			if (Time.deltaTime > 0)
+			{
+				float velocityX = (curX - lastFrameX) / Time.deltaTime;
+				float targetZ = -velocityX * 0.5f; 
+				targetZ = Mathf.Clamp(targetZ, -45f, 45f);
+				Quaternion targetRot = Quaternion.Euler(0, 0, targetZ);
+				Rect.localRotation = Quaternion.Lerp(Rect.localRotation, targetRot, Time.deltaTime * 15f);
+			}
 			lastFrameX = curX;
+		}
+		else if (isTargetSet)
+		{
+			transform.localPosition = Vector3.SmoothDamp(
+				transform.localPosition, targetLocalPosition, ref velocity, 0.05f);
+
+			float tiltZ = -velocity.x * 0.05f; 
+			tiltZ = Mathf.Clamp(tiltZ, -40f, 40f);
+			
+			Vector3 finalEuler = targetLocalRotation.eulerAngles;
+			finalEuler.z += tiltZ;
+
+			float currentZ = transform.localRotation.eulerAngles.z;
+			float newZ = Mathf.SmoothDampAngle(currentZ, finalEuler.z, ref rotVelocity, SmoothTime);
+			
+			transform.localRotation = Quaternion.Euler(finalEuler.x, finalEuler.y, newZ);
+
+			// --- 도착 판정 추가 ---
+			if (Vector3.SqrMagnitude(transform.localPosition - targetLocalPosition) < 0.001f && 
+			    Mathf.Abs(Mathf.DeltaAngle(currentZ, finalEuler.z)) < 0.1f)
+			{
+				transform.localPosition = targetLocalPosition;
+				transform.localRotation = targetLocalRotation;
+				isTargetSet = false;
+			}
 		}
 
 		var back = transform.forward.z;
@@ -82,28 +120,10 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 
 	public void LocalMoveTo(Vector3 position, Quaternion rotation)
 	{
-		Sequence seq = DOTween.Sequence();
-		
-		float rot = transform.rotation.eulerAngles.z;
-		float diffX = transform.localPosition.x - position.x;
-		if (diffX > 0.5)
-		{
-			rot = 30;
-		}
-		else if (diffX < -0.5)
-		{
-			rot = -30;
-		}
-		//Debug.Log(diffX);
-		Quaternion moveRot = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, rot);
-		transform.rotation = moveRot;
-		
-		//seq.Append(transform.DORotateQuaternion(moveRot, AnimationVariable.CardMoveTime * 0.5f));
-		seq.Append(transform.DOLocalMove(position, AnimationVariable.CardMoveTime, true));
-		seq.Join(transform.DORotateQuaternion(rotation, AnimationVariable.CardMoveTime * 0.5f));
-		
-		// transform.DOLocalMove(position, AnimationVariable.CardMoveTime, true);
-		// transform.DORotateQuaternion(rotation, AnimationVariable.CardMoveTime * 2);
+		transform.DOKill();
+		targetLocalPosition = position;
+		targetLocalRotation = rotation;
+		isTargetSet = true;
 	}
 
 	public void WorldMoveTo(Vector3 position, Quaternion rotation)
@@ -186,6 +206,7 @@ public class CardView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 	public void OnBeginDrag(PointerEventData eventData)
 	{
 		isDragging = true;
+		lastFrameX = transform.position.x;
 		// 드롭 타겟이 드래그 요소를 '통과하여' 그 아래에 있는 요소를 감지할 수 있도록 잠시 끕니다.
 		canvasGroup.blocksRaycasts = false; 
 		if (fanLayout != null) fanLayout.DraggingChild = Rect;
